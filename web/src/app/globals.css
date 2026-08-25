@@ -214,8 +214,16 @@ section {
   width: 100%;
   padding: var(--space-md) 0;
   z-index: 1000;
-  transition: all var(--transition-smooth);
   color: var(--color-white);
+  opacity: 1;
+  transform: translateY(0);
+  visibility: visible;
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+              background-color var(--transition-smooth),
+              padding var(--transition-smooth),
+              box-shadow var(--transition-smooth),
+              border-bottom var(--transition-smooth);
 }
 
 .nav--scrolled {
@@ -681,61 +689,22 @@ section {
   transform: translateY(-3px);
 }
 
-/* Navbar Adaptability during Hero Intro Phase */
-html[data-hero-state="intro"] .nav:not(.nav--scrolled),
-html[data-hero-state="open"] .nav:not(.nav--scrolled),
-html[data-hero-state="cycling"] .nav:not(.nav--scrolled) {
-  color: #111827;
+/* Navbar Hidden during Hero Intro / Loading Phase */
+html[data-hero-state="intro"] .nav,
+html[data-hero-state="open"] .nav,
+html[data-hero-state="cycling"] .nav {
+  opacity: 0 !important;
+  transform: translateY(-24px) !important;
+  pointer-events: none !important;
+  visibility: hidden !important;
 }
 
-html[data-hero-state="intro"] .nav:not(.nav--scrolled) .nav__logo-text,
-html[data-hero-state="open"] .nav:not(.nav--scrolled) .nav__logo-text,
-html[data-hero-state="cycling"] .nav:not(.nav--scrolled) .nav__logo-text {
-  color: #059669;
-  text-shadow: none;
-}
-
-html[data-hero-state="intro"] .nav:not(.nav--scrolled) .nav__logo-sub,
-html[data-hero-state="open"] .nav:not(.nav--scrolled) .nav__logo-sub,
-html[data-hero-state="cycling"] .nav:not(.nav--scrolled) .nav__logo-sub {
-  color: #4B5563;
-  text-shadow: none;
-}
-
-html[data-hero-state="intro"] .nav:not(.nav--scrolled) .nav__links a,
-html[data-hero-state="open"] .nav:not(.nav--scrolled) .nav__links a,
-html[data-hero-state="cycling"] .nav:not(.nav--scrolled) .nav__links a {
-  color: #374151;
-  text-shadow: none;
-}
-
-html[data-hero-state="intro"] .nav:not(.nav--scrolled) .nav__links a:hover,
-html[data-hero-state="open"] .nav:not(.nav--scrolled) .nav__links a:hover,
-html[data-hero-state="cycling"] .nav:not(.nav--scrolled) .nav__links a:hover {
-  color: #059669;
-}
-
-html[data-hero-state="intro"] .nav:not(.nav--scrolled) .nav__cta,
-html[data-hero-state="open"] .nav:not(.nav--scrolled) .nav__cta,
-html[data-hero-state="cycling"] .nav:not(.nav--scrolled) .nav__cta {
-  background-color: rgba(5, 150, 105, 0.1);
-  border-color: #059669;
-  color: #059669;
-  text-shadow: none;
-  box-shadow: 0 2px 10px rgba(5, 150, 105, 0.15);
-}
-
-html[data-hero-state="intro"] .nav:not(.nav--scrolled) .nav__cta:hover,
-html[data-hero-state="open"] .nav:not(.nav--scrolled) .nav__cta:hover,
-html[data-hero-state="cycling"] .nav:not(.nav--scrolled) .nav__cta:hover {
-  background-color: #059669;
-  color: #FFFFFF;
-}
-
-html[data-hero-state="intro"] .nav:not(.nav--scrolled) .nav__hamburger span,
-html[data-hero-state="open"] .nav:not(.nav--scrolled) .nav__hamburger span,
-html[data-hero-state="cycling"] .nav:not(.nav--scrolled) .nav__hamburger span {
-  background-color: #111827;
+html[data-hero-state="expanding"] .nav,
+html[data-hero-state="settled"] .nav {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+  visibility: visible;
 }
 
 /* Animations */
@@ -1245,78 +1214,594 @@ html[data-hero-state="cycling"] .nav:not(.nav--scrolled) .nav__hamburger span {
   }
 }
 
-/* Experiences */
-.experiences {
-  background-color: var(--color-warm-white);
+/* Experiences & Attractions (Scroll-Driven Cinematic 3-Image Showcase) */
+.attractions-section {
+  position: relative;
+  width: 100%;
+  background-color: #070B13;
+  color: var(--color-white);
+  z-index: 10;
 }
 
-.experiences__grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 30px;
-  margin-top: var(--space-xl);
-}
-
-.experience-card {
-  background-color: var(--color-white);
-  padding: 0;
-  border-radius: 16px;
+.attractions-stage {
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
   overflow: hidden;
-  text-align: left;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.05);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
 }
 
-.experience-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 12px 32px rgba(0,0,0,0.12);
-}
-
-.experience-card__img-wrapper {
-  width: 100%;
-  height: 280px;
+/* Atmospheric Pinned Background Layers */
+.attractions-canvas-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
   overflow: hidden;
-  position: relative;
+  background-color: #070B13;
 }
 
-.experience-card__img {
+.attractions-canvas-bg__layer {
+  position: absolute;
+  inset: -5%;
+  width: 110%;
+  height: 110%;
+  background-size: cover;
+  background-position: center;
+  filter: blur(28px) brightness(0.28) saturate(1.2);
+  opacity: 0;
+  transform: scale(1.05);
+  transition: opacity 0.4s ease;
+  will-change: opacity;
+}
+
+.attractions-canvas-bg__layer.is-visible {
+  opacity: 1;
+}
+
+.attractions-grid-pattern {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+  background-size: 5rem 5rem;
+  z-index: 2;
+}
+
+.attractions-vignette-overlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(7, 11, 19, 0.3) 0%, rgba(7, 11, 19, 0.95) 100%);
+  z-index: 3;
+}
+
+.attractions-dark-tint {
+  position: absolute;
+  inset: 0;
+  background: rgba(7, 11, 19, 0.45);
+  z-index: 4;
+}
+
+/* Top Floating Header Bar */
+.attractions-top-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 2.25rem 3.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 60;
+  pointer-events: auto;
+}
+
+.attractions-top-bar__left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.attractions-badge {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: #34D399;
+  padding: 6px 16px;
+  background: rgba(17, 24, 39, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(52, 211, 153, 0.35);
+  border-radius: var(--radius-full);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+.attractions-top-sub {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.attractions-counter {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  color: var(--color-white);
+  padding: 6px 16px;
+  background: rgba(17, 24, 39, 0.65);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-full);
+}
+
+.attractions-counter__current {
+  color: #34D399;
+  font-weight: 700;
+}
+
+.attractions-counter__divider {
+  margin: 0 4px;
+  opacity: 0.4;
+}
+
+.attractions-counter__total {
+  opacity: 0.7;
+}
+
+/* Left-Side Fixed Attraction Directory / Navigation */
+.attractions-left-nav {
+  position: absolute;
+  left: 3.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 60;
+  width: 250px;
+  pointer-events: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.attractions-left-nav__header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.attractions-left-nav__label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  color: rgba(255, 255, 255, 0.4);
+  text-transform: uppercase;
+}
+
+.attractions-left-nav__line {
+  flex: 1;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.attractions-left-nav__list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+}
+
+.attractions-left-nav__btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  padding: 0.35rem 0;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.38);
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.attractions-left-nav__btn:hover {
+  color: rgba(255, 255, 255, 0.85);
+  transform: translateX(3px);
+}
+
+.attractions-left-nav__btn.is-active {
+  color: #FFFFFF;
+  font-weight: 700;
+  transform: translateX(6px);
+}
+
+.attractions-left-nav__index {
+  font-size: 10px;
+  font-family: var(--font-body);
+  color: rgba(255, 255, 255, 0.28);
+  letter-spacing: 1px;
+  transition: color 0.3s ease;
+  flex-shrink: 0;
+}
+
+.attractions-left-nav__btn.is-active .attractions-left-nav__index {
+  color: #34D399;
+  font-weight: 800;
+}
+
+.attractions-left-nav__title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.attractions-left-nav__indicator {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #34D399;
+  box-shadow: 0 0 10px #34D399;
+}
+
+/* 3 Independent Floating Image Slots (Canvas Container) */
+.attractions-floating-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 20;
+  pointer-events: none;
+}
+
+.attraction-floating-slot {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(255, 255, 255, 0.1);
+  pointer-events: auto;
+  will-change: transform, width, height;
+}
+
+.attraction-floating-slot__inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.attraction-slot-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  will-change: opacity;
+}
+
+.attraction-slot-photo.is-initial-visible {
+  opacity: 1;
+}
+
+.attraction-slot-photo__img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.5s ease;
+  display: block;
 }
 
-.experience-card:hover .experience-card__img {
-  transform: scale(1.08);
+.attraction-slot-photo__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.35) 0%,
+    transparent 50%
+  );
+  pointer-events: none;
 }
 
-.experience-card__body {
-  padding: 20px 22px;
+/* Fixed Center Title Anchor (The Visual Core of the Scene) */
+.attractions-center-anchor {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 40;
+  width: 100%;
+  max-width: 900px;
+  height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
 }
 
-.experience-card__title {
+.attractions-center-title-card {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: max-content;
+  max-width: min(850px, 88vw);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  opacity: 0;
+  will-change: transform, opacity;
+  padding: 0 1rem;
+}
+
+.attractions-center-title-card.is-initial-visible {
+  opacity: 1;
+}
+
+.attractions-center-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 14px;
+  background: rgba(17, 24, 39, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: var(--radius-full);
+  margin-bottom: 0.85rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+}
+
+.attractions-center-tag__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.attractions-center-tag__category {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2.2px;
+  text-transform: uppercase;
+  color: #FFFFFF;
+}
+
+.attractions-center-tag__sep {
+  opacity: 0.35;
+  color: #FFFFFF;
+}
+
+.attractions-center-tag__loc {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.75);
+  letter-spacing: 1px;
+}
+
+.attractions-center-heading {
   font-family: var(--font-display);
-  font-size: 24px;
-  color: var(--color-navy);
-  margin-bottom: 8px;
+  font-size: clamp(2.5rem, 5.2vw, 4.6rem);
+  font-weight: 600;
+  line-height: 1.06;
+  color: #FFFFFF;
+  letter-spacing: -0.5px;
+  margin: 0;
+  text-align: center;
+  text-shadow: 
+    0 4px 35px rgba(0, 0, 0, 0.98),
+    0 2px 14px rgba(0, 0, 0, 0.95),
+    0 1px 4px rgba(0, 0, 0, 0.9);
 }
 
-.experience-card__desc {
-  color: var(--color-charcoal-light);
+.attractions-center-subtitle {
+  font-family: var(--font-body);
+  font-size: clamp(0.95rem, 1.2vw, 1.15rem);
+  color: #34D399;
+  font-weight: 600;
+  margin: 0.6rem 0 0 0;
+  letter-spacing: 0.5px;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.9);
+}
+
+/* Bottom Progress Navigation Bar */
+.attractions-bottom-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 1.75rem 3.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 60;
+  pointer-events: auto;
+}
+
+.attractions-bottom-dots {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.attraction-bottom-dot {
+  background: transparent;
+  border: none;
+  padding: 6px 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.attraction-bottom-dot__line {
+  display: block;
+  width: 22px;
+  height: 3px;
+  border-radius: 3px;
+  background-color: rgba(255, 255, 255, 0.2);
+  transition: width 0.3s ease, background-color 0.3s ease;
+}
+
+.attraction-bottom-dot.is-active .attraction-bottom-dot__line {
+  width: 44px;
+  background-color: #34D399;
+  box-shadow: 0 0 10px rgba(52, 211, 153, 0.5);
+}
+
+.attractions-scroll-hint {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  color: rgba(255, 255, 255, 0.6);
+  text-transform: uppercase;
+}
+
+.attractions-scroll-hint__arrow {
+  display: inline-block;
+  animation: bounceHint 2s infinite ease-in-out;
+  color: #34D399;
   font-size: 14px;
+}
+
+/* Reduced Motion & Accessible Grid */
+.attractions-accessible-grid {
+  display: none;
+}
+
+.attractions-accessible-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xl);
+  margin-top: var(--space-xl);
+}
+
+.attraction-accessible-card {
+  background: var(--color-white);
+  padding: var(--space-xl);
+  border-radius: var(--radius-md);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.attraction-accessible-card__tag {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #059669;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.attraction-accessible-card__title {
+  font-family: var(--font-display);
+  font-size: 28px;
+  color: var(--color-navy);
+  margin-bottom: 4px;
+}
+
+.attraction-accessible-card__subtitle {
+  font-family: var(--font-body);
+  font-size: 15px;
+  color: #6B7280;
+  margin-bottom: 12px;
+}
+
+.attraction-accessible-card__desc {
+  color: var(--color-charcoal);
+  margin-bottom: 20px;
   line-height: 1.6;
 }
 
-@media (max-width: 1200px) {
-  .experiences__grid {
-    grid-template-columns: repeat(2, 1fr);
+.attraction-accessible-card__images {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.attraction-accessible-card__img-wrap {
+  aspect-ratio: 4/3;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.attraction-accessible-card__img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .attractions-stage {
+    display: none !important;
+  }
+  .attractions-accessible-grid {
+    display: block !important;
+    padding: var(--space-3xl) 0;
+    background-color: var(--color-warm-white);
+    color: #111827;
   }
 }
 
-@media (max-width: 700px) {
-  .experiences__grid {
+/* Responsive Styles for Tablet & Mobile */
+@media (max-width: 1024px) {
+  .attractions-top-bar {
+    padding: 1.5rem 2rem;
+  }
+  .attractions-bottom-bar {
+    padding: 1.5rem 2rem;
+  }
+  .attractions-left-nav {
+    left: 2rem;
+    width: 200px;
+  }
+}
+
+@media (max-width: 768px) {
+  .attractions-top-bar {
+    padding: 1rem 1.25rem;
+  }
+  .attractions-bottom-bar {
+    padding: 1rem 1.25rem;
+  }
+  .attractions-left-nav {
+    display: none; /* Hide vertical nav on small mobile to give maximum visual stage to title & floating composition */
+  }
+  .attractions-center-heading {
+    font-size: clamp(1.8rem, 6.5vw, 2.5rem);
+  }
+  .attractions-center-subtitle {
+    font-size: 0.88rem;
+  }
+  .attractions-center-tag {
+    padding: 3px 10px;
+  }
+  .attractions-center-tag__category {
+    font-size: 9px;
+  }
+  .attraction-accessible-card__images {
     grid-template-columns: 1fr;
   }
 }
@@ -1984,5 +2469,32 @@ html[data-hero-state="cycling"] .nav:not(.nav--scrolled) .nav__hamburger span {
   border-radius: var(--radius-sm);
   font-size: 15px;
   color: #333;
+}
+
+/* Interactive Scrolling Story Component */
+.interactive-story-scroller {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.interactive-story-scroller::-webkit-scrollbar {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .interactive-story-left-col {
+    padding: 1.5rem 1.25rem 1.75rem !important;
+    justify-content: space-between !important;
+  }
+  .interactive-story-pagination {
+    position: static !important;
+    margin-bottom: 1.25rem !important;
+  }
+  .interactive-story-text-container {
+    min-height: 280px !important;
+  }
+  .interactive-story-cta-container {
+    position: static !important;
+    margin-top: 1.5rem !important;
+  }
 }
 

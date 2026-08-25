@@ -174,15 +174,15 @@ export default function About({
       });
 
       // =========================================================
-      // 2. MASTER 150% SLOWER SCROLL-SCRUBBED TIMELINE (+=520vh)
+      // 2. MASTER 300% SLOWER SCROLL-SCRUBBED TIMELINE (+=1560vh)
       // =========================================================
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: containerRef.current,
           start: 'top top',
-          end: '+=520vh', // 150% slower, lavish scroll runway for ultra-fluid control
+          end: '+=1560vh', // 300% slower, lavish cinematic scroll runway
           pin: true,
-          scrub: 1.2, // Velvety smooth momentum scrub
+          scrub: 1.8, // Silky smooth cinematic momentum scrub
           anticipatePin: 1,
           invalidateOnRefresh: true,
         },

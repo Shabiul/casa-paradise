@@ -71,12 +71,14 @@ export default function Hero() {
     // 1. Text settles, then aperture opens between CASA and PARADISO
     const tOpen = setTimeout(() => {
       setPhase('open');
+      document.documentElement.setAttribute('data-hero-state', 'open');
     }, 900);
     timeoutsRef.current.push(tOpen);
 
     // 2. Cycling starts inside the aperture
     const tCycleStart = setTimeout(() => {
       setPhase('cycling');
+      document.documentElement.setAttribute('data-hero-state', 'cycling');
       let idx = 0;
       intervalRef.current = setInterval(() => {
         idx++;
