@@ -22,16 +22,19 @@ import {
   subscribeToCRM,
   updateVehicleBooking,
   createVehicleBooking,
-  deleteBooking
+  deleteBooking,
+  hasPermission
 } from '@/lib/crmStore';
 import { VehicleBooking, VehicleBookingStatus, PaymentStatus, CRMStoreData } from '@/lib/types';
 import QuickBookingModal from '@/components/QuickBookingModal';
+import AccessRestricted from '@/components/AccessRestricted';
 
 export default function VehiclesAdminPage() {
   const [store, setStore] = useState<CRMStoreData>(getCRMStore());
   const [filterStatus, setFilterStatus] = useState<string>('all');
   const [filterCategory, setFilterCategory] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const [allowed, setAllowed] = useState<boolean>(true);
 
   // Edit / Handover / Return Modal
   const [selectedBooking, setSelectedBooking] = useState<VehicleBooking | null>(null);
@@ -46,11 +49,24 @@ export default function VehiclesAdminPage() {
   const [isQuickOpen, setIsQuickOpen] = useState(false);
 
   useEffect(() => {
-    const update = () => setStore(getCRMStore());
+    const update = () => {
+      setAllowed(hasPermission('vehicles'));
+      setStore(getCRMStore());
+    };
     update();
     const unsubscribe = subscribeToCRM(update);
     return () => unsubscribe();
   }, []);
+
+  if (!allowed) {
+    return (
+      <AccessRestricted
+        moduleName="Fleet & Rental Management"
+        requiredPermission="vehicles (Car & Bike Rental Access)"
+        description="Managing scooter and car rentals, customer vehicle dispatch, handover contracts, and security deposits requires Vehicle Management clearance."
+      />
+    );
+  }
 
   const filteredBookings = store.vehicleBookings.filter(b => {
     const matchesStatus = filterStatus === 'all' || b.status === filterStatus;

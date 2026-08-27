@@ -19,8 +19,32 @@ import {
   VehicleBookingStatus,
   DiningBookingStatus,
   PaymentStatus,
-  PaymentMethod
+  PaymentMethod,
+  CRMUser,
+  CRMUserRole,
+  StaffPermissions
 } from './types';
+
+import { isSupabaseConfigured } from './supabaseClient';
+import {
+  fetchFullStoreFromSupabase,
+  persistUserToSupabase,
+  deleteUserFromSupabase,
+  persistGuestToSupabase,
+  persistRoomBookingToSupabase,
+  persistVehicleBookingToSupabase,
+  persistDiningBookingToSupabase,
+  persistRoomToSupabase,
+  persistRoomsBatchToSupabase,
+  persistVehicleToSupabase,
+  persistDiningTableToSupabase,
+  persistMaintenanceTicketToSupabase,
+  persistFolioToSupabase,
+  persistActivityLogToSupabase,
+  persistHotelSettingsToSupabase,
+  deleteRecordFromSupabase,
+  setupSupabaseRealtimeChannel
+} from './supabaseService';
 
 export const STORAGE_KEY = 'casa_paradiso_crm_v2';
 export const SYNC_CHANNEL_NAME = 'casa_crm_channel';
@@ -458,6 +482,79 @@ export const initialLogs: ActivityLog[] = [
   }
 ];
 
+export const defaultStaffPermissions: StaffPermissions = {
+  dashboard: true,
+  calendar: true,
+  rooms: true,
+  vehicles: true,
+  dining: true,
+  housekeeping: true,
+  guests: true,
+  billing: false,
+  analytics: false,
+  settings: false
+};
+
+export const defaultAdminPermissions: StaffPermissions = {
+  dashboard: true,
+  calendar: true,
+  rooms: true,
+  vehicles: true,
+  dining: true,
+  housekeeping: true,
+  guests: true,
+  billing: true,
+  analytics: true,
+  settings: true
+};
+
+export const initialUsers: CRMUser[] = [
+  {
+    id: 'USR-ADMIN-1',
+    name: 'General Manager',
+    email: 'gm@casaparadisohotel.in',
+    role: 'admin',
+    pin: '1234',
+    designation: 'Hotel General Manager',
+    avatar: '👑',
+    permissions: defaultAdminPermissions,
+    createdAt: '2026-08-01T09:00:00Z'
+  },
+  {
+    id: 'USR-STAFF-101',
+    name: 'Front Desk Staff',
+    email: 'frontdesk@casaparadisohotel.in',
+    role: 'staff',
+    pin: '0000',
+    designation: 'Front Office Associate',
+    avatar: '🏨',
+    permissions: defaultStaffPermissions,
+    createdAt: '2026-08-01T09:00:00Z'
+  },
+  {
+    id: 'USR-STAFF-102',
+    name: 'Housekeeping Supervisor',
+    email: 'housekeeping@casaparadisohotel.in',
+    role: 'staff',
+    pin: '1111',
+    designation: 'Housekeeping & Maintenance Lead',
+    avatar: '🧹',
+    permissions: {
+      dashboard: false,
+      calendar: false,
+      rooms: true,
+      vehicles: false,
+      dining: false,
+      housekeeping: true,
+      guests: false,
+      billing: false,
+      analytics: false,
+      settings: false
+    },
+    createdAt: '2026-08-01T09:00:00Z'
+  }
+];
+
 export const initialData: CRMStoreData = {
   version: 2,
   settings: defaultSettings,
@@ -470,7 +567,9 @@ export const initialData: CRMStoreData = {
   diningBookings: initialDiningBookings,
   maintenanceTickets: initialMaintenance,
   folios: initialFolios,
-  activityLogs: initialLogs
+  activityLogs: initialLogs,
+  users: initialUsers,
+  activeUserId: 'USR-ADMIN-1'
 };
 
 // Cross-tab broadcast channel
@@ -492,9 +591,36 @@ export function notifySubscribers() {
   }
 }
 
-// 1. Get Store
+let hasInitiatedInitialSupabaseFetch = false;
+
+// Pull from Supabase
+export async function pullLatestFromSupabase(): Promise<boolean> {
+  if (!isSupabaseConfigured()) return false;
+  try {
+    const remoteData = await fetchFullStoreFromSupabase();
+    if (remoteData) {
+      if (typeof window !== 'undefined') {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(remoteData));
+        notifySubscribers();
+      }
+      return true;
+    }
+  } catch (e) {
+    console.error('Error pulling latest data from Supabase:', e);
+  }
+  return false;
+}
+
+// 1. Get Store (Cached in LocalStorage + background refresh from Supabase)
 export function getCRMStore(): CRMStoreData {
   if (typeof window === 'undefined') return initialData;
+
+  // Background fetch from Supabase on first run
+  if (isSupabaseConfigured() && !hasInitiatedInitialSupabaseFetch) {
+    hasInitiatedInitialSupabaseFetch = true;
+    pullLatestFromSupabase().catch(() => {});
+  }
+
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) {
@@ -528,6 +654,15 @@ export function getCRMStore(): CRMStoreData {
     }
     if (!parsed.folios) {
       parsed.folios = initialFolios;
+      needsUpdate = true;
+    }
+    if (!parsed.users || parsed.users.length === 0) {
+      parsed.users = initialUsers;
+      parsed.activeUserId = 'USR-ADMIN-1';
+      needsUpdate = true;
+    }
+    if (!parsed.activeUserId) {
+      parsed.activeUserId = parsed.users[0]?.id || 'USR-ADMIN-1';
       needsUpdate = true;
     }
 
@@ -585,6 +720,7 @@ function getOrCreateGuest(
       existing.tags.push('Repeat Guest');
     }
     updatedGuests = updatedGuests.map(g => (g.id === existing!.id ? existing! : g));
+    persistGuestToSupabase(existing);
     return { guest: existing, updatedGuests };
   } else {
     const newGuest: Guest = {
@@ -600,6 +736,7 @@ function getOrCreateGuest(
       notes: notes || undefined
     };
     updatedGuests.unshift(newGuest);
+    persistGuestToSupabase(newGuest);
     return { guest: newGuest, updatedGuests };
   }
 }
@@ -683,6 +820,7 @@ export function createRoomBooking(payload: {
         ? { ...r, isOccupied: true, currentBookingId: id }
         : r
     );
+    persistRoomsBatchToSupabase(updatedRooms);
   }
 
   saveCRMStore({
@@ -692,6 +830,10 @@ export function createRoomBooking(payload: {
     roomBookings: [newBooking, ...store.roomBookings],
     activityLogs: [newLog, ...store.activityLogs]
   });
+
+  // Supabase Async Persistence
+  persistRoomBookingToSupabase(newBooking);
+  persistActivityLogToSupabase(newLog);
 
   return newBooking;
 }
@@ -738,7 +880,7 @@ export function updateRoomBooking(id: string, updates: Partial<RoomBooking>): Ro
 
   const logs = [...store.activityLogs];
   if (updates.status && updates.status !== current.status) {
-    logs.unshift({
+    const statusLog: ActivityLog = {
       id: `LOG-${Date.now()}`,
       timestamp: new Date().toISOString(),
       type: 'room',
@@ -748,7 +890,9 @@ export function updateRoomBooking(id: string, updates: Partial<RoomBooking>): Ro
       guestName: current.guestName,
       bookingId: id,
       roomNumber: updated.roomNumber
-    });
+    };
+    logs.unshift(statusLog);
+    persistActivityLogToSupabase(statusLog);
   }
 
   saveCRMStore({
@@ -757,6 +901,10 @@ export function updateRoomBooking(id: string, updates: Partial<RoomBooking>): Ro
     roomBookings: updatedBookings,
     activityLogs: logs
   });
+
+  // Supabase Async Persistence
+  persistRoomBookingToSupabase(updated);
+  persistRoomsBatchToSupabase(updatedRooms);
 
   return updated;
 }
@@ -838,6 +986,10 @@ export function createVehicleBooking(payload: {
     activityLogs: [newLog, ...store.activityLogs]
   });
 
+  // Supabase Async Persistence
+  persistVehicleBookingToSupabase(newBooking);
+  persistActivityLogToSupabase(newLog);
+
   return newBooking;
 }
 
@@ -858,19 +1010,31 @@ export function updateVehicleBooking(id: string, updates: Partial<VehicleBooking
 
   // Update vehicle fleet status
   let updatedVehicles = [...store.vehicles];
+  let touchedVehicle: VehicleDefinition | undefined;
+
   if (updates.status === 'handed_over') {
-    updatedVehicles = updatedVehicles.map(v =>
-      v.id === updated.vehicleId ? { ...v, status: 'rented', isAvailable: false } : v
-    );
+    updatedVehicles = updatedVehicles.map(v => {
+      if (v.id === updated.vehicleId) {
+        const vUp: VehicleDefinition = { ...v, status: 'rented', isAvailable: false };
+        touchedVehicle = vUp;
+        return vUp;
+      }
+      return v;
+    });
   } else if (updates.status === 'returned' || updates.status === 'cancelled') {
-    updatedVehicles = updatedVehicles.map(v =>
-      v.id === updated.vehicleId ? { ...v, status: 'available', isAvailable: true } : v
-    );
+    updatedVehicles = updatedVehicles.map(v => {
+      if (v.id === updated.vehicleId) {
+        const vUp: VehicleDefinition = { ...v, status: 'available', isAvailable: true };
+        touchedVehicle = vUp;
+        return vUp;
+      }
+      return v;
+    });
   }
 
   const logs = [...store.activityLogs];
   if (updates.status && updates.status !== current.status) {
-    logs.unshift({
+    const statusLog: ActivityLog = {
       id: `LOG-${Date.now()}`,
       timestamp: new Date().toISOString(),
       type: 'vehicle',
@@ -879,7 +1043,9 @@ export function updateVehicleBooking(id: string, updates: Partial<VehicleBooking
       description: `${current.guestName}'s ${current.vehicleName} status updated to ${updates.status}`,
       guestName: current.guestName,
       bookingId: id
-    });
+    };
+    logs.unshift(statusLog);
+    persistActivityLogToSupabase(statusLog);
   }
 
   saveCRMStore({
@@ -888,6 +1054,12 @@ export function updateVehicleBooking(id: string, updates: Partial<VehicleBooking
     vehicleBookings: updatedBookings,
     activityLogs: logs
   });
+
+  // Supabase Async Persistence
+  persistVehicleBookingToSupabase(updated);
+  if (touchedVehicle) {
+    persistVehicleToSupabase(touchedVehicle);
+  }
 
   return updated;
 }
@@ -952,6 +1124,10 @@ export function createDiningBooking(payload: {
     activityLogs: [newLog, ...store.activityLogs]
   });
 
+  // Supabase Async Persistence
+  persistDiningBookingToSupabase(newBooking);
+  persistActivityLogToSupabase(newLog);
+
   return newBooking;
 }
 
@@ -972,19 +1148,31 @@ export function updateDiningBooking(id: string, updates: Partial<DiningBooking>)
 
   // Table status update
   let updatedTables = [...store.diningTables];
+  let touchedTable: DiningTable | undefined;
+
   if (updates.status === 'seated' && updated.tableNumber) {
-    updatedTables = updatedTables.map(t =>
-      t.id === updated.tableNumber ? { ...t, isOccupied: true, currentBookingId: id } : t
-    );
+    updatedTables = updatedTables.map(t => {
+      if (t.id === updated.tableNumber) {
+        const tUp: DiningTable = { ...t, isOccupied: true, currentBookingId: id };
+        touchedTable = tUp;
+        return tUp;
+      }
+      return t;
+    });
   } else if ((updates.status === 'completed' || updates.status === 'cancelled') && updated.tableNumber) {
-    updatedTables = updatedTables.map(t =>
-      t.id === updated.tableNumber ? { ...t, isOccupied: false, currentBookingId: undefined } : t
-    );
+    updatedTables = updatedTables.map(t => {
+      if (t.id === updated.tableNumber) {
+        const tUp: DiningTable = { ...t, isOccupied: false, currentBookingId: undefined };
+        touchedTable = tUp;
+        return tUp;
+      }
+      return t;
+    });
   }
 
   const logs = [...store.activityLogs];
   if (updates.status && updates.status !== current.status) {
-    logs.unshift({
+    const statusLog: ActivityLog = {
       id: `LOG-${Date.now()}`,
       timestamp: new Date().toISOString(),
       type: 'dining',
@@ -993,7 +1181,9 @@ export function updateDiningBooking(id: string, updates: Partial<DiningBooking>)
       description: `${current.guestName}'s reservation updated to ${updates.status}`,
       guestName: current.guestName,
       bookingId: id
-    });
+    };
+    logs.unshift(statusLog);
+    persistActivityLogToSupabase(statusLog);
   }
 
   saveCRMStore({
@@ -1002,6 +1192,12 @@ export function updateDiningBooking(id: string, updates: Partial<DiningBooking>)
     diningBookings: updatedBookings,
     activityLogs: logs
   });
+
+  // Supabase Async Persistence
+  persistDiningBookingToSupabase(updated);
+  if (touchedTable) {
+    persistDiningTableToSupabase(touchedTable);
+  }
 
   return updated;
 }
@@ -1012,12 +1208,14 @@ export function updateRoomCleanliness(roomNumber: string, cleanliness: Cleanline
   const index = store.rooms.findIndex(r => r.roomNumber === roomNumber);
   if (index === -1) return false;
 
-  const updatedRooms = [...store.rooms];
-  updatedRooms[index] = {
-    ...updatedRooms[index],
+  const updatedRoom: RoomDefinition = {
+    ...store.rooms[index],
     cleanliness,
-    notes: notes !== undefined ? notes : updatedRooms[index].notes
+    notes: notes !== undefined ? notes : store.rooms[index].notes
   };
+
+  const updatedRooms = [...store.rooms];
+  updatedRooms[index] = updatedRoom;
 
   const log: ActivityLog = {
     id: `LOG-${Date.now()}`,
@@ -1034,6 +1232,10 @@ export function updateRoomCleanliness(roomNumber: string, cleanliness: Cleanline
     rooms: updatedRooms,
     activityLogs: [log, ...store.activityLogs]
   });
+
+  // Supabase Async Persistence
+  persistRoomToSupabase(updatedRoom);
+  persistActivityLogToSupabase(log);
 
   return true;
 }
@@ -1056,6 +1258,7 @@ export function createMaintenanceTicket(payload: Omit<MaintenanceTicket, 'id' | 
     updatedRooms = updatedRooms.map(r =>
       r.roomNumber === payload.roomNumber ? { ...r, cleanliness: 'out_of_order', notes: payload.issueTitle } : r
     );
+    persistRoomsBatchToSupabase(updatedRooms);
   }
 
   const log: ActivityLog = {
@@ -1074,6 +1277,10 @@ export function createMaintenanceTicket(payload: Omit<MaintenanceTicket, 'id' | 
     maintenanceTickets: [newTicket, ...store.maintenanceTickets],
     activityLogs: [log, ...store.activityLogs]
   });
+
+  // Supabase Async Persistence
+  persistMaintenanceTicketToSupabase(newTicket);
+  persistActivityLogToSupabase(log);
 
   return newTicket;
 }
@@ -1101,6 +1308,7 @@ export function updateMaintenanceTicket(id: string, updates: Partial<Maintenance
         ? { ...r, cleanliness: 'dirty', notes: 'Maintenance resolved. Needs cleaning.' }
         : r
     );
+    persistRoomsBatchToSupabase(updatedRooms);
   }
 
   saveCRMStore({
@@ -1108,6 +1316,9 @@ export function updateMaintenanceTicket(id: string, updates: Partial<Maintenance
     rooms: updatedRooms,
     maintenanceTickets: updatedTickets
   });
+
+  // Supabase Async Persistence
+  persistMaintenanceTicketToSupabase(updated);
 
   return updated;
 }
@@ -1129,8 +1340,13 @@ export function updateGuestProfile(guestId: string, updates: Partial<Guest>): Gu
     guests: updatedGuests
   });
 
+  // Supabase Async Persistence
+  persistGuestToSupabase(updated);
+
   return updated;
 }
+
+export const updateGuest = updateGuestProfile;
 
 // 10. Guest Folios & Invoicing
 export function getOrCreateFolioForGuest(guestId: string): GuestFolio {
@@ -1230,6 +1446,9 @@ export function getOrCreateFolioForGuest(guestId: string): GuestFolio {
     folios: [newFolio, ...store.folios]
   });
 
+  // Supabase Async Persistence
+  persistFolioToSupabase(newFolio);
+
   return newFolio;
 }
 
@@ -1269,6 +1488,10 @@ export function recordFolioPayment(folioId: string, amount: number, paymentMetho
     activityLogs: [log, ...store.activityLogs]
   });
 
+  // Supabase Async Persistence
+  persistFolioToSupabase(updated);
+  persistActivityLogToSupabase(log);
+
   return updated;
 }
 
@@ -1279,10 +1502,13 @@ export function deleteBooking(type: 'room' | 'vehicle' | 'dining', id: string): 
 
   if (type === 'room') {
     updatedStore.roomBookings = store.roomBookings.filter(b => b.id !== id);
+    deleteRecordFromSupabase('room_bookings', id);
   } else if (type === 'vehicle') {
     updatedStore.vehicleBookings = store.vehicleBookings.filter(b => b.id !== id);
+    deleteRecordFromSupabase('vehicle_bookings', id);
   } else if (type === 'dining') {
     updatedStore.diningBookings = store.diningBookings.filter(b => b.id !== id);
+    deleteRecordFromSupabase('dining_bookings', id);
   }
 
   saveCRMStore(updatedStore);
@@ -1301,6 +1527,9 @@ export function updateHotelSettings(newSettings: Partial<HotelSettings>): HotelS
     ...store,
     settings: updatedSettings
   });
+
+  // Supabase Async Persistence
+  persistHotelSettingsToSupabase(updatedSettings);
 
   return updatedSettings;
 }
@@ -1325,6 +1554,8 @@ export function importCRMDataFromJSON(jsonString: string): boolean {
 
 export function resetCRMData(): void {
   saveCRMStore(initialData);
+  persistHotelSettingsToSupabase(defaultSettings);
+  persistRoomsBatchToSupabase(initialRooms);
 }
 
 // 14. Real-time Subscription Hook Helper
@@ -1345,11 +1576,135 @@ export function subscribeToCRM(callback: () => void): () => void {
     broadcastChannel.addEventListener('message', handleBroadcast);
   }
 
+  // Setup Supabase Realtime channel if configured
+  const unsubscribeSupabase = setupSupabaseRealtimeChannel(() => {
+    pullLatestFromSupabase().then(() => callback()).catch(() => callback());
+  });
+
   return () => {
     window.removeEventListener('casa_crm_updated', handleCustomEvent);
     window.removeEventListener('storage', handleStorageEvent);
     if (broadcastChannel && handleBroadcast) {
       broadcastChannel.removeEventListener('message', handleBroadcast);
     }
+    unsubscribeSupabase();
   };
 }
+
+// ==========================================
+// 15. RBAC & STAFF PERMISSIONS MANAGEMENT
+// ==========================================
+
+export function getCurrentUser(): CRMUser {
+  const store = getCRMStore();
+  const user = store.users?.find(u => u.id === store.activeUserId);
+  return user || store.users?.[0] || initialUsers[0];
+}
+
+export function getAllUsers(): CRMUser[] {
+  const store = getCRMStore();
+  return store.users || initialUsers;
+}
+
+export function setCurrentUser(userId: string): boolean {
+  const store = getCRMStore();
+  const user = store.users?.find(u => u.id === userId);
+  if (!user) return false;
+  store.activeUserId = userId;
+  saveCRMStore(store);
+  return true;
+}
+
+export function verifyUserPin(userId: string, pin: string): boolean {
+  const store = getCRMStore();
+  const user = store.users?.find(u => u.id === userId);
+  if (!user) return false;
+  return user.pin === pin.trim();
+}
+
+export function hasPermission(key: keyof StaffPermissions): boolean {
+  const user = getCurrentUser();
+  if (user.role === 'admin') return true;
+  return Boolean(user.permissions && user.permissions[key]);
+}
+
+export function createStaffUser(payload: {
+  name: string;
+  email: string;
+  role?: CRMUserRole;
+  pin?: string;
+  designation?: string;
+  avatar?: string;
+  permissions?: Partial<StaffPermissions>;
+}): CRMUser {
+  const store = getCRMStore();
+  const role: CRMUserRole = payload.role || 'staff';
+  const newUser: CRMUser = {
+    id: `USR-${role === 'admin' ? 'ADMIN' : 'STAFF'}-${Math.floor(100 + Math.random() * 900)}`,
+    name: payload.name.trim(),
+    email: payload.email.trim(),
+    role,
+    pin: payload.pin?.trim() || (role === 'admin' ? '1234' : '0000'),
+    designation: payload.designation?.trim() || (role === 'admin' ? 'Hotel Administrator' : 'Front Office Associate'),
+    avatar: payload.avatar || (role === 'admin' ? '👑' : '👤'),
+    permissions: role === 'admin' 
+      ? { ...defaultAdminPermissions } 
+      : { ...defaultStaffPermissions, ...(payload.permissions || {}) },
+    createdAt: new Date().toISOString()
+  };
+
+  store.users = store.users || [];
+  store.users.push(newUser);
+  saveCRMStore(store);
+  persistUserToSupabase(newUser);
+  return newUser;
+}
+
+export function updateStaffUser(userId: string, updates: Partial<CRMUser>): CRMUser | null {
+  const store = getCRMStore();
+  if (!store.users) return null;
+  const index = store.users.findIndex(u => u.id === userId);
+  if (index === -1) return null;
+
+  const current = store.users[index];
+  const updated: CRMUser = {
+    ...current,
+    ...updates,
+    permissions: updates.role === 'admin' || current.role === 'admin' && updates.role !== 'staff'
+      ? { ...defaultAdminPermissions }
+      : {
+          ...current.permissions,
+          ...(updates.permissions || {})
+        }
+  };
+
+  store.users[index] = updated;
+  saveCRMStore(store);
+  persistUserToSupabase(updated);
+  return updated;
+}
+
+export function deleteStaffUser(userId: string): boolean {
+  const store = getCRMStore();
+  if (!store.users) return false;
+
+  const user = store.users.find(u => u.id === userId);
+  if (!user) return false;
+
+  // Protect against deleting the last admin
+  const adminCount = store.users.filter(u => u.role === 'admin').length;
+  if (user.role === 'admin' && adminCount <= 1) {
+    return false;
+  }
+
+  store.users = store.users.filter(u => u.id !== userId);
+  if (store.activeUserId === userId) {
+    const fallback = store.users.find(u => u.role === 'admin') || store.users[0];
+    store.activeUserId = fallback ? fallback.id : 'USR-ADMIN-1';
+  }
+
+  saveCRMStore(store);
+  deleteUserFromSupabase(userId);
+  return true;
+}
+

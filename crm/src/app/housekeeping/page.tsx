@@ -18,15 +18,18 @@ import {
   subscribeToCRM,
   updateRoomCleanliness,
   createMaintenanceTicket,
-  updateMaintenanceTicket
+  updateMaintenanceTicket,
+  hasPermission
 } from '@/lib/crmStore';
 import { CleanlinessStatus, MaintenanceTicket, MaintenancePriority, CRMStoreData } from '@/lib/types';
 import QuickBookingModal from '@/components/QuickBookingModal';
+import AccessRestricted from '@/components/AccessRestricted';
 
 export default function HousekeepingAdminPage() {
   const [store, setStore] = useState<CRMStoreData>(getCRMStore());
   const [activeTab, setActiveTab] = useState<'rooms' | 'maintenance'>('rooms');
   const [isQuickMaintOpen, setIsQuickMaintOpen] = useState(false);
+  const [allowed, setAllowed] = useState<boolean>(true);
 
   // Maintenance Edit
   const [selectedTicket, setSelectedTicket] = useState<MaintenanceTicket | null>(null);
@@ -34,11 +37,24 @@ export default function HousekeepingAdminPage() {
   const [ticketAssignee, setTicketAssignee] = useState('');
 
   useEffect(() => {
-    const update = () => setStore(getCRMStore());
+    const update = () => {
+      setAllowed(hasPermission('housekeeping'));
+      setStore(getCRMStore());
+    };
     update();
     const unsubscribe = subscribeToCRM(update);
     return () => unsubscribe();
   }, []);
+
+  if (!allowed) {
+    return (
+      <AccessRestricted
+        moduleName="Housekeeping & Maintenance"
+        requiredPermission="housekeeping (Cleaning & Work Orders Access)"
+        description="Updating room cleaning statuses, linen requests, and logging maintenance repair tickets requires Housekeeping permissions."
+      />
+    );
+  }
 
   const cleanRooms = store.rooms.filter(r => r.cleanliness === 'clean' || r.cleanliness === 'inspected').length;
   const dirtyRooms = store.rooms.filter(r => r.cleanliness === 'dirty').length;

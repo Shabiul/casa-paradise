@@ -13,22 +13,37 @@ import {
   CheckCircle2,
   X
 } from 'lucide-react';
-import { getCRMStore, subscribeToCRM, updateRoomBooking } from '@/lib/crmStore';
+import { getCRMStore, subscribeToCRM, updateRoomBooking, hasPermission } from '@/lib/crmStore';
 import { RoomBooking, RoomDefinition, CRMStoreData } from '@/lib/types';
 import QuickBookingModal from '@/components/QuickBookingModal';
+import AccessRestricted from '@/components/AccessRestricted';
 
 export default function TapeChartCalendarPage() {
   const [store, setStore] = useState<CRMStoreData>(getCRMStore());
   const [startDate, setStartDate] = useState<Date>(new Date());
   const [selectedBooking, setSelectedBooking] = useState<RoomBooking | null>(null);
   const [isQuickOpen, setIsQuickOpen] = useState(false);
+  const [allowed, setAllowed] = useState<boolean>(true);
 
   useEffect(() => {
-    const update = () => setStore(getCRMStore());
+    const update = () => {
+      setAllowed(hasPermission('calendar'));
+      setStore(getCRMStore());
+    };
     update();
     const unsubscribe = subscribeToCRM(update);
     return () => unsubscribe();
   }, []);
+
+  if (!allowed) {
+    return (
+      <AccessRestricted
+        moduleName="Tape Chart Grid & Visual Booking Calendar"
+        requiredPermission="calendar (Tape Chart & Booking Schedule Access)"
+        description="Viewing the 14-day multi-room visual tape chart and drag-and-drop booking timeline requires Calendar access."
+      />
+    );
+  }
 
   // Generate 14-day array starting from startDate
   const daysToShow = 14;

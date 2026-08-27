@@ -20,18 +20,40 @@ import {
   ArrowRight,
   Receipt
 } from 'lucide-react';
-import { getCRMStore, subscribeToCRM, updateRoomBooking, updateVehicleBooking, updateDiningBooking } from '@/lib/crmStore';
+import {
+  getCRMStore,
+  subscribeToCRM,
+  updateRoomBooking,
+  updateVehicleBooking,
+  updateDiningBooking,
+  hasPermission
+} from '@/lib/crmStore';
 import { CRMStoreData } from '@/lib/types';
+import AccessRestricted from '@/components/AccessRestricted';
 
 export default function ExecutiveDashboard() {
   const [store, setStore] = useState<CRMStoreData>(getCRMStore());
+  const [allowed, setAllowed] = useState<boolean>(true);
 
   useEffect(() => {
-    const update = () => setStore(getCRMStore());
+    const update = () => {
+      setAllowed(hasPermission('dashboard'));
+      setStore(getCRMStore());
+    };
     update();
     const unsubscribe = subscribeToCRM(update);
     return () => unsubscribe();
   }, []);
+
+  if (!allowed) {
+    return (
+      <AccessRestricted
+        moduleName="Executive KPI Dashboard"
+        requiredPermission="dashboard (Executive Overview Access)"
+        description="Viewing revenue KPIs, operational summaries, and real-time hotel performance dashboards requires Executive Dashboard access."
+      />
+    );
+  }
 
   // Calculate Metrics
   const roomRevenue = store.roomBookings

@@ -20,15 +20,18 @@ import {
   subscribeToCRM,
   updateDiningBooking,
   createDiningBooking,
-  deleteBooking
+  deleteBooking,
+  hasPermission
 } from '@/lib/crmStore';
 import { DiningBooking, DiningBookingStatus, CRMStoreData } from '@/lib/types';
 import QuickBookingModal from '@/components/QuickBookingModal';
+import AccessRestricted from '@/components/AccessRestricted';
 
 export default function DiningAdminPage() {
   const [store, setStore] = useState<CRMStoreData>(getCRMStore());
   const [filterSlot, setFilterSlot] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const [allowed, setAllowed] = useState<boolean>(true);
 
   // Edit / Seat Modal
   const [selectedBooking, setSelectedBooking] = useState<DiningBooking | null>(null);
@@ -41,11 +44,24 @@ export default function DiningAdminPage() {
   const [isQuickOpen, setIsQuickOpen] = useState(false);
 
   useEffect(() => {
-    const update = () => setStore(getCRMStore());
+    const update = () => {
+      setAllowed(hasPermission('dining'));
+      setStore(getCRMStore());
+    };
     update();
     const unsubscribe = subscribeToCRM(update);
     return () => unsubscribe();
   }, []);
+
+  if (!allowed) {
+    return (
+      <AccessRestricted
+        moduleName="Dining & Restaurant Management"
+        requiredPermission="dining (Table Reservations & F&B Access)"
+        description="Managing restaurant table reservations, guest seating plans, and meal slots requires Dining Management permissions."
+      />
+    );
+  }
 
   const filteredBookings = store.diningBookings.filter(b => {
     const matchesSlot = filterSlot === 'all' || b.timeSlot.toLowerCase().includes(filterSlot.toLowerCase());

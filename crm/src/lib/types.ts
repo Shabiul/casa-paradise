@@ -228,6 +228,37 @@ export interface HotelSettings {
   whatsappMessageTemplate?: string;
 }
 
+// ==========================================
+// ROLE-BASED ACCESS CONTROL (RBAC) TYPES
+// ==========================================
+
+export type CRMUserRole = 'admin' | 'staff';
+
+export interface StaffPermissions {
+  dashboard: boolean;
+  calendar: boolean;
+  rooms: boolean;
+  vehicles: boolean;
+  dining: boolean;
+  housekeeping: boolean;
+  guests: boolean;
+  billing: boolean;
+  analytics: boolean;
+  settings: boolean;
+}
+
+export interface CRMUser {
+  id: string; // e.g. 'USR-ADMIN-1', 'USR-STAFF-101'
+  name: string;
+  email: string;
+  role: CRMUserRole;
+  pin: string; // 4-digit PIN for shift switching
+  permissions: StaffPermissions;
+  avatar?: string;
+  designation?: string;
+  createdAt: string;
+}
+
 export interface CRMStoreData {
   guests: Guest[];
   roomBookings: RoomBooking[];
@@ -240,5 +271,7 @@ export interface CRMStoreData {
   folios: GuestFolio[];
   activityLogs: ActivityLog[];
   settings: HotelSettings;
+  users: CRMUser[];
+  activeUserId: string;
   version: number;
 }

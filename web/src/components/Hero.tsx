@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
+import { getCRMStore, subscribeToCRM } from '@/lib/crmStore';
 
 interface CycleImage {
   src: string;
@@ -19,23 +20,26 @@ const CYCLE_IMAGES: CycleImage[] = [
 
 export default function Hero() {
   const [heroImg, setHeroImg] = useState('/assets/hero.png');
+  const [tagline, setTagline] = useState('Boutique Luxury Hotel · Panaji, Goa');
   const [phase, setPhase] = useState<'intro' | 'open' | 'cycling' | 'expanding' | 'settled'>('intro');
   const [currentCycleIndex, setCurrentCycleIndex] = useState(0);
   const [reducedMotion, setReducedMotion] = useState(false);
   const timeoutsRef = useRef<NodeJS.Timeout[]>([]);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Check localStorage for hero override & check prefers-reduced-motion
+  // Sync with CRM Store and check prefers-reduced-motion
   useEffect(() => {
-    try {
-      const saved = localStorage.getItem('casa_custom_images');
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (parsed.hero) setHeroImg(parsed.hero);
+    const updateFromCRM = () => {
+      const store = getCRMStore();
+      if (store.settings?.heroImageOverride) {
+        setHeroImg(store.settings.heroImageOverride);
       }
-    } catch (e) {
-      console.warn('Failed to load hero image override', e);
-    }
+      if (store.settings?.tagline) {
+        setTagline(store.settings.tagline);
+      }
+    };
+    updateFromCRM();
+    const unsubscribe = subscribeToCRM(updateFromCRM);
 
     if (typeof window !== 'undefined') {
       const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -43,9 +47,10 @@ export default function Hero() {
         setReducedMotion(true);
         setPhase('settled');
         document.documentElement.setAttribute('data-hero-state', 'settled');
-        return;
       }
     }
+
+    return () => unsubscribe();
   }, []);
 
   // Preload cycle images for buttery smooth playback
@@ -168,7 +173,7 @@ export default function Hero() {
 
       {/* Final Settled Hero Content (Preserves all branding, CTAs, and copy) */}
       <div className={`hero-cinematic__content ${phase === 'settled' ? 'is-visible' : ''}`}>
-        <span className="hero__label">Boutique Luxury Hotel · Panaji, Goa</span>
+        <span className="hero__label">{tagline}</span>
         <h2 className="hero__title">Sanctuary of Timeless Goan Elegance</h2>
         <p className="hero__subtitle">
           An intimate 18-room boutique haven on Altinho hill, steps from the Mandovi River, vibrant casinos, and historic Latin Quarter.

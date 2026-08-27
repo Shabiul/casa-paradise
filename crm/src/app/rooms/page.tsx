@@ -24,16 +24,19 @@ import {
   updateRoomBooking,
   createRoomBooking,
   deleteBooking,
-  getOrCreateFolioForGuest
+  getOrCreateFolioForGuest,
+  hasPermission
 } from '@/lib/crmStore';
 import { RoomBooking, BookingStatus, PaymentStatus, CRMStoreData } from '@/lib/types';
 import QuickBookingModal from '@/components/QuickBookingModal';
 import InvoiceModal from '@/components/InvoiceModal';
+import AccessRestricted from '@/components/AccessRestricted';
 
 export default function RoomsAdminPage() {
   const [store, setStore] = useState<CRMStoreData>(getCRMStore());
   const [filterStatus, setFilterStatus] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const [allowed, setAllowed] = useState<boolean>(true);
 
   // Selected Booking for Edit Modal
   const [selectedBooking, setSelectedBooking] = useState<RoomBooking | null>(null);
@@ -48,11 +51,24 @@ export default function RoomsAdminPage() {
   const [viewFolioGuestId, setViewFolioGuestId] = useState<string | null>(null);
 
   useEffect(() => {
-    const update = () => setStore(getCRMStore());
+    const update = () => {
+      setAllowed(hasPermission('rooms'));
+      setStore(getCRMStore());
+    };
     update();
     const unsubscribe = subscribeToCRM(update);
     return () => unsubscribe();
   }, []);
+
+  if (!allowed) {
+    return (
+      <AccessRestricted
+        moduleName="Rooms & Front Desk Operations"
+        requiredPermission="rooms (Front Desk, Check-In/Out Access)"
+        description="Managing guest room bookings, assignations, and front desk check-in / check-out requires Room Management permissions."
+      />
+    );
+  }
 
   const filteredBookings = store.roomBookings.filter(b => {
     const matchesStatus = filterStatus === 'all' || b.status === filterStatus;

@@ -16,21 +16,25 @@ import {
   getCRMStore,
   subscribeToCRM,
   getOrCreateFolioForGuest,
-  recordFolioPayment
+  recordFolioPayment,
+  hasPermission
 } from '@/lib/crmStore';
 import { GuestFolio, CRMStoreData } from '@/lib/types';
 import InvoiceModal from '@/components/InvoiceModal';
+import AccessRestricted from '@/components/AccessRestricted';
 
 export default function BillingAdminPage() {
   const [store, setStore] = useState<CRMStoreData>(getCRMStore());
   const [filterStatus, setFilterStatus] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const [allowed, setAllowed] = useState<boolean>(true);
 
   // Selected Folio Modal
   const [selectedFolio, setSelectedFolio] = useState<GuestFolio | null>(null);
 
   useEffect(() => {
     const update = () => {
+      setAllowed(hasPermission('billing'));
       const s = getCRMStore();
       // Ensure folios exist for all guests who have bookings
       s.guests.forEach(g => {
@@ -43,6 +47,16 @@ export default function BillingAdminPage() {
     const unsubscribe = subscribeToCRM(update);
     return () => unsubscribe();
   }, []);
+
+  if (!allowed) {
+    return (
+      <AccessRestricted
+        moduleName="Billing & Guest Folios"
+        requiredPermission="billing (Financial & Invoicing Access)"
+        description="Viewing financial folios, guest invoices, tax ledgers, and payment collection requires Finance/Admin clearance."
+      />
+    );
+  }
 
   const totalInvoiced = store.folios.reduce((sum, f) => sum + f.grandTotal, 0);
   const totalCollected = store.folios.reduce((sum, f) => sum + f.amountPaid, 0);

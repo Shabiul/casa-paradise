@@ -25,15 +25,18 @@ import {
   getCRMStore,
   subscribeToCRM,
   updateGuestProfile,
-  getOrCreateFolioForGuest
+  getOrCreateFolioForGuest,
+  hasPermission
 } from '@/lib/crmStore';
 import { Guest, GuestTag, CRMStoreData } from '@/lib/types';
 import InvoiceModal from '@/components/InvoiceModal';
+import AccessRestricted from '@/components/AccessRestricted';
 
 export default function GuestsAdminPage() {
   const [store, setStore] = useState<CRMStoreData>(getCRMStore());
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [filterTag, setFilterTag] = useState<string>('all');
+  const [allowed, setAllowed] = useState<boolean>(true);
 
   // Selected Guest Dossier Modal
   const [selectedGuest, setSelectedGuest] = useState<Guest | null>(null);
@@ -50,11 +53,24 @@ export default function GuestsAdminPage() {
   const [viewFolioGuestId, setViewFolioGuestId] = useState<string | null>(null);
 
   useEffect(() => {
-    const update = () => setStore(getCRMStore());
+    const update = () => {
+      setAllowed(hasPermission('guests'));
+      setStore(getCRMStore());
+    };
     update();
     const unsubscribe = subscribeToCRM(update);
     return () => unsubscribe();
   }, []);
+
+  if (!allowed) {
+    return (
+      <AccessRestricted
+        moduleName="Guest 360 CRM & Master Directory"
+        requiredPermission="guests (Guest Profiles & CRM Directory Access)"
+        description="Accessing the full guest directory, VIP tags, stay history, personal preferences, and ID verification records requires Guest CRM clearance."
+      />
+    );
+  }
 
   const filteredGuests = store.guests.filter(g => {
     const q = searchQuery.toLowerCase();

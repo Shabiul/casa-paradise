@@ -13,18 +13,33 @@ import {
   Calendar,
   FileSpreadsheet
 } from 'lucide-react';
-import { getCRMStore, subscribeToCRM, exportCRMDataAsJSON } from '@/lib/crmStore';
+import { getCRMStore, subscribeToCRM, exportCRMDataAsJSON, hasPermission } from '@/lib/crmStore';
 import { CRMStoreData } from '@/lib/types';
+import AccessRestricted from '@/components/AccessRestricted';
 
 export default function AnalyticsAdminPage() {
   const [store, setStore] = useState<CRMStoreData>(getCRMStore());
+  const [allowed, setAllowed] = useState<boolean>(true);
 
   useEffect(() => {
-    const update = () => setStore(getCRMStore());
+    const update = () => {
+      setAllowed(hasPermission('analytics'));
+      setStore(getCRMStore());
+    };
     update();
     const unsubscribe = subscribeToCRM(update);
     return () => unsubscribe();
   }, []);
+
+  if (!allowed) {
+    return (
+      <AccessRestricted
+        moduleName="Financial & Revenue Analytics"
+        requiredPermission="analytics (Financial Reporting & RevPAR Access)"
+        description="Hotel revenue metrics, ADR, RevPAR, department profitability breakdowns, and CSV export are confidential executive analytics."
+      />
+    );
+  }
 
   const roomRevenue = store.roomBookings
     .filter(b => b.status !== 'cancelled')
