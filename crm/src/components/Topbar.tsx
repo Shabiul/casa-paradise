@@ -10,18 +10,22 @@ import {
   UtensilsCrossed,
   Wrench,
   KeyRound,
-  ShieldCheck
+  LogOut
 } from 'lucide-react';
 import { getCRMStore, getCurrentUser, hasPermission, subscribeToCRM } from '@/lib/crmStore';
 import { isSupabaseConfigured } from '@/lib/supabaseClient';
 import { CRMUser } from '@/lib/types';
 import UserSwitcherModal from './UserSwitcherModal';
+import { useAuth } from '@/lib/AuthContext';
+import { useRouter } from 'next/navigation';
 
 interface TopbarProps {
   onOpenQuickModal: (type: 'room' | 'vehicle' | 'dining' | 'maintenance') => void;
 }
 
 export default function Topbar({ onOpenQuickModal }: TopbarProps) {
+  const { user: authUser, logout } = useAuth();
+  const router = useRouter();
   const [timeStr, setTimeStr] = useState('');
   const [totalPending, setTotalPending] = useState(0);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -29,11 +33,17 @@ export default function Topbar({ onOpenQuickModal }: TopbarProps) {
   const [currentUser, setCurrentUserState] = useState<CRMUser | null>(null);
   const [isSwitcherOpen, setIsSwitcherOpen] = useState(false);
 
+  const handleSignOut = async () => {
+    await logout();
+    router.replace('/login');
+  };
+
   useEffect(() => {
     setHasSupabase(isSupabaseConfigured());
     const updateStats = () => {
       const store = getCRMStore();
-      const user = getCurrentUser();
+      // Prefer the Supabase auth user, fall back to crmStore
+      const user = authUser || getCurrentUser();
       setCurrentUserState(user);
       const pending =
         store.roomBookings.filter(b => b.status === 'pending').length +
@@ -317,6 +327,26 @@ export default function Topbar({ onOpenQuickModal }: TopbarProps) {
               </div>
             </div>
             <KeyRound size={13} color="var(--text-muted)" style={{ marginLeft: '4px' }} />
+          </button>
+
+          {/* Sign Out */}
+          <button
+            onClick={handleSignOut}
+            title="Sign out"
+            style={{
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              width: '34px', height: '34px',
+              background: 'rgba(239,68,68,0.08)',
+              border: '1px solid rgba(239,68,68,0.2)',
+              borderRadius: 'var(--radius-md)',
+              cursor: 'pointer',
+              color: '#EF4444',
+              transition: 'background 0.2s'
+            }}
+            onMouseEnter={e => e.currentTarget.style.background = 'rgba(239,68,68,0.16)'}
+            onMouseLeave={e => e.currentTarget.style.background = 'rgba(239,68,68,0.08)'}
+          >
+            <LogOut size={15} />
           </button>
         </div>
       </header>

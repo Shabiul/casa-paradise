@@ -1,9 +1,11 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 import { getCRMStore, subscribeToCRM } from '@/lib/crmStore';
 
 export default function WhatsAppButton() {
+  const pathname = usePathname();
   const [whatsapp, setWhatsapp] = useState('919881247847');
   const [hotelName, setHotelName] = useState('Casa Paradiso');
 
@@ -21,6 +23,10 @@ export default function WhatsAppButton() {
     const unsubscribe = subscribeToCRM(updateSettings);
     return () => unsubscribe();
   }, []);
+
+  if (pathname?.startsWith('/admin')) {
+    return null;
+  }
 
   const cleanNum = whatsapp.replace(/\D/g, '');
   const encodedText = encodeURIComponent(`Hello, I have an enquiry regarding staying at ${hotelName}, Goa.`);

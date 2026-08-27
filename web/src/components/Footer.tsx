@@ -31,6 +31,10 @@ export default function Footer() {
 
   const getHref = (hash: string) => (pathname === '/' ? hash : `/${hash}`);
 
+  if (pathname?.startsWith('/admin')) {
+    return null;
+  }
+
   return (
     <footer className="footer">
       <div className="container">
