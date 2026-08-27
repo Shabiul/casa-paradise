@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { Utensils, Users, Calendar, Clock, Sparkles, Check } from 'lucide-react';
 import { createDiningBooking } from '@/lib/crmStore';
 import BookingConfirmationModal, { BookingConfirmationProps } from './BookingConfirmationModal';
+import { persistDiningBookingToSupabase } from '@/lib/persistEnquiry';
 
 export default function DiningReservation() {
   const [guestName, setGuestName] = useState('');
@@ -40,6 +41,21 @@ export default function DiningReservation() {
       partySize,
       dietaryPreferences: dietary,
       specialRequests
+    });
+
+    // Persist to Supabase CRM in the background
+    persistDiningBookingToSupabase({
+      id: newBooking.id,
+      guestName,
+      guestPhone,
+      guestEmail: newBooking.guestEmail,
+      date,
+      timeSlot,
+      partySize,
+      dietaryPreferences: dietary,
+      specialRequests,
+      status: newBooking.status || 'pending',
+      createdAt: newBooking.createdAt || new Date().toISOString(),
     });
 
     setConfirmationData({

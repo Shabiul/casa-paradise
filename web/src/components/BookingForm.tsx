@@ -5,6 +5,7 @@ import { Sparkles, Calendar, User, Phone, Mail, MessageSquare, ShieldCheck, MapP
 import { getCRMStore, subscribeToCRM, createRoomBooking } from '@/lib/crmStore';
 import { RoomPriceConfig } from '@/lib/types';
 import BookingConfirmationModal, { BookingConfirmationProps } from './BookingConfirmationModal';
+import { persistRoomBookingToSupabase } from '@/lib/persistEnquiry';
 
 const defaultPrices: RoomPriceConfig = {
   ac: { single: 1200, double: 1800, triple: 2000 },
@@ -68,7 +69,7 @@ export default function BookingForm() {
     const roomLabel = roomType === 'ac' ? 'Paradise AC Suite' : 'Heritage Non-AC Room';
     const guestEmail = email.trim() || `${name.toLowerCase().replace(/\s+/g, '')}@guest.casaparadiso.in`;
 
-    // Save to CRM database
+    // Save to CRM local store
     const newBooking = createRoomBooking({
       guestName: name,
       guestPhone: phone,
@@ -81,6 +82,24 @@ export default function BookingForm() {
       baseRate,
       totalPrice,
       specialRequests
+    });
+
+    // Persist to Supabase CRM in the background
+    persistRoomBookingToSupabase({
+      id: newBooking.id,
+      guestName: name,
+      guestPhone: phone,
+      guestEmail,
+      roomType,
+      occupancy,
+      checkIn,
+      checkOut,
+      nights,
+      baseRate,
+      totalPrice,
+      specialRequests,
+      status: newBooking.status || 'pending',
+      createdAt: newBooking.createdAt || new Date().toISOString(),
     });
 
     setConfirmationData({

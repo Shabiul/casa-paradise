@@ -17,7 +17,8 @@ import {
   ExternalLink,
   ShieldCheck,
   UserCheck,
-  KeyRound
+  KeyRound,
+  X
 } from 'lucide-react';
 import { getCRMStore, getCurrentUser, hasPermission, subscribeToCRM } from '@/lib/crmStore';
 import { StaffPermissions, CRMUser } from '@/lib/types';
@@ -36,10 +37,14 @@ export default function Sidebar() {
   const pathname = usePathname();
   const [currentUser, setCurrentUser] = useState<CRMUser | null>(null);
   const [isSwitcherOpen, setIsSwitcherOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const [pendingRooms, setPendingRooms] = useState(0);
   const [pendingVehicles, setPendingVehicles] = useState(0);
   const [pendingDining, setPendingDining] = useState(0);
   const [dirtyRooms, setDirtyRooms] = useState(0);
+
+  // Close sidebar on route change (mobile)
+  useEffect(() => { setIsOpen(false); }, [pathname]);
 
   useEffect(() => {
     const update = () => {
@@ -79,11 +84,24 @@ export default function Sidebar() {
 
   const isAdmin = currentUser?.role === 'admin';
 
+  // Expose open/close for Topbar hamburger via custom event
+  useEffect(() => {
+    const handler = () => setIsOpen(v => !v);
+    window.addEventListener('crm-sidebar-toggle', handler);
+    return () => window.removeEventListener('crm-sidebar-toggle', handler);
+  }, []);
+
   return (
     <>
-      <aside className="crm-sidebar">
+      {/* Mobile backdrop */}
+      <div
+        className={`crm-sidebar-backdrop${isOpen ? ' is-open' : ''}`}
+        onClick={() => setIsOpen(false)}
+        aria-hidden="true"
+      />
+      <aside className={`crm-sidebar${isOpen ? ' is-open' : ''}`}>
         {/* Brand Header */}
-        <div className="crm-sidebar-brand">
+        <div className="crm-sidebar-brand" style={{ justifyContent: 'space-between' }}>
           <div className="crm-brand-badge">CP</div>
           <div>
             <h2 style={{ margin: 0, fontSize: '15px', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '0.4px' }}>
@@ -109,6 +127,19 @@ export default function Sidebar() {
               </span>
             </div>
           </div>
+          {/* Mobile close button */}
+          <button
+            onClick={() => setIsOpen(false)}
+            style={{
+              display: 'none', // shown via .crm-hamburger media query reuse
+              background: 'none', border: 'none', cursor: 'pointer',
+              color: 'var(--text-muted)', padding: '4px'
+            }}
+            className="crm-sidebar-close"
+            aria-label="Close menu"
+          >
+            <X size={20} />
+          </button>
         </div>
 
         {/* Nav List */}

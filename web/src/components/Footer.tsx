@@ -56,7 +56,6 @@ export default function Footer() {
               <li><Link href={getHref('#rooms')}>Suites & Rates</Link></li>
               <li><Link href={getHref('#experiences')}>Attractions</Link></li>
               <li><Link href={getHref('#rentals')}>Car & Bike Rentals</Link></li>
-              <li><Link href="/admin">Admin Portal</Link></li>
             </ul>
           </div>
 

@@ -185,6 +185,16 @@ body {
   border-radius: var(--radius-full);
 }
 
+/* Hamburger (mobile only — hidden on desktop) */
+.crm-hamburger {
+  display: none;
+}
+
+/* Sidebar close button (mobile only — hidden on desktop) */
+.crm-sidebar-close {
+  display: none;
+}
+
 /* Topbar */
 .crm-main-viewport {
   flex: 1;
@@ -595,3 +605,167 @@ body {
     box-shadow: none !important;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════
+   CRM MOBILE RESPONSIVE STYLES
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── Mobile Sidebar Overlay Toggle ── */
+/* Sidebar slides off-screen by default on mobile; add class .is-open to show */
+@media (max-width: 768px) {
+  .crm-layout {
+    flex-direction: column;
+    position: relative;
+  }
+
+  /* Sidebar becomes a fixed overlay drawer */
+  .crm-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100dvh;
+    width: 280px;
+    z-index: 200;
+    transform: translateX(-100%);
+    transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 4px 0 24px rgba(0,0,0,0.12);
+  }
+
+  .crm-sidebar.is-open {
+    transform: translateX(0);
+  }
+
+  /* Dim overlay when sidebar is open */
+  .crm-sidebar-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.45);
+    z-index: 199;
+    backdrop-filter: blur(2px);
+  }
+
+  .crm-sidebar-backdrop.is-open {
+    display: block;
+  }
+
+  /* Main viewport takes full width */
+  .crm-main-viewport {
+    width: 100%;
+    min-width: 0;
+  }
+
+  /* Topbar adjustments */
+  .crm-topbar {
+    height: 56px;
+    padding: 0 14px;
+    gap: 8px;
+  }
+
+  /* Show hamburger button (hidden on desktop) */
+  .crm-hamburger {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    background: var(--bg-elevated);
+    cursor: pointer;
+    flex-shrink: 0;
+    color: var(--text-primary);
+  }
+
+  /* Show sidebar close button on mobile */
+  .crm-sidebar-close {
+    display: flex !important;
+  }
+
+  /* Hide verbose topbar pills on mobile */
+  .crm-sync-pill {
+    display: none;
+  }
+
+  /* Quick action button label — hide text, keep icon */
+  .crm-topbar .crm-btn span {
+    display: none;
+  }
+
+  /* Page content tighter padding */
+  .crm-content {
+    padding: 16px;
+    gap: 16px;
+  }
+
+  /* Metrics: 2-column on mobile */
+  .crm-metrics-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .crm-metric-card {
+    padding: 14px;
+  }
+
+  .crm-metric-value {
+    font-size: 20px;
+  }
+
+  /* Card padding tighter */
+  .crm-card {
+    padding: 14px;
+  }
+
+  /* Tables: horizontal scroll on mobile */
+  .crm-table-container {
+    border-radius: var(--radius-md);
+  }
+
+  .crm-table th,
+  .crm-table td {
+    padding: 10px 12px;
+    font-size: 12.5px;
+    white-space: nowrap;
+  }
+
+  /* Modals: full-screen on mobile */
+  .crm-modal-backdrop {
+    padding: 0;
+    align-items: flex-end;
+  }
+
+  .crm-modal {
+    max-width: 100%;
+    width: 100%;
+    max-height: 92dvh;
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  }
+
+  /* Tapechart: min-width so it scrolls */
+  .crm-tapechart-container {
+    min-width: 0;
+  }
+
+  .crm-tapechart-header-row,
+  .crm-tapechart-row {
+    grid-template-columns: 120px repeat(14, minmax(56px, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  /* Single-column metrics on very small screens */
+  .crm-metrics-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .crm-topbar {
+    padding: 0 10px;
+  }
+
+  .crm-content {
+    padding: 12px;
+    gap: 12px;
+  }
+}
+

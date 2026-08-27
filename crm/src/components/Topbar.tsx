@@ -10,7 +10,8 @@ import {
   UtensilsCrossed,
   Wrench,
   KeyRound,
-  LogOut
+  LogOut,
+  Menu
 } from 'lucide-react';
 import { getCRMStore, getCurrentUser, hasPermission, subscribeToCRM } from '@/lib/crmStore';
 import { isSupabaseConfigured } from '@/lib/supabaseClient';
@@ -85,7 +86,16 @@ export default function Topbar({ onOpenQuickModal }: TopbarProps) {
     <>
       <header className="crm-topbar">
         {/* Left side info */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          {/* Hamburger — mobile only, shown via CSS */}
+          <button
+            className="crm-hamburger"
+            style={{ display: 'none' }}
+            onClick={() => window.dispatchEvent(new Event('crm-sidebar-toggle'))}
+            aria-label="Open navigation menu"
+          >
+            <Menu size={18} />
+          </button>
           <div 
             className="crm-sync-pill"
             title={hasSupabase ? "Connected to Supabase PostgreSQL Realtime Cloud" : "Running on Local Storage. Add NEXT_PUBLIC_SUPABASE_URL and KEY in .env.local to sync."}
