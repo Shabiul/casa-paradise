@@ -42,17 +42,6 @@ export default function CRMLoginPage() {
     }
   };
 
-  const quickLogin = async (emailAddr: string, pwd: string) => {
-    setEmail(emailAddr);
-    setPassword(pwd);
-    setLocalError(null);
-    setSubmitting(true);
-    const ok = await login(emailAddr, pwd);
-    setSubmitting(false);
-    if (ok) router.replace('/');
-    else setLocalError(authError || 'Login failed.');
-  };
-
   if (loading) {
     return (
       <div style={{
@@ -228,39 +217,6 @@ export default function CRMLoginPage() {
           </form>
         </div>
 
-        {/* Quick access cards */}
-        <div style={{ marginTop: '24px' }}>
-          <p style={{ color: 'rgba(255,255,255,0.35)', fontSize: '12px', textAlign: 'center', marginBottom: '12px', letterSpacing: '0.5px', textTransform: 'uppercase' }}>
-            Quick Access — Demo Accounts
-          </p>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            {[
-              { label: '👑 General Manager', email: 'gm@casaparadisohotel.in', pwd: 'CasaAdmin2026!', role: 'Admin · Full Access' },
-              { label: '🏨 Front Desk Staff', email: 'frontdesk@casaparadisohotel.in', pwd: 'CasaStaff2026!', role: 'Staff · Limited Access' },
-              { label: '🧹 Housekeeping Lead', email: 'housekeeping@casaparadisohotel.in', pwd: 'CasaHouse2026!', role: 'Staff · Housekeeping Only' }
-            ].map(acc => (
-              <button
-                key={acc.email}
-                onClick={() => quickLogin(acc.email, acc.pwd)}
-                disabled={submitting}
-                style={{
-                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                  background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)',
-                  borderRadius: '12px', padding: '12px 16px', cursor: submitting ? 'not-allowed' : 'pointer',
-                  transition: 'background 0.2s, border-color 0.2s', textAlign: 'left', width: '100%'
-                }}
-                onMouseEnter={e => { if (!submitting) { e.currentTarget.style.background = 'rgba(16,185,129,0.08)'; e.currentTarget.style.borderColor = 'rgba(16,185,129,0.25)'; } }}
-                onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; }}
-              >
-                <div>
-                  <div style={{ color: '#F8FAFC', fontSize: '13.5px', fontWeight: 600 }}>{acc.label}</div>
-                  <div style={{ color: 'rgba(255,255,255,0.4)', fontSize: '12px', marginTop: '2px' }}>{acc.role}</div>
-                </div>
-                <div style={{ color: 'rgba(16,185,129,0.7)', fontSize: '12px', fontWeight: 600 }}>Sign In →</div>
-              </button>
-            ))}
-          </div>
-        </div>
 
         <p style={{ textAlign: 'center', color: 'rgba(255,255,255,0.2)', fontSize: '12px', marginTop: '28px' }}>
           Casa Paradiso · Secure Operations Portal · Panaji, Goa
