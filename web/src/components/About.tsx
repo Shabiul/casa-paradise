@@ -88,9 +88,10 @@ export default function About({
   useGSAP(
     () => {
       const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const isMobile = window.innerWidth <= 768;
 
-      if (prefersReducedMotion) {
-        // Immediate static layout for accessibility
+      if (prefersReducedMotion || isMobile) {
+        // Static layout for mobile and accessibility
         gsap.set(openingWrapperRef.current, { display: 'none' });
         gsap.set(rotatingStripRef.current, { display: 'none' });
         gsap.set(textStageRef.current, { display: 'none' });
@@ -458,6 +459,22 @@ export default function About({
                 {line}
               </div>
             ))}
+          </div>
+        </div>
+
+        {/* Mobile-only heritage text block — shown only on ≤768px */}
+        <div className="editorial-mobile-info" aria-label="Casa Paradiso Heritage">
+          <div style={{ borderLeft: `3px solid ${accentColor}`, paddingLeft: '16px' }}>
+            <span className="editorial-badge">{leftTitle}</span>
+            <div className="editorial-copy" style={{ marginTop: '8px' }}>
+              {leftCopy.map((line, idx) => <p key={idx}>{line}</p>)}
+            </div>
+          </div>
+          <div style={{ borderLeft: `3px solid ${accentColor}`, paddingLeft: '16px' }}>
+            <span className="editorial-badge">{rightTitle}</span>
+            <div className="editorial-copy" style={{ marginTop: '8px' }}>
+              {rightCopy.map((line, idx) => <p key={idx}>{line}</p>)}
+            </div>
           </div>
         </div>
       </div>

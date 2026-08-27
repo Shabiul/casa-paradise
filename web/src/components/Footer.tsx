@@ -83,6 +83,33 @@ export default function Footer() {
           </div>
         </div>
 
+        {/* ── Google Maps ── */}
+        <div className="footer__map-wrapper">
+          <div className="footer__map-header">
+            <h4 className="footer__title" style={{ margin: 0 }}>Find Us</h4>
+            <a
+              href="https://maps.app.goo.gl/iKyFhnt8Q5JwUMD46"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="footer__map-directions"
+            >
+              Get Directions →
+            </a>
+          </div>
+          <div className="footer__map-frame">
+            <iframe
+              title="Casa Paradiso location on Google Maps"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3844.047!2d73.83!3d15.497!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bbfc0fc3a58e44b%3A0x8a2bd60571ce41b3!2sCasa%20Paradiso%20Hotel!5e0!3m2!1sen!2sin!4v1693000000000!5m2!1sen!2sin"
+              width="100%"
+              height="100%"
+              style={{ border: 0 }}
+              allowFullScreen
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+            />
+          </div>
+        </div>
+
         <div className="footer__bottom">
           <div className="footer__bottom-content">
             <div className="footer__bottom-row">
