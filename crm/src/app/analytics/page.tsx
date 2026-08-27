@@ -164,8 +164,8 @@ export default function AnalyticsAdminPage() {
         </div>
       </div>
 
-      {/* Revenue Breakdown by Stream */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(380px, 1fr))', gap: '20px' }}>
+      {/* Revenue Breakdown by Stream & Category Share */}
+      <div className="crm-analytics-grid">
         {/* Stream Distribution */}
         <div className="crm-card">
           <div className="crm-card-header">
@@ -175,15 +175,15 @@ export default function AnalyticsAdminPage() {
             </div>
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
             {/* Rooms */}
             <div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', fontWeight: 700, marginBottom: '6px' }}>
-                <span style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--text-primary)' }}>
+              <div className="crm-stream-header">
+                <span className="crm-stream-label">
                   <BedDouble size={15} color="#059669" />
                   <span>Suite Accommodations</span>
                 </span>
-                <span style={{ color: '#059669' }}>
+                <span className="crm-stream-val" style={{ color: '#059669' }}>
                   ₹{roomRevenue.toLocaleString('en-IN')} ({totalRevenue > 0 ? Math.round((roomRevenue / totalRevenue) * 100) : 0}%)
                 </span>
               </div>
@@ -201,12 +201,12 @@ export default function AnalyticsAdminPage() {
 
             {/* Vehicle Rentals */}
             <div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', fontWeight: 700, marginBottom: '6px' }}>
-                <span style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--text-primary)' }}>
+              <div className="crm-stream-header">
+                <span className="crm-stream-label">
                   <Car size={15} color="#0284C7" />
                   <span>Vehicle Fleet Rentals</span>
                 </span>
-                <span style={{ color: '#0284C7' }}>
+                <span className="crm-stream-val" style={{ color: '#0284C7' }}>
                   ₹{vehicleRevenue.toLocaleString('en-IN')} ({totalRevenue > 0 ? Math.round((vehicleRevenue / totalRevenue) * 100) : 0}%)
                 </span>
               </div>
@@ -224,12 +224,12 @@ export default function AnalyticsAdminPage() {
 
             {/* Dining */}
             <div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', fontWeight: 700, marginBottom: '6px' }}>
-                <span style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--text-primary)' }}>
+              <div className="crm-stream-header">
+                <span className="crm-stream-label">
                   <UtensilsCrossed size={15} color="#D97706" />
-                  <span>Restaurant & Gastronomy</span>
+                  <span>Restaurant &amp; Gastronomy</span>
                 </span>
-                <span style={{ color: '#D97706' }}>
+                <span className="crm-stream-val" style={{ color: '#D97706' }}>
                   ₹{diningRevenue.toLocaleString('en-IN')} ({totalRevenue > 0 ? Math.round((diningRevenue / totalRevenue) * 100) : 0}%)
                 </span>
               </div>
@@ -256,9 +256,9 @@ export default function AnalyticsAdminPage() {
             </div>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
-            <div style={{ backgroundColor: 'var(--bg-subtle)', border: '1px solid var(--border-subtle)', padding: '16px', borderRadius: 'var(--radius-md)' }}>
-              <div style={{ fontSize: '12px', color: '#059669', fontWeight: 700, textTransform: 'uppercase' }}>
+          <div className="crm-category-share-grid">
+            <div style={{ backgroundColor: 'var(--bg-subtle)', border: '1px solid var(--border-subtle)', padding: '14px', borderRadius: 'var(--radius-md)' }}>
+              <div style={{ fontSize: '11px', color: '#059669', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                 Paradise AC Suites
               </div>
               <div style={{ fontSize: '20px', fontWeight: 800, color: 'var(--text-primary)', marginTop: '4px' }}>
@@ -269,8 +269,8 @@ export default function AnalyticsAdminPage() {
               </div>
             </div>
 
-            <div style={{ backgroundColor: 'var(--bg-subtle)', border: '1px solid var(--border-subtle)', padding: '16px', borderRadius: 'var(--radius-md)' }}>
-              <div style={{ fontSize: '12px', color: '#0284C7', fontWeight: 700, textTransform: 'uppercase' }}>
+            <div style={{ backgroundColor: 'var(--bg-subtle)', border: '1px solid var(--border-subtle)', padding: '14px', borderRadius: 'var(--radius-md)' }}>
+              <div style={{ fontSize: '11px', color: '#0284C7', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                 Heritage Non-AC Rooms
               </div>
               <div style={{ fontSize: '20px', fontWeight: 800, color: 'var(--text-primary)', marginTop: '4px' }}>

@@ -35,6 +35,7 @@ import {
   persistVehicleBookingToSupabase,
   persistDiningBookingToSupabase,
   persistRoomToSupabase,
+  deleteRoomFromSupabase,
   persistRoomsBatchToSupabase,
   persistVehicleToSupabase,
   persistDiningTableToSupabase,
@@ -92,7 +93,7 @@ export const initialRooms: RoomDefinition[] = [
   { roomNumber: '203', floor: 2, roomType: 'ac', title: 'Paradise AC Suite (Altinho Hill View)', maxOccupancy: 3, cleanliness: 'clean', isOccupied: false },
   { roomNumber: '204', floor: 2, roomType: 'ac', title: 'Paradise AC Suite (Altinho Hill View)', maxOccupancy: 3, cleanliness: 'clean', isOccupied: true, currentBookingId: 'CP-RM-1044' },
   { roomNumber: '205', floor: 2, roomType: 'ac', title: 'Paradise AC Suite', maxOccupancy: 3, cleanliness: 'clean', isOccupied: false },
-  { roomNumber: '206', floor: 2, roomType: 'ac', title: 'Paradise AC Suite', maxOccupancy: 3, cleanliness: 'out_of_order', isOccupied: false, notes: 'AC compressor scheduled for servicing' },
+  { roomNumber: '206', floor: 2, roomType: 'ac', title: 'Paradise AC Suite', maxOccupancy: 3, cleanliness: 'dirty', isOccupied: false, notes: 'AC compressor scheduled for servicing' },
   { roomNumber: '207', floor: 2, roomType: 'nonac', title: 'Heritage Non-AC Room', maxOccupancy: 2, cleanliness: 'clean', isOccupied: false },
   { roomNumber: '208', floor: 2, roomType: 'nonac', title: 'Heritage Non-AC Room', maxOccupancy: 3, cleanliness: 'clean', isOccupied: false },
   { roomNumber: '209', floor: 2, roomType: 'nonac', title: 'Heritage Non-AC Room', maxOccupancy: 2, cleanliness: 'clean', isOccupied: false },
@@ -1238,6 +1239,121 @@ export function updateRoomCleanliness(roomNumber: string, cleanliness: Cleanline
   persistActivityLogToSupabase(log);
 
   return true;
+}
+
+export function createRoomDefinition(newRoom: RoomDefinition): { success: boolean; error?: string } {
+  const store = getCRMStore();
+  const exists = store.rooms.some(r => r.roomNumber.trim() === newRoom.roomNumber.trim());
+  if (exists) {
+    return { success: false, error: `Room ${newRoom.roomNumber} already exists.` };
+  }
+
+  const room: RoomDefinition = {
+    roomNumber: newRoom.roomNumber.trim(),
+    floor: newRoom.floor || 1,
+    roomType: newRoom.roomType || 'ac',
+    title: newRoom.title.trim() || `Suite ${newRoom.roomNumber.trim()}`,
+    maxOccupancy: Number(newRoom.maxOccupancy) || 2,
+    cleanliness: newRoom.cleanliness || 'clean',
+    isOccupied: false,
+    notes: newRoom.notes || ''
+  };
+
+  const updatedRooms = [...store.rooms, room].sort((a, b) => parseInt(a.roomNumber) - parseInt(b.roomNumber));
+
+  const log: ActivityLog = {
+    id: `LOG-${Date.now()}`,
+    timestamp: new Date().toISOString(),
+    type: 'room',
+    action: 'created',
+    title: `Suite ${room.roomNumber} Added`,
+    description: `Admin created ${room.title} (Floor ${room.floor}, max ${room.maxOccupancy} guests)`,
+    roomNumber: room.roomNumber
+  };
+
+  saveCRMStore({
+    ...store,
+    rooms: updatedRooms,
+    activityLogs: [log, ...store.activityLogs]
+  });
+
+  persistRoomToSupabase(room);
+  persistActivityLogToSupabase(log);
+
+  return { success: true };
+}
+
+export function updateRoomDefinition(roomNumber: string, updates: Partial<RoomDefinition>): { success: boolean; error?: string } {
+  const store = getCRMStore();
+  const index = store.rooms.findIndex(r => r.roomNumber === roomNumber);
+  if (index === -1) {
+    return { success: false, error: `Room ${roomNumber} not found.` };
+  }
+
+  const updatedRoom: RoomDefinition = {
+    ...store.rooms[index],
+    ...updates,
+    roomNumber: store.rooms[index].roomNumber // preserve primary key
+  };
+
+  const updatedRooms = [...store.rooms];
+  updatedRooms[index] = updatedRoom;
+
+  const log: ActivityLog = {
+    id: `LOG-${Date.now()}`,
+    timestamp: new Date().toISOString(),
+    type: 'room',
+    action: 'updated',
+    title: `Suite ${roomNumber} Details Updated`,
+    description: `Admin updated specifications for ${updatedRoom.title}`,
+    roomNumber
+  };
+
+  saveCRMStore({
+    ...store,
+    rooms: updatedRooms,
+    activityLogs: [log, ...store.activityLogs]
+  });
+
+  persistRoomToSupabase(updatedRoom);
+  persistActivityLogToSupabase(log);
+
+  return { success: true };
+}
+
+export function deleteRoomDefinition(roomNumber: string): { success: boolean; error?: string } {
+  const store = getCRMStore();
+  const room = store.rooms.find(r => r.roomNumber === roomNumber);
+  if (!room) {
+    return { success: false, error: `Room ${roomNumber} not found.` };
+  }
+
+  if (room.isOccupied) {
+    return { success: false, error: `Cannot delete Suite ${roomNumber} because it is currently occupied by a guest.` };
+  }
+
+  const updatedRooms = store.rooms.filter(r => r.roomNumber !== roomNumber);
+
+  const log: ActivityLog = {
+    id: `LOG-${Date.now()}`,
+    timestamp: new Date().toISOString(),
+    type: 'room',
+    action: 'status_changed',
+    title: `Suite ${roomNumber} Removed`,
+    description: `Admin removed Suite ${roomNumber} from hotel room inventory`,
+    roomNumber
+  };
+
+  saveCRMStore({
+    ...store,
+    rooms: updatedRooms,
+    activityLogs: [log, ...store.activityLogs]
+  });
+
+  deleteRoomFromSupabase(roomNumber);
+  persistActivityLogToSupabase(log);
+
+  return { success: true };
 }
 
 // 8. Maintenance Tickets

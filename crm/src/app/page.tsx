@@ -102,21 +102,8 @@ export default function ExecutiveDashboard() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
       {/* Executive Hero Banner */}
-      <div
-        style={{
-          background: 'linear-gradient(135deg, #0B1D3A 0%, #1E3A8A 50%, #064E3B 100%)',
-          borderRadius: 'var(--radius-lg)',
-          padding: '24px 28px',
-          border: '1px solid rgba(255, 255, 255, 0.12)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          flexWrap: 'wrap',
-          gap: '16px',
-          boxShadow: '0 12px 36px rgba(0,0,0,0.3)'
-        }}
-      >
-        <div>
+      <div className="crm-hero-banner">
+        <div className="crm-hero-content">
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
             <span
               style={{
@@ -142,10 +129,10 @@ export default function ExecutiveDashboard() {
           </p>
         </div>
 
-        <div style={{ display: 'flex', gap: '10px' }}>
-          <Link href="/calendar" className="crm-btn crm-btn-secondary" style={{ padding: '9px 16px' }}>
-            <Calendar size={16} />
-            <span>Open Tape Chart</span>
+        <div className="crm-hero-actions">
+          <Link href="/guests" className="crm-btn crm-btn-secondary" style={{ padding: '9px 16px' }}>
+            <Users size={16} />
+            <span>Guest 360 CRM</span>
           </Link>
           <Link href="/rooms" className="crm-btn crm-btn-primary" style={{ padding: '9px 16px' }}>
             <BedDouble size={16} />
@@ -219,7 +206,7 @@ export default function ExecutiveDashboard() {
       </div>
 
       {/* Main Grid: Pending Action Queue & Live Stay Pipeline */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(420px, 1fr))', gap: '24px' }}>
+      <div className="crm-dashboard-grid">
         {/* Pending Action Queue */}
         <div className="crm-card">
           <div className="crm-card-header">
@@ -246,19 +233,10 @@ export default function ExecutiveDashboard() {
               {pendingRooms.map(b => (
                 <div
                   key={b.id}
-                  style={{
-                    backgroundColor: 'var(--bg-subtle)',
-                    border: '1px solid var(--border-subtle)',
-                    borderRadius: 'var(--radius-md)',
-                    padding: '12px 16px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    gap: '12px'
-                  }}
+                  className="crm-list-item"
                 >
-                  <div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <div className="crm-list-item-main">
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
                       <span className="crm-badge crm-badge-pending">Room Request</span>
                       <strong style={{ fontSize: '13.5px', color: 'var(--text-primary)' }}>{b.guestName}</strong>
                     </div>
@@ -269,7 +247,7 @@ export default function ExecutiveDashboard() {
                   <button
                     onClick={() => handleQuickCheckIn(b.id, '101')}
                     className="crm-btn crm-btn-primary"
-                    style={{ padding: '6px 12px', fontSize: '12px' }}
+                    style={{ padding: '6px 12px', fontSize: '12px', flexShrink: 0 }}
                   >
                     Quick Check-In
                   </button>
@@ -280,19 +258,10 @@ export default function ExecutiveDashboard() {
               {pendingVehicles.map(v => (
                 <div
                   key={v.id}
-                  style={{
-                    backgroundColor: 'var(--bg-subtle)',
-                    border: '1px solid var(--border-subtle)',
-                    borderRadius: 'var(--radius-md)',
-                    padding: '12px 16px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    gap: '12px'
-                  }}
+                  className="crm-list-item"
                 >
-                  <div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <div className="crm-list-item-main">
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
                       <span className="crm-badge crm-badge-confirmed">Vehicle Rental</span>
                       <strong style={{ fontSize: '13.5px', color: 'var(--text-primary)' }}>{v.guestName}</strong>
                     </div>
@@ -303,7 +272,7 @@ export default function ExecutiveDashboard() {
                   <button
                     onClick={() => handleApproveVehicle(v.id)}
                     className="crm-btn crm-btn-secondary"
-                    style={{ padding: '6px 12px', fontSize: '12px', color: '#0284C7' }}
+                    style={{ padding: '6px 12px', fontSize: '12px', color: '#0284C7', flexShrink: 0 }}
                   >
                     Approve Dispatch
                   </button>
@@ -314,19 +283,10 @@ export default function ExecutiveDashboard() {
               {pendingDining.map(d => (
                 <div
                   key={d.id}
-                  style={{
-                    backgroundColor: 'var(--bg-subtle)',
-                    border: '1px solid var(--border-subtle)',
-                    borderRadius: 'var(--radius-md)',
-                    padding: '12px 16px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    gap: '12px'
-                  }}
+                  className="crm-list-item"
                 >
-                  <div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <div className="crm-list-item-main">
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
                       <span className="crm-badge crm-badge-pending">Table Booking</span>
                       <strong style={{ fontSize: '13.5px', color: 'var(--text-primary)' }}>{d.guestName}</strong>
                     </div>
@@ -337,7 +297,7 @@ export default function ExecutiveDashboard() {
                   <button
                     onClick={() => handleApproveDining(d.id)}
                     className="crm-btn crm-btn-secondary"
-                    style={{ padding: '6px 12px', fontSize: '12px', color: '#D97706' }}
+                    style={{ padding: '6px 12px', fontSize: '12px', color: '#D97706', flexShrink: 0 }}
                   >
                     Assign Table
                   </button>
@@ -363,19 +323,10 @@ export default function ExecutiveDashboard() {
             {store.roomBookings.slice(0, 5).map(b => (
               <div
                 key={b.id}
-                style={{
-                  backgroundColor: 'var(--bg-subtle)',
-                  borderRadius: 'var(--radius-md)',
-                  border: '1px solid var(--border-subtle)',
-                  padding: '12px 16px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  gap: '12px'
-                }}
+                className="crm-list-item"
               >
-                <div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <div className="crm-list-item-main">
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
                     <strong style={{ fontSize: '13.5px', color: 'var(--text-primary)' }}>{b.guestName}</strong>
                     {b.roomNumber && (
                       <span
@@ -397,7 +348,7 @@ export default function ExecutiveDashboard() {
                   </div>
                 </div>
 
-                <div>
+                <div style={{ flexShrink: 0 }}>
                   <span
                     className={`crm-badge ${
                       b.status === 'checked_in'

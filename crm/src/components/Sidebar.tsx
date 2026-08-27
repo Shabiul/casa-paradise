@@ -64,7 +64,6 @@ export default function Sidebar() {
 
   const allNavItems: NavItemConfig[] = [
     { href: '/', label: 'Executive Dashboard', icon: LayoutDashboard, permissionKey: 'dashboard', exact: true },
-    { href: '/calendar', label: 'Tape Chart Grid', icon: CalendarDays, permissionKey: 'calendar' },
     { href: '/rooms', label: 'Rooms & Front Desk', icon: BedDouble, permissionKey: 'rooms', badge: pendingRooms },
     { href: '/vehicles', label: 'Fleet & Rentals', icon: Car, permissionKey: 'vehicles', badge: pendingVehicles },
     { href: '/dining', label: 'Dining & Tables', icon: UtensilsCrossed, permissionKey: 'dining', badge: pendingDining },

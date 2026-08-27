@@ -86,7 +86,7 @@ export default function Topbar({ onOpenQuickModal }: TopbarProps) {
     <>
       <header className="crm-topbar">
         {/* Left side info */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+        <div className="crm-topbar-left">
           {/* Hamburger — mobile only, shown via CSS */}
           <button
             className="crm-hamburger"
@@ -110,7 +110,7 @@ export default function Topbar({ onOpenQuickModal }: TopbarProps) {
           </div>
 
           {timeStr && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--text-secondary)', fontSize: '12.5px', fontWeight: 600 }}>
+            <div className="crm-topbar-clock">
               <Clock size={14} color="var(--text-muted)" />
               <span>{timeStr}</span>
             </div>
@@ -118,7 +118,7 @@ export default function Topbar({ onOpenQuickModal }: TopbarProps) {
         </div>
 
         {/* Right side controls */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', position: 'relative' }}>
+        <div className="crm-topbar-right">
           {/* Quick Action Button (Shows allowed actions) */}
           {(canRooms || canVehicles || canDining || canMaint) && (
             <div style={{ position: 'relative' }}>
@@ -281,37 +281,19 @@ export default function Topbar({ onOpenQuickModal }: TopbarProps) {
 
           {/* Active User Switcher Pill */}
           <button
+            className="crm-user-pill"
             onClick={() => setIsSwitcherOpen(true)}
             title="Click to Switch User / Shift"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '10px',
-              padding: '5px 12px',
-              backgroundColor: 'var(--bg-elevated)',
-              border: '1px solid var(--border-subtle)',
-              borderRadius: 'var(--radius-md)',
-              cursor: 'pointer',
-              textAlign: 'left'
-            }}
           >
             <div
+              className="crm-user-avatar"
               style={{
-                width: '26px',
-                height: '26px',
-                borderRadius: '50%',
-                backgroundColor: isAdmin ? 'var(--accent-gold)' : 'var(--accent-emerald)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '13px',
-                fontWeight: 800,
-                color: '#FFF'
+                backgroundColor: isAdmin ? 'var(--accent-gold)' : 'var(--accent-emerald)'
               }}
             >
               {currentUser?.avatar || (isAdmin ? '👑' : '👤')}
             </div>
-            <div>
+            <div className="crm-user-info">
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                 <span style={{ fontSize: '12.5px', fontWeight: 700, color: 'var(--text-primary)' }}>
                   {currentUser?.name || 'Staff User'}
@@ -335,25 +317,14 @@ export default function Topbar({ onOpenQuickModal }: TopbarProps) {
                 {currentUser?.designation || 'Hotel Associate'}
               </div>
             </div>
-            <KeyRound size={13} color="var(--text-muted)" style={{ marginLeft: '4px' }} />
+            <KeyRound size={13} color="var(--text-muted)" className="crm-user-key" style={{ marginLeft: '4px' }} />
           </button>
 
           {/* Sign Out */}
           <button
+            className="crm-logout-btn"
             onClick={handleSignOut}
             title="Sign out"
-            style={{
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              width: '34px', height: '34px',
-              background: 'rgba(239,68,68,0.08)',
-              border: '1px solid rgba(239,68,68,0.2)',
-              borderRadius: 'var(--radius-md)',
-              cursor: 'pointer',
-              color: '#EF4444',
-              transition: 'background 0.2s'
-            }}
-            onMouseEnter={e => e.currentTarget.style.background = 'rgba(239,68,68,0.16)'}
-            onMouseLeave={e => e.currentTarget.style.background = 'rgba(239,68,68,0.08)'}
           >
             <LogOut size={15} />
           </button>

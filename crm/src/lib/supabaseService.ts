@@ -656,6 +656,16 @@ export async function persistRoomToSupabase(room: RoomDefinition) {
   }
 }
 
+export async function deleteRoomFromSupabase(roomNumber: string) {
+  const supabase = getSupabaseClient();
+  if (!supabase) return;
+  try {
+    await supabase.from('rooms').delete().eq('room_number', roomNumber);
+  } catch (e) {
+    console.error('Failed to delete room from Supabase:', e);
+  }
+}
+
 export async function persistRoomsBatchToSupabase(rooms: RoomDefinition[]) {
   const supabase = getSupabaseClient();
   if (!supabase) return;

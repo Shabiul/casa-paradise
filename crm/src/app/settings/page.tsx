@@ -258,7 +258,6 @@ export default function SettingsAdminPage() {
 
   const permissionModules: { key: keyof StaffPermissions; label: string; icon: any; desc: string }[] = [
     { key: 'dashboard', label: 'Executive Dashboard', icon: LayoutDashboard, desc: 'View revenue totals & occupancy KPIs' },
-    { key: 'calendar', label: 'Tape Chart Calendar', icon: CalendarDays, desc: '14-day visual tape chart & booking grid' },
     { key: 'rooms', label: 'Rooms & Front Desk', icon: BedDouble, desc: 'Manage room bookings & front desk check-in' },
     { key: 'vehicles', label: 'Vehicle Fleet & Rentals', icon: Car, desc: 'Manage scooter/car rental dispatches & returns' },
     { key: 'dining', label: 'Dining & Tables', icon: UtensilsCrossed, desc: 'Manage dining reservations & table seating' },
