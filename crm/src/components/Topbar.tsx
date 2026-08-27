@@ -90,7 +90,6 @@ export default function Topbar({ onOpenQuickModal }: TopbarProps) {
           {/* Hamburger — mobile only, shown via CSS */}
           <button
             className="crm-hamburger"
-            style={{ display: 'none' }}
             onClick={() => window.dispatchEvent(new Event('crm-sidebar-toggle'))}
             aria-label="Open navigation menu"
           >

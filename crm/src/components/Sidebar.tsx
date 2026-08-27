@@ -127,14 +127,9 @@ export default function Sidebar() {
               </span>
             </div>
           </div>
-          {/* Mobile close button */}
+          {/* Mobile close button — shown via CSS on ≤768px */}
           <button
             onClick={() => setIsOpen(false)}
-            style={{
-              display: 'none', // shown via .crm-hamburger media query reuse
-              background: 'none', border: 'none', cursor: 'pointer',
-              color: 'var(--text-muted)', padding: '4px'
-            }}
             className="crm-sidebar-close"
             aria-label="Close menu"
           >
