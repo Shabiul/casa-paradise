@@ -2,12 +2,13 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import Rooms from '@/components/Rooms';
 import Breadcrumbs from '@/components/Breadcrumbs';
-import { BUSINESS } from '@/lib/seo';
+import { BUSINESS, SITE_URL, absoluteUrl } from '@/lib/seo';
+import { ROOMS_DATA } from '@/lib/roomsData';
 
 export const metadata: Metadata = {
   title: 'Rooms & Suites in Panaji, Goa',
   description:
-    "Two room categories at Casa Paradiso in Panaji: the air-conditioned Paradise AC Suite and the Heritage Non-AC Room, across an intimate 18-room boutique hotel on Altinho hill.",
+    'Two room categories at Casa Paradiso in Panaji: the air-conditioned Paradise AC Suite and the Heritage Non-AC Room, across an intimate 18-room boutique hotel on Altinho hill.',
   alternates: { canonical: '/rooms' },
   openGraph: {
     title: 'Rooms & Suites in Panaji, Goa | Casa Paradiso',
@@ -15,12 +16,33 @@ export const metadata: Metadata = {
       'Explore the Paradise AC Suite and Heritage Non-AC Room at Casa Paradiso, a boutique hotel on Altinho hill in Panaji, Goa.',
     url: '/rooms',
     type: 'website',
+    images: [absoluteUrl('/assets/wa-photo-8.jpeg')],
   },
 };
 
 export default function RoomsPage() {
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: 'Rooms and Suites at Casa Paradiso',
+    description: 'Accommodation categories available at Casa Paradiso boutique hotel in Panaji, Goa.',
+    itemListElement: ROOMS_DATA.map((room, idx) => ({
+      '@type': 'ListItem',
+      position: idx + 1,
+      name: room.name,
+      url: `${SITE_URL}/rooms/${room.id}`,
+      description: room.description,
+      image: absoluteUrl(room.image),
+    })),
+  };
+
   return (
     <main>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+
       <Breadcrumbs items={[{ label: 'Rooms' }]} />
 
       <section className="legal-page__hero" style={{ padding: '32px 0 40px' }}>
@@ -39,6 +61,25 @@ export default function RoomsPage() {
       <section className="container" style={{ padding: '0 24px 80px', maxWidth: 1140, margin: '0 auto' }}>
         <div className="legal-page__card">
           <div className="legal-page__section">
+            <h2>Detailed Room Specifications & Pages</h2>
+            <div className="info-grid">
+              {ROOMS_DATA.map((room) => (
+                <div className="info-grid__item" key={room.id}>
+                  <h3>
+                    <Link href={`/rooms/${room.id}`}>{room.name}</Link>
+                  </h3>
+                  <p>{room.description}</p>
+                  <p style={{ marginTop: '8px' }}>
+                    <Link href={`/rooms/${room.id}`} style={{ color: 'var(--color-champagne)', fontWeight: 600 }}>
+                      View Full {room.shortName} Details & Tariff →
+                    </Link>
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="legal-page__section">
             <h2>Choosing a Room Type</h2>
             <p>
               Casa Paradiso offers two distinct room categories. The <strong>Paradise AC Suite</strong> is a
@@ -49,6 +90,7 @@ export default function RoomsPage() {
               complimentary high-speed Wi-Fi and daily breakfast options.
             </p>
           </div>
+
           <div className="legal-page__section" style={{ borderBottom: 'none', marginBottom: 0, paddingBottom: 0 }}>
             <h2>Good to Know Before You Book</h2>
             <div className="info-grid">
@@ -66,6 +108,7 @@ export default function RoomsPage() {
               </div>
             </div>
           </div>
+
           <div className="content-links">
             <Link href="/location">Hotel Location & Nearby Attractions</Link>
             <Link href="/experiences">Things to Do Near Casa Paradiso</Link>

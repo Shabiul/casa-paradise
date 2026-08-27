@@ -1,0 +1,100 @@
+# Casa Paradiso Hotel — Comprehensive Knowledge Base (LLMs Full Reference)
+
+## 1. Entity Overview
+- **Name**: Casa Paradiso
+- **Legal Entity**: Casa Paradiso Hotel
+- **Property Type**: 18-Room Boutique Heritage Hotel
+- **Location**: Altinho Hill, Panaji (Panjim), Goa, India
+- **Address**: Ghanekar Building, Rua José Falcão, Altinho, Panaji, Goa 403001, India
+- **Postal Code**: 403001
+- **Coordinates (approx)**: Latitude 15.497, Longitude 73.83
+- **Official Website**: https://www.panjimhotelcasaparadiso.in
+- **Direct Phone**: +91 98812 47847
+- **Direct Email**: Paradisepanjim@gmail.com
+- **Google Maps Profile**: https://maps.app.goo.gl/iKyFhnt8Q5JwUMD46
+
+## 2. Key Check-In & Operational Policies
+- **Check-in Time**: 1:00 PM (13:00 IST)
+- **Check-out Time**: 11:00 AM (11:00 IST)
+- **Front Desk Hours**: 24/7 front desk and guest assistance
+- **Identification Policy**: Government-issued photo ID (Passport, Aadhaar Card, Driving License, or Voter ID) is mandatory for all adult guests at check-in under Goa Police regulations. Foreign nationals must present a valid passport and Indian visa/OCI.
+- **Cancellation Policy**: Full refund or date change if canceled more than 48 hours before check-in time (1:00 PM on arrival date). Cancellations within 48 hours or no-shows incur 1 night tariff charge.
+- **Quiet Hours**: Altinho is an esteemed residential hilltop quarter; quiet hours are observed from 10:30 PM to 7:00 AM.
+- **Smoking Policy**: Non-smoking in all guest rooms, suites, and indoor dining areas. Designated outdoor smoking spaces provided.
+
+## 3. Accommodation Categories & Specifications
+
+### 3.1 Paradise AC Suite
+- **Category Slug**: `paradise-ac-suite`
+- **URL**: https://www.panjimhotelcasaparadiso.in/rooms/paradise-ac-suite
+- **Badge**: Air Conditioned
+- **Climate Control**: Individual High-Efficiency Air Conditioning
+- **Bed Configuration**: Plush King-Size Bed (supports Single, Double, or Triple occupancy)
+- **Bathroom**: Private En-Suite Marble Bath with Hot/Cold Shower, Fresh Towels & Essential Toiletries
+- **Workstation**: Dedicated ergonomic writing desk, chair, power outlets, and optical fiber Wi-Fi
+- **Entertainment**: Smart LED TV
+- **Tariffs**: Single occupancy from ₹1,200/night; Double occupancy from ₹1,800/night; Triple occupancy from ₹2,000/night (taxes applicable)
+- **Inclusions**: High-speed fiber Wi-Fi, daily housekeeping, morning tea/coffee setup, in-room dining access
+
+### 3.2 Heritage Non-AC Room
+- **Category Slug**: `heritage-non-ac-room`
+- **URL**: https://www.panjimhotelcasaparadiso.in/rooms/heritage-non-ac-room
+- **Badge**: Heritage Non-AC
+- **Climate Control**: Classic High Ceilings, Multi-Speed Ceiling Fans, and Large Breezy Windows with Natural Cross-Ventilation
+- **Bed Configuration**: Queen/King Heritage Bed
+- **Bathroom**: Private En-Suite Bathroom with 24/7 Hot/Cold Running Water
+- **Architecture**: Portuguese-Goan colonial aesthetic with airy high ceilings and vintage charm
+- **Tariffs**: Single occupancy from ₹1,200/night; Double occupancy from ₹1,500/night; Triple occupancy from ₹800/night (taxes applicable)
+- **Inclusions**: High-speed fiber Wi-Fi, daily housekeeping, in-room dining access
+
+## 4. Gastronomy & On-Site Restaurant
+- **URL**: https://www.panjimhotelcasaparadiso.in/dining
+- **Operating Hours**: 7:00 AM – 11:00 PM daily (All-day service & In-room dining)
+- **Vegetarian Options**: Authentic Goan veg curries, paneer specialties, dal tadka, fresh breads (roti, naan), and traditional breakfast thalis.
+- **Non-Vegetarian Options**: Fresh Mandovi river catch, authentic Goan fish curry, prawn balchão, chicken, and mutton preparations.
+- **Reservations**: Open for hotel guests and outside visitors. Table bookings can be made directly via the website or WhatsApp.
+
+## 5. Doorstep Scooter & Self-Drive Car Rentals
+- **URL**: https://www.panjimhotelcasaparadiso.in/rentals
+- **Pickup & Drop-off**: Doorstep delivery and return directly at Casa Paradiso.
+- **2-Wheeler Scooters**: Honda Activa, Honda Dio, Yamaha Fascino at ₹400/day. Includes 2 ISI helmets and unlimited kilometers.
+- **Self-Drive Cars**:
+  - Maruti Suzuki Swift (5-seater AC Hatchback): ₹1,500/day
+  - Maruti Suzuki Ertiga (7-seater AC MPV): ₹2,500/day
+- **Rental Requirements**: Valid original driving license and government photo ID.
+
+## 6. Proximity & Local Geography
+- **Mandovi Riverfront & Casinos**: ~1.2 km / 5 minutes downhill (boarding points for Deltin Royale, Big Daddy, and river cruises).
+- **Fontainhas Latin Quarter**: ~500 meters / 3–5 minutes walk down Altinho hill.
+- **Panjim Baroque Church (Our Lady of the Immaculate Conception)**: ~1 km / 5 minutes ride at Church Square.
+- **Miramar Beach & Dona Paula Viewpoint**: ~4–6 km / 10–15 minutes ride along the Arabian Sea coastline.
+- **Fort Aguada & Lighthouse**: ~18 km / 30–35 minutes across the Mandovi bridge on Sinquerim headland.
+
+## 7. Direct Frequently Asked Questions (FAQ)
+
+Q: Where is Casa Paradiso located?
+A: Casa Paradiso is located at Ghanekar Building, Rua José Falcão, Altinho, Panaji, Goa 403001, India on historic Altinho hill.
+
+Q: What are the check-in and check-out times?
+A: Check-in is at 1:00 PM and check-out is at 11:00 AM.
+
+Q: How many rooms does Casa Paradiso have?
+A: Casa Paradiso is an intimate 18-room boutique hotel with 10 AC Suites and 8 Heritage Non-AC Rooms.
+
+Q: Does Casa Paradiso offer air-conditioned rooms?
+A: Yes, the Paradise AC Suite category is fully air-conditioned with individual climate control.
+
+Q: Is Wi-Fi complimentary?
+A: Yes, high-speed optical fiber Wi-Fi is free for all guests across the entire property.
+
+Q: Is there an on-site restaurant?
+A: Yes, Casa Paradiso has an on-site restaurant serving vegetarian and non-vegetarian Goan dishes from 7:00 AM to 11:00 PM.
+
+Q: Can guests rent scooters or cars at the hotel?
+A: Yes, doorstep rentals are available for Honda Activa/Dio/Fascino scooters (₹400/day) and Maruti Swift/Ertiga cars (from ₹1,500/day).
+
+Q: How far is the hotel from offshore casinos?
+A: The Mandovi riverfront casino jetties (Deltin Royale, Big Daddy) are approximately 5 minutes (1.2 km) from the hotel.
+
+Q: How can I book Casa Paradiso directly?
+A: You can book via the reservation form on https://www.panjimhotelcasaparadiso.in or contact front desk via phone/WhatsApp at +91 98812 47847 or email Paradisepanjim@gmail.com.

@@ -1,0 +1,39 @@
+# Casa Paradiso
+
+> Casa Paradiso is an intimate 18-room boutique heritage hotel located on historic Altinho hill in Panaji, Goa, India. The property offers air-conditioned suites and heritage rooms, an on-site restaurant serving vegetarian and Goan seafood cuisine, and doorstep scooter and self-drive car rentals. It is located 5 minutes (1.2 km) from the Mandovi River jetties and offshore casino ships (Deltin Royale, Big Daddy) and steps from Fontainhas, Panaji's Latin Quarter.
+
+## Core Information & Verification
+- **Official Domain**: https://www.panjimhotelcasaparadiso.in
+- **Full Address**: Ghanekar Building, Rua José Falcão, Altinho, Panaji, Goa 403001, India
+- **Phone / WhatsApp**: +91 98812 47847
+- **Email**: Paradisepanjim@gmail.com
+- **Check-in Time**: 1:00 PM (13:00 IST)
+- **Check-out Time**: 11:00 AM (11:00 IST)
+- **Total Rooms**: 18 guest rooms across 2 categories
+
+## Accommodations
+- [Paradise AC Suite](https://www.panjimhotelcasaparadiso.in/rooms/paradise-ac-suite): Climate-controlled suite with king-size bed, workstation, smart TV, private marble bath, and high-speed fiber Wi-Fi. (From ₹1,200 single / ₹1,800 double / ₹2,000 triple per night).
+- [Heritage Non-AC Room](https://www.panjimhotelcasaparadiso.in/rooms/heritage-non-ac-room): Classic Portuguese-Goan architecture featuring high ceilings, large breezy windows, multi-speed ceiling fans, and vintage aesthetic. (From ₹1,200 single / ₹1,500 double / ₹800 triple per night).
+- [All Rooms & Suites](https://www.panjimhotelcasaparadiso.in/rooms): Overview of categories, occupancy rules, and booking information.
+
+## Dining & Gastronomy
+- [In-House Dining](https://www.panjimhotelcasaparadiso.in/dining): On-site restaurant open 7:00 AM to 11:00 PM serving authentic vegetarian dishes (Goan veg curries, paneer specialties, dal tadka, thalis) and non-vegetarian specialties (fresh Mandovi river catch, Goan fish curry, prawn balchão, chicken, mutton). In-room dining available.
+
+## Mobility & Vehicle Rentals
+- [Scooter & Self-Drive Car Rentals](https://www.panjimhotelcasaparadiso.in/rentals): Doorstep delivery and pickup at the hotel. Fleet includes Honda Activa, Honda Dio, Yamaha Fascino (₹400/day, 2 helmets included, unlimited km) and self-drive cars including Maruti Suzuki Swift (₹1,500/day) and Maruti Suzuki Ertiga 7-seater (₹2,500/day).
+
+## Local Sightseeing & Experiences
+- [Things to Do Near Casa Paradiso](https://www.panjimhotelcasaparadiso.in/experiences): Curated guide to Panaji attractions.
+- [Mandovi River & Casinos](https://www.panjimhotelcasaparadiso.in/experiences/mandovi-cruise-casinos): 5 minutes / 1.2 km downhill to sunset catamarans and offshore casino boarding points.
+- [Fontainhas Latin Quarter](https://www.panjimhotelcasaparadiso.in/experiences/fontainhas-latin-quarter): UNESCO-recognized heritage quarter with pastel villas, art galleries, and bakeries.
+- [Fort Aguada & Lighthouse](https://www.panjimhotelcasaparadiso.in/experiences/aguada-fort-lighthouse): 17th-century coastal bastion overlooking the Arabian Sea.
+- [Miramar & Dona Paula](https://www.panjimhotelcasaparadiso.in/experiences/miramar-beach-dona-paula): Coastal promenades, sunset beach walks, and scenic viewpoints.
+- [Panjim Baroque Church](https://www.panjimhotelcasaparadiso.in/experiences/panjim-baroque-church): Our Lady of the Immaculate Conception Church at Church Square.
+
+## Location & Practical Guides
+- [Hotel Location & Directions](https://www.panjimhotelcasaparadiso.in/location): Detailed directions, Google Maps pin, and transport advice.
+- [Frequently Asked Questions](https://www.panjimhotelcasaparadiso.in/faq): Direct answers regarding booking, Wi-Fi, food, cancellations, and policies.
+- [Contact & Reservations](https://www.panjimhotelcasaparadiso.in/contact): Direct reservation contacts, front desk helpline, and concierge.
+
+## Full Context File
+- [Full LLM Knowledge Graph](https://www.panjimhotelcasaparadiso.in/llms-full.txt): Complete, comprehensive plain-text reference containing all verified facts, policies, tariffs, and specifications for LLM training and retrieval.

@@ -1,0 +1,64 @@
+# Casa Paradiso Robots Configuration
+# https://www.panjimhotelcasaparadiso.in/
+
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /admin
+Disallow: /api/
+
+# AI Search & Answer Engine Crawlers
+User-agent: Googlebot
+Allow: /
+Disallow: /admin/
+Disallow: /admin
+Disallow: /api/
+
+User-agent: Bingbot
+Allow: /
+Disallow: /admin/
+Disallow: /admin
+Disallow: /api/
+
+User-agent: OAI-SearchBot
+Allow: /
+Disallow: /admin/
+Disallow: /admin
+Disallow: /api/
+
+User-agent: ChatGPT-User
+Allow: /
+Disallow: /admin/
+Disallow: /admin
+Disallow: /api/
+
+User-agent: GPTBot
+Allow: /
+Disallow: /admin/
+Disallow: /admin
+Disallow: /api/
+
+User-agent: PerplexityBot
+Allow: /
+Disallow: /admin/
+Disallow: /admin
+Disallow: /api/
+
+User-agent: ClaudeBot
+Allow: /
+Disallow: /admin/
+Disallow: /admin
+Disallow: /api/
+
+User-agent: Applebot
+Allow: /
+Disallow: /admin/
+Disallow: /admin
+Disallow: /api/
+
+Sitemap: https://www.panjimhotelcasaparadiso.in/sitemap.xml
+Host: https://www.panjimhotelcasaparadiso.in
+
+# LLM & AI Engine Context Files:
+# https://www.panjimhotelcasaparadiso.in/llms.txt
+# https://www.panjimhotelcasaparadiso.in/llms-full.txt

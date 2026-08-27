@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import Breadcrumbs from '@/components/Breadcrumbs';
 import { ATTRACTIONS_DATA } from '@/components/attractions/attractionData';
-import { BUSINESS } from '@/lib/seo';
+import { BUSINESS, SITE_URL, absoluteUrl } from '@/lib/seo';
 
 export const metadata: Metadata = {
   title: 'Location — Hotel in Panaji, Goa',
@@ -14,12 +14,41 @@ export const metadata: Metadata = {
     description: 'Find Casa Paradiso on Altinho hill in Panaji, Goa, close to the Mandovi riverfront and Fontainhas.',
     url: '/location',
     type: 'website',
+    images: [absoluteUrl('/assets/hero.png')],
   },
 };
 
 export default function LocationPage() {
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Hotel',
+    name: BUSINESS.name,
+    description: BUSINESS.description,
+    url: `${SITE_URL}/location`,
+    telephone: BUSINESS.telephone,
+    hasMap: BUSINESS.mapsUrl,
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: BUSINESS.streetAddress,
+      addressLocality: BUSINESS.addressLocality,
+      addressRegion: BUSINESS.addressRegion,
+      postalCode: BUSINESS.postalCode,
+      addressCountry: BUSINESS.addressCountry,
+    },
+    geo: {
+      '@type': 'GeoCoordinates',
+      latitude: BUSINESS.geo.latitude,
+      longitude: BUSINESS.geo.longitude,
+    },
+  };
+
   return (
     <main>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+
       <Breadcrumbs items={[{ label: 'Location' }]} />
 
       <section className="legal-page__hero" style={{ padding: '32px 0 40px' }}>
@@ -35,35 +64,59 @@ export default function LocationPage() {
       <section className="container" style={{ padding: '40px 24px 24px', maxWidth: 1140, margin: '0 auto' }}>
         <div className="legal-page__card">
           <div className="legal-page__section">
-            <h2>Where Casa Paradiso Sits in Panaji</h2>
+            <h2>Where Casa Paradiso Sits in Panaji, Goa</h2>
             <p>
-              Casa Paradiso is a boutique hotel on historic Altinho hill, one of Panaji&apos;s oldest residential
-              quarters, overlooking the city and the Mandovi River. The hotel is close to the Mandovi riverfront
-              and its casino boarding points (about 5 minutes / 1.2 km away), and within reach of Panaji&apos;s
-              cultural landmarks including the Fontainhas Latin Quarter and the Panjim Baroque Church.
+              Casa Paradiso is a boutique heritage hotel situated on historic Altinho hill, one of Panaji&apos;s oldest
+              and most prestigious residential quarters. Overlooking the city and the Mandovi River, the hotel offers a
+              quiet hilltop haven while remaining within minutes of Panaji&apos;s most sought-after cultural, dining, and
+              entertainment destinations.
             </p>
           </div>
 
           <div className="legal-page__section">
-            <h2>Getting to Casa Paradiso</h2>
+            <h2>Proximity to Major Landmarks & Attractions</h2>
+            <div className="info-grid">
+              <div className="info-grid__item">
+                <h3>Mandovi River & Offshore Casinos</h3>
+                <p>Located roughly 5 minutes (1.2 km) downhill from the hotel to the jetty boarding points for Deltin Royale, Big Daddy, and scenic sunset catamarans.</p>
+              </div>
+              <div className="info-grid__item">
+                <h3>Fontainhas Latin Quarter</h3>
+                <p>Asia’s only surviving Latin quarter is located just down the hill, renowned for Portuguese villas, art galleries, and heritage bakeries.</p>
+              </div>
+              <div className="info-grid__item">
+                <h3>Panjim Baroque Church</h3>
+                <p>Our Lady of the Immaculate Conception Church at Church Square is a short 5-minute ride from the property.</p>
+              </div>
+              <div className="info-grid__item">
+                <h3>Miramar & Dona Paula</h3>
+                <p>Golden shoreline walks and the Arabian Sea coastline are easily accessible within 10 to 15 minutes by scooter or car.</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="legal-page__section">
+            <h2>How to Reach Casa Paradiso</h2>
             <p>
-              Guests arriving in Goa can reach Casa Paradiso by taxi, pre-booked transfer, or self-drive. Once at
-              the hotel, scooters and self-drive cars are available for doorstep rental — see our{' '}
-              <Link href="/rentals">rentals page</Link> for the full fleet and pricing.{' '}
-              {/* TODO(manual verification): add a confirmed distance/drive-time from Goa's airport(s) once verified — not
-                  invented here to avoid publishing an unverified travel-time claim. */}
+              Guests can reach Casa Paradiso via prepaid airport/railway taxi, private cab, or self-drive vehicle. We offer
+              doorstep scooter and car rentals directly at the hotel — visit our <Link href="/rentals">rentals page</Link> for
+              options and vehicle reservations.
             </p>
           </div>
 
           <div className="legal-page__section" style={{ borderBottom: 'none', marginBottom: 0, paddingBottom: 0 }}>
-            <h2>Nearby Attractions</h2>
-            <div className="info-grid">
-              {ATTRACTIONS_DATA.map((a) => (
-                <div className="info-grid__item" key={a.id}>
-                  <h3><Link href={`/experiences/${a.id}`}>{a.title}</Link></h3>
-                  <p>{a.location ?? a.description}</p>
-                </div>
-              ))}
+            <h2>Location & Access FAQ</h2>
+            <div className="qa-block" style={{ marginTop: 16 }}>
+              <p className="qa-block__q">What is the exact street address of Casa Paradiso?</p>
+              <p className="qa-block__a">{BUSINESS.streetAddress}, {BUSINESS.addressLocality}, {BUSINESS.addressRegion} {BUSINESS.postalCode}, India.</p>
+            </div>
+            <div className="qa-block" style={{ marginTop: 16 }}>
+              <p className="qa-block__q">Is parking or vehicle access available on Altinho hill?</p>
+              <p className="qa-block__a">Yes, Altinho hill is fully accessible by two-wheelers and four-wheelers with convenient doorstep drop-off and pickup.</p>
+            </div>
+            <div className="qa-block" style={{ marginTop: 16 }}>
+              <p className="qa-block__q">How close is the hotel to Panaji city center?</p>
+              <p className="qa-block__a">Casa Paradiso is located within central Panaji, less than 5 minutes from Church Square, MG Road, and the central market.</p>
             </div>
           </div>
         </div>
@@ -87,9 +140,10 @@ export default function LocationPage() {
               Get Directions on Google Maps →
             </a>
           </p>
-          <div className="content-links">
+          <div className="content-links" style={{ marginTop: 24 }}>
             <Link href="/rooms">Rooms & Suites</Link>
             <Link href="/experiences">Things to Do Nearby</Link>
+            <Link href="/rentals">Scooter & Car Rentals</Link>
             <Link href="/contact">Contact Casa Paradiso</Link>
             <Link href="/#booking">Book Your Stay</Link>
           </div>

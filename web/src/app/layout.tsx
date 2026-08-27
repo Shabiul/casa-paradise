@@ -128,6 +128,8 @@ export default function RootLayout({
   return (
     <html lang="en" data-hero-state="intro">
       <head>
+        <link rel="alternate" type="text/markdown" href="/llms.txt" title="LLMs.txt Summary" />
+        <link rel="alternate" type="text/markdown" href="/llms-full.txt" title="LLMs.txt Full Knowledge Base" />
         <JsonLd />
       </head>
       <body>
