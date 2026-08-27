@@ -1568,6 +1568,177 @@ export function getOrCreateFolioForGuest(guestId: string): GuestFolio {
   return newFolio;
 }
 
+export function updateFolio(folioId: string, updates: Partial<GuestFolio>): GuestFolio | null {
+  const store = getCRMStore();
+  const index = store.folios.findIndex(f => f.id === folioId);
+  if (index === -1) return null;
+
+  const current = store.folios[index];
+  const subtotal = updates.subtotal !== undefined ? updates.subtotal : current.subtotal;
+  const taxAmount = updates.taxAmount !== undefined ? updates.taxAmount : current.taxAmount;
+  const discountAmount = updates.discountAmount !== undefined ? updates.discountAmount : (current.discountAmount || 0);
+  const grandTotal = updates.grandTotal !== undefined ? updates.grandTotal : Math.max(0, Math.round(subtotal + taxAmount - discountAmount));
+  const amountPaid = updates.amountPaid !== undefined ? updates.amountPaid : current.amountPaid;
+  const balanceDue = updates.balanceDue !== undefined ? updates.balanceDue : Math.max(0, grandTotal - amountPaid);
+  const status = updates.status !== undefined ? updates.status : (balanceDue <= 0 ? 'settled' : 'open');
+
+  const updated: GuestFolio = {
+    ...current,
+    ...updates,
+    subtotal,
+    taxAmount,
+    discountAmount,
+    grandTotal,
+    amountPaid,
+    balanceDue,
+    status,
+    updatedAt: new Date().toISOString()
+  };
+
+  const updatedFolios = [...store.folios];
+  updatedFolios[index] = updated;
+
+  saveCRMStore({
+    ...store,
+    folios: updatedFolios
+  });
+
+  persistFolioToSupabase(updated);
+  return updated;
+}
+
+export function syncAllFolios(): GuestFolio[] {
+  const store = getCRMStore();
+  const foliosByGuestId = new Map<string, GuestFolio>();
+  store.folios.forEach(f => {
+    if (f.guestId) foliosByGuestId.set(f.guestId, f);
+  });
+
+  const allGuestIds = new Set<string>();
+  store.guests.forEach(g => allGuestIds.add(g.id));
+  store.roomBookings.forEach(r => { if (r.guestId) allGuestIds.add(r.guestId); });
+  store.vehicleBookings.forEach(v => { if (v.guestId) allGuestIds.add(v.guestId); });
+  store.diningBookings.forEach(d => { if (d.guestId) allGuestIds.add(d.guestId); });
+
+  const updatedFolios: GuestFolio[] = [];
+
+  allGuestIds.forEach(guestId => {
+    const guest = store.guests.find(g => g.id === guestId);
+    const guestRooms = store.roomBookings.filter(b => b.guestId === guestId && b.status !== 'cancelled');
+    const guestVehicles = store.vehicleBookings.filter(b => b.guestId === guestId && b.status !== 'cancelled');
+    const guestDining = store.diningBookings.filter(b => b.guestId === guestId && b.status !== 'cancelled');
+
+    if (!guest && guestRooms.length === 0 && guestVehicles.length === 0 && guestDining.length === 0) {
+      return;
+    }
+
+    const items: GuestFolio['items'] = [];
+    let subtotal = 0;
+    let taxAmount = 0;
+
+    guestRooms.forEach(r => {
+      const tax = r.totalPrice * 0.12;
+      items.push({
+        id: `FIT-RM-${r.id}`,
+        date: r.checkIn,
+        category: 'Room',
+        description: `${r.roomTitle || ('Suite ' + r.roomNumber)} (${r.nights} night${r.nights > 1 ? 's' : ''} @ ₹${r.baseRate}/night)`,
+        qty: r.nights,
+        unitPrice: r.baseRate,
+        taxRatePercent: 12,
+        totalPrice: r.totalPrice,
+        referenceId: r.id
+      });
+      subtotal += r.totalPrice;
+      taxAmount += tax;
+    });
+
+    guestVehicles.forEach(v => {
+      const tax = v.totalPrice * 0.18;
+      items.push({
+        id: `FIT-VH-${v.id}`,
+        date: v.pickupDate,
+        category: 'Vehicle',
+        description: `${v.vehicleName} (${v.days} day${v.days > 1 ? 's' : ''} @ ₹${v.dailyRate}/day)`,
+        qty: v.days,
+        unitPrice: v.dailyRate,
+        taxRatePercent: 18,
+        totalPrice: v.totalPrice,
+        referenceId: v.id
+      });
+      subtotal += v.totalPrice;
+      taxAmount += tax;
+    });
+
+    guestDining.forEach(d => {
+      const bill = d.estimatedBill || 1500;
+      const tax = bill * 0.05;
+      items.push({
+        id: `FIT-DN-${d.id}`,
+        date: d.date,
+        category: 'Dining',
+        description: `Restaurant Dining (${d.timeSlot} - Party of ${d.partySize})`,
+        qty: 1,
+        unitPrice: bill,
+        taxRatePercent: 5,
+        totalPrice: bill,
+        referenceId: d.id
+      });
+      subtotal += bill;
+      taxAmount += tax;
+    });
+
+    const grandTotal = Math.round(subtotal + taxAmount);
+    const existing = foliosByGuestId.get(guestId);
+
+    const paidFromBookings = guestRooms.reduce((sum, r) => sum + (r.paymentStatus === 'paid' ? r.totalPrice : (r.advanceAmount || 0)), 0) +
+                             guestVehicles.reduce((sum, v) => sum + (v.paymentStatus === 'paid' ? v.totalPrice : 0), 0);
+
+    const amountPaid = existing ? Math.max(existing.amountPaid, paidFromBookings) : paidFromBookings;
+    const balanceDue = Math.max(0, grandTotal - amountPaid);
+    const status = balanceDue <= 0 ? 'settled' : 'open';
+
+    const synced: GuestFolio = {
+      id: existing ? existing.id : `FOL-${Math.floor(1000 + Math.random() * 9000)}`,
+      guestId,
+      guestName: guest?.name || guestRooms[0]?.guestName || guestVehicles[0]?.guestName || guestDining[0]?.guestName || 'Guest',
+      guestPhone: guest?.phone || guestRooms[0]?.guestPhone || guestVehicles[0]?.guestPhone || guestDining[0]?.guestPhone || '',
+      guestEmail: guest?.email || guestRooms[0]?.guestEmail || '',
+      roomBookingId: guestRooms[0]?.id,
+      roomNumber: guestRooms[0]?.roomNumber,
+      checkIn: guestRooms[0]?.checkIn,
+      checkOut: guestRooms[0]?.checkOut,
+      items: items.length > 0 ? items : (existing?.items || []),
+      subtotal: items.length > 0 ? subtotal : (existing?.subtotal || 0),
+      taxAmount: items.length > 0 ? Math.round(taxAmount) : (existing?.taxAmount || 0),
+      discountAmount: existing?.discountAmount || 0,
+      grandTotal: items.length > 0 ? grandTotal : (existing?.grandTotal || 0),
+      amountPaid,
+      balanceDue,
+      status,
+      createdAt: existing ? existing.createdAt : new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+
+    updatedFolios.push(synced);
+    persistFolioToSupabase(synced);
+  });
+
+  // Keep any extra folios without guestId
+  store.folios.forEach(f => {
+    if (!f.guestId && !updatedFolios.some(uf => uf.id === f.id)) {
+      updatedFolios.push(f);
+    }
+  });
+
+  saveCRMStore({
+    ...store,
+    folios: updatedFolios
+  });
+
+  return updatedFolios;
+}
+
 export function recordFolioPayment(folioId: string, amount: number, paymentMethod: string): GuestFolio | null {
   const store = getCRMStore();
   const index = store.folios.findIndex(f => f.id === folioId);

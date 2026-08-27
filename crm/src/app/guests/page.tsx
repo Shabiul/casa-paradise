@@ -131,7 +131,7 @@ export default function GuestsAdminPage() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
       {/* Header */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px' }}>
+      <div className="crm-page-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px' }}>
         <div>
           <h1 style={{ fontSize: '22px', fontWeight: 800, color: 'var(--text-primary)', margin: 0, display: 'flex', alignItems: 'center', gap: '10px' }}>
             <Users size={22} color="#059669" />
@@ -168,6 +168,7 @@ export default function GuestsAdminPage() {
 
       {/* Filter & Search Bar */}
       <div
+        className="crm-filter-bar"
         style={{
           display: 'flex',
           alignItems: 'center',
@@ -209,7 +210,7 @@ export default function GuestsAdminPage() {
           ))}
         </div>
 
-        <div style={{ position: 'relative', width: '280px' }}>
+        <div className="crm-filter-search" style={{ position: 'relative', flex: '1', minWidth: '160px', maxWidth: '280px' }}>
           <Search size={15} color="var(--text-muted)" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)' }} />
           <input
             type="text"
@@ -367,7 +368,7 @@ export default function GuestsAdminPage() {
                   KYC & Identity Proof
                 </span>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                <div className="crm-guests-kyc-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
                   <div className="crm-form-group">
                     <label className="crm-label">ID Proof Document Type</label>
                     <select

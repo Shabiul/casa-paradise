@@ -139,7 +139,7 @@ export default function VehiclesAdminPage() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
       {/* Header */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px' }}>
+      <div className="crm-page-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px' }}>
         <div>
           <h1 style={{ fontSize: '22px', fontWeight: 800, color: 'var(--text-primary)', margin: 0, display: 'flex', alignItems: 'center', gap: '10px' }}>
             <Car size={22} color="#0284C7" />
@@ -157,7 +157,7 @@ export default function VehiclesAdminPage() {
       </div>
 
       {/* Fleet Inventory Cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))', gap: '14px' }}>
+      <div className="crm-vehicles-fleet-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))', gap: '14px' }}>
         {store.vehicles.map(veh => (
           <div
             key={veh.id}
@@ -205,6 +205,7 @@ export default function VehiclesAdminPage() {
 
       {/* Filter & Search Bar */}
       <div
+        className="crm-filter-bar"
         style={{
           display: 'flex',
           alignItems: 'center',
@@ -245,7 +246,7 @@ export default function VehiclesAdminPage() {
           ))}
         </div>
 
-        <div style={{ position: 'relative', width: '260px' }}>
+        <div className="crm-filter-search" style={{ position: 'relative', flex: '1', minWidth: '160px', maxWidth: '260px' }}>
           <Search size={15} color="var(--text-muted)" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)' }} />
           <input
             type="text"

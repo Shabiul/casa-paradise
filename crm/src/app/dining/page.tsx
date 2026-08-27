@@ -128,7 +128,7 @@ export default function DiningAdminPage() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
       {/* Header */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px' }}>
+      <div className="crm-page-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px' }}>
         <div>
           <h1 style={{ fontSize: '22px', fontWeight: 800, color: 'var(--text-primary)', margin: 0, display: 'flex', alignItems: 'center', gap: '10px' }}>
             <UtensilsCrossed size={22} color="#D97706" />
@@ -155,7 +155,7 @@ export default function DiningAdminPage() {
           <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>10 Tables (Balcony · Garden · Hall · Lounge)</span>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(190px, 1fr))', gap: '12px' }}>
+        <div className="crm-dining-floorplan" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(190px, 1fr))', gap: '12px' }}>
           {store.diningTables.map(t => (
             <div
               key={t.id}
@@ -196,6 +196,7 @@ export default function DiningAdminPage() {
 
       {/* Filter & Search Bar */}
       <div
+        className="crm-filter-bar"
         style={{
           display: 'flex',
           alignItems: 'center',
@@ -236,7 +237,7 @@ export default function DiningAdminPage() {
           ))}
         </div>
 
-        <div style={{ position: 'relative', width: '260px' }}>
+        <div className="crm-filter-search" style={{ position: 'relative', flex: '1', minWidth: '160px', maxWidth: '260px' }}>
           <Search size={15} color="var(--text-muted)" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)' }} />
           <input
             type="text"

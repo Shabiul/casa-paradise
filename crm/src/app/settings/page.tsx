@@ -60,20 +60,20 @@ export default function SettingsAdminPage() {
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
   // Room Prices
-  const [acSingle, setAcSingle] = useState(1200);
-  const [acDouble, setAcDouble] = useState(1800);
-  const [acTriple, setAcTriple] = useState(2000);
+  const [acSingle, setAcSingle] = useState<number | string>(1200);
+  const [acDouble, setAcDouble] = useState<number | string>(1800);
+  const [acTriple, setAcTriple] = useState<number | string>(2000);
 
-  const [nonacSingle, setNonacSingle] = useState(1200);
-  const [nonacDouble, setNonacDouble] = useState(1500);
-  const [nonacTriple, setNonacTriple] = useState(800);
+  const [nonacSingle, setNonacSingle] = useState<number | string>(1200);
+  const [nonacDouble, setNonacDouble] = useState<number | string>(1500);
+  const [nonacTriple, setNonacTriple] = useState<number | string>(800);
 
   // Vehicle Prices
-  const [activaPrice, setActivaPrice] = useState(400);
-  const [dioPrice, setDioPrice] = useState(400);
-  const [fascinoPrice, setFascinoPrice] = useState(400);
-  const [swiftPrice, setSwiftPrice] = useState(1500);
-  const [ertigaPrice, setErtigaPrice] = useState(2500);
+  const [activaPrice, setActivaPrice] = useState<number | string>(400);
+  const [dioPrice, setDioPrice] = useState<number | string>(400);
+  const [fascinoPrice, setFascinoPrice] = useState<number | string>(400);
+  const [swiftPrice, setSwiftPrice] = useState<number | string>(1500);
+  const [ertigaPrice, setErtigaPrice] = useState<number | string>(2500);
 
   // Hotel Info
   const [hotelName, setHotelName] = useState('');
@@ -83,7 +83,7 @@ export default function SettingsAdminPage() {
   const [email, setEmail] = useState('');
   const [address, setAddress] = useState('');
   const [gstin, setGstin] = useState('');
-  const [taxRate, setTaxRate] = useState(12);
+  const [taxRate, setTaxRate] = useState<number | string>(12);
   const [whatsappTemplate, setWhatsappTemplate] = useState('');
   const [heroImageOverride, setHeroImageOverride] = useState('');
 
@@ -167,19 +167,19 @@ export default function SettingsAdminPage() {
       email,
       address,
       gstin,
-      taxRatePercent: Number(taxRate),
+      taxRatePercent: Number(taxRate) || 12,
       whatsappMessageTemplate: whatsappTemplate,
       heroImageOverride: heroImageOverride.trim() || undefined,
       roomPrices: {
-        ac: { single: Number(acSingle), double: Number(acDouble), triple: Number(acTriple) },
-        nonac: { single: Number(nonacSingle), double: Number(nonacDouble), triple: Number(nonacTriple) }
+        ac: { single: Number(acSingle) || 0, double: Number(acDouble) || 0, triple: Number(acTriple) || 0 },
+        nonac: { single: Number(nonacSingle) || 0, double: Number(nonacDouble) || 0, triple: Number(nonacTriple) || 0 }
       },
       vehiclePrices: {
-        activa: Number(activaPrice),
-        dio: Number(dioPrice),
-        fascino: Number(fascinoPrice),
-        swift: Number(swiftPrice),
-        ertiga: Number(ertigaPrice)
+        activa: Number(activaPrice) || 0,
+        dio: Number(dioPrice) || 0,
+        fascino: Number(fascinoPrice) || 0,
+        swift: Number(swiftPrice) || 0,
+        ertiga: Number(ertigaPrice) || 0
       }
     });
 
@@ -303,65 +303,29 @@ export default function SettingsAdminPage() {
       </div>
 
       {/* Tabs */}
-      <div style={{ display: 'flex', gap: '8px', borderBottom: '1px solid var(--border-subtle)', marginBottom: '24px' }}>
+      <div className="crm-settings-tabs">
         <button
           onClick={() => setActiveTab('rates')}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-            padding: '12px 20px',
-            background: 'none',
-            border: 'none',
-            borderBottom: activeTab === 'rates' ? '2.5px solid var(--color-emerald)' : '2.5px solid transparent',
-            color: activeTab === 'rates' ? 'var(--color-emerald)' : 'var(--text-secondary)',
-            fontWeight: activeTab === 'rates' ? 700 : 600,
-            fontSize: '14px',
-            cursor: 'pointer'
-          }}
+          className={`crm-settings-tab-btn ${activeTab === 'rates' ? 'active' : ''}`}
         >
-          <Building2 size={18} />
-          <span>Rates & Hotel Profile</span>
+          <Building2 size={17} />
+          <span>Rates &amp; Hotel Profile</span>
         </button>
 
         <button
           onClick={() => setActiveTab('staff')}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-            padding: '12px 20px',
-            background: 'none',
-            border: 'none',
-            borderBottom: activeTab === 'staff' ? '2.5px solid var(--color-emerald)' : '2.5px solid transparent',
-            color: activeTab === 'staff' ? 'var(--color-emerald)' : 'var(--text-secondary)',
-            fontWeight: activeTab === 'staff' ? 700 : 600,
-            fontSize: '14px',
-            cursor: 'pointer'
-          }}
+          className={`crm-settings-tab-btn ${activeTab === 'staff' ? 'active' : ''}`}
         >
-          <ShieldCheck size={18} />
-          <span>Staff & Role Access Control</span>
+          <ShieldCheck size={17} />
+          <span>Staff &amp; Role Control</span>
         </button>
 
         <button
           onClick={() => setActiveTab('system')}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-            padding: '12px 20px',
-            background: 'none',
-            border: 'none',
-            borderBottom: activeTab === 'system' ? '2.5px solid var(--color-emerald)' : '2.5px solid transparent',
-            color: activeTab === 'system' ? 'var(--color-emerald)' : 'var(--text-secondary)',
-            fontWeight: activeTab === 'system' ? 700 : 600,
-            fontSize: '14px',
-            cursor: 'pointer'
-          }}
+          className={`crm-settings-tab-btn ${activeTab === 'system' ? 'active' : ''}`}
         >
-          <RotateCcw size={18} />
-          <span>Database & Backup</span>
+          <RotateCcw size={17} />
+          <span>Database &amp; Backup</span>
         </button>
       </div>
 
@@ -369,48 +333,48 @@ export default function SettingsAdminPage() {
       {activeTab === 'rates' && (
         <form onSubmit={handleSaveRates}>
           {/* Room Pricing Master */}
-          <div className="crm-card" style={{ padding: '24px', marginBottom: '24px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
+          <div className="crm-card" style={{ padding: '20px', marginBottom: '20px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
               <BedDouble size={20} color="var(--color-emerald)" />
-              <h2 style={{ fontSize: '17px', fontWeight: 700, margin: 0, color: 'var(--text-primary)' }}>
+              <h2 style={{ fontSize: '16px', fontWeight: 800, margin: 0, color: 'var(--text-primary)' }}>
                 Room Category Nightly Rates (INR ₹)
               </h2>
             </div>
-            <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '20px' }}>
+            <p style={{ fontSize: '12.5px', color: 'var(--text-secondary)', marginBottom: '16px' }}>
               Rates dynamically update both the public website booking engine and the CRM front desk billing.
             </p>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px' }}>
+            <div className="crm-rates-grid">
               {/* AC Suite */}
-              <div style={{ padding: '16px', borderRadius: '12px', border: '1px solid var(--border-subtle)', backgroundColor: 'var(--bg-subtle)' }}>
-                <h3 style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '12px' }}>
+              <div style={{ padding: '14px', borderRadius: '10px', border: '1px solid var(--border-subtle)', backgroundColor: 'var(--bg-subtle)' }}>
+                <h3 style={{ fontSize: '13.5px', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '10px' }}>
                   Paradise AC Suite (10 Rooms)
                 </h3>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
+                <div className="crm-rate-inputs">
                   <div>
-                    <label style={{ fontSize: '11.5px', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Single</label>
+                    <label style={{ fontSize: '11px', fontWeight: 600, color: 'var(--text-secondary)', display: 'block', marginBottom: '3px' }}>Single</label>
                     <input
                       type="number"
                       value={acSingle}
-                      onChange={(e) => setAcSingle(Number(e.target.value))}
+                      onChange={(e) => setAcSingle(e.target.value)}
                       className="crm-input"
                     />
                   </div>
                   <div>
-                    <label style={{ fontSize: '11.5px', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Double</label>
+                    <label style={{ fontSize: '11px', fontWeight: 600, color: 'var(--text-secondary)', display: 'block', marginBottom: '3px' }}>Double</label>
                     <input
                       type="number"
                       value={acDouble}
-                      onChange={(e) => setAcDouble(Number(e.target.value))}
+                      onChange={(e) => setAcDouble(e.target.value)}
                       className="crm-input"
                     />
                   </div>
                   <div>
-                    <label style={{ fontSize: '11.5px', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Triple</label>
+                    <label style={{ fontSize: '11px', fontWeight: 600, color: 'var(--text-secondary)', display: 'block', marginBottom: '3px' }}>Triple</label>
                     <input
                       type="number"
                       value={acTriple}
-                      onChange={(e) => setAcTriple(Number(e.target.value))}
+                      onChange={(e) => setAcTriple(e.target.value)}
                       className="crm-input"
                     />
                   </div>
@@ -418,35 +382,35 @@ export default function SettingsAdminPage() {
               </div>
 
               {/* Non-AC Suite */}
-              <div style={{ padding: '16px', borderRadius: '12px', border: '1px solid var(--border-subtle)', backgroundColor: 'var(--bg-subtle)' }}>
-                <h3 style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '12px' }}>
+              <div style={{ padding: '14px', borderRadius: '10px', border: '1px solid var(--border-subtle)', backgroundColor: 'var(--bg-subtle)' }}>
+                <h3 style={{ fontSize: '13.5px', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '10px' }}>
                   Heritage Non-AC Room (8 Rooms)
                 </h3>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
+                <div className="crm-rate-inputs">
                   <div>
-                    <label style={{ fontSize: '11.5px', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Single</label>
+                    <label style={{ fontSize: '11px', fontWeight: 600, color: 'var(--text-secondary)', display: 'block', marginBottom: '3px' }}>Single</label>
                     <input
                       type="number"
                       value={nonacSingle}
-                      onChange={(e) => setNonacSingle(Number(e.target.value))}
+                      onChange={(e) => setNonacSingle(e.target.value)}
                       className="crm-input"
                     />
                   </div>
                   <div>
-                    <label style={{ fontSize: '11.5px', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Double</label>
+                    <label style={{ fontSize: '11px', fontWeight: 600, color: 'var(--text-secondary)', display: 'block', marginBottom: '3px' }}>Double</label>
                     <input
                       type="number"
                       value={nonacDouble}
-                      onChange={(e) => setNonacDouble(Number(e.target.value))}
+                      onChange={(e) => setNonacDouble(e.target.value)}
                       className="crm-input"
                     />
                   </div>
                   <div>
-                    <label style={{ fontSize: '11.5px', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Triple</label>
+                    <label style={{ fontSize: '11px', fontWeight: 600, color: 'var(--text-secondary)', display: 'block', marginBottom: '3px' }}>Triple</label>
                     <input
                       type="number"
                       value={nonacTriple}
-                      onChange={(e) => setNonacTriple(Number(e.target.value))}
+                      onChange={(e) => setNonacTriple(e.target.value)}
                       className="crm-input"
                     />
                   </div>
@@ -456,57 +420,57 @@ export default function SettingsAdminPage() {
           </div>
 
           {/* Vehicle Pricing Master */}
-          <div className="crm-card" style={{ padding: '24px', marginBottom: '24px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
+          <div className="crm-card" style={{ padding: '20px', marginBottom: '20px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '14px' }}>
               <Car size={20} color="var(--color-emerald)" />
-              <h2 style={{ fontSize: '17px', fontWeight: 700, margin: 0, color: 'var(--text-primary)' }}>
+              <h2 style={{ fontSize: '16px', fontWeight: 800, margin: 0, color: 'var(--text-primary)' }}>
                 Vehicle Fleet Daily Rental Rates (INR ₹/day)
               </h2>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '14px' }}>
+            <div className="crm-vehicle-rates-grid">
               <div>
-                <label style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Honda Activa 6G</label>
+                <label style={{ fontSize: '11.5px', fontWeight: 600, color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Honda Activa 6G</label>
                 <input
                   type="number"
                   value={activaPrice}
-                  onChange={(e) => setActivaPrice(Number(e.target.value))}
+                  onChange={(e) => setActivaPrice(e.target.value)}
                   className="crm-input"
                 />
               </div>
               <div>
-                <label style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Honda Dio 110</label>
+                <label style={{ fontSize: '11.5px', fontWeight: 600, color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Honda Dio 110</label>
                 <input
                   type="number"
                   value={dioPrice}
-                  onChange={(e) => setDioPrice(Number(e.target.value))}
+                  onChange={(e) => setDioPrice(e.target.value)}
                   className="crm-input"
                 />
               </div>
               <div>
-                <label style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Yamaha Fascino</label>
+                <label style={{ fontSize: '11.5px', fontWeight: 600, color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Yamaha Fascino</label>
                 <input
                   type="number"
                   value={fascinoPrice}
-                  onChange={(e) => setFascinoPrice(Number(e.target.value))}
+                  onChange={(e) => setFascinoPrice(e.target.value)}
                   className="crm-input"
                 />
               </div>
               <div>
-                <label style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Maruti Swift (Car)</label>
+                <label style={{ fontSize: '11.5px', fontWeight: 600, color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Maruti Swift (Car)</label>
                 <input
                   type="number"
                   value={swiftPrice}
-                  onChange={(e) => setSwiftPrice(Number(e.target.value))}
+                  onChange={(e) => setSwiftPrice(e.target.value)}
                   className="crm-input"
                 />
               </div>
               <div>
-                <label style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Maruti Ertiga (7-Seater)</label>
+                <label style={{ fontSize: '11.5px', fontWeight: 600, color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Maruti Ertiga (7-Seater)</label>
                 <input
                   type="number"
                   value={ertigaPrice}
-                  onChange={(e) => setErtigaPrice(Number(e.target.value))}
+                  onChange={(e) => setErtigaPrice(e.target.value)}
                   className="crm-input"
                 />
               </div>
@@ -514,17 +478,17 @@ export default function SettingsAdminPage() {
           </div>
 
           {/* Hotel Contact & General Info */}
-          <div className="crm-card" style={{ padding: '24px', marginBottom: '24px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
+          <div className="crm-card" style={{ padding: '20px', marginBottom: '20px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '14px' }}>
               <Building2 size={20} color="var(--color-emerald)" />
-              <h2 style={{ fontSize: '17px', fontWeight: 700, margin: 0, color: 'var(--text-primary)' }}>
-                Hotel Profile & Tax Configuration
+              <h2 style={{ fontSize: '16px', fontWeight: 800, margin: 0, color: 'var(--text-primary)' }}>
+                Hotel Profile &amp; Tax Configuration
               </h2>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px', marginBottom: '16px' }}>
+            <div className="crm-hotel-profile-grid">
               <div>
-                <label style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Hotel Name</label>
+                <label style={{ fontSize: '11.5px', fontWeight: 600, color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Hotel Name</label>
                 <input
                   type="text"
                   value={hotelName}
@@ -533,7 +497,7 @@ export default function SettingsAdminPage() {
                 />
               </div>
               <div>
-                <label style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Tagline</label>
+                <label style={{ fontSize: '11.5px', fontWeight: 600, color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Tagline</label>
                 <input
                   type="text"
                   value={tagline}
@@ -542,7 +506,7 @@ export default function SettingsAdminPage() {
                 />
               </div>
               <div>
-                <label style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Primary Phone</label>
+                <label style={{ fontSize: '11.5px', fontWeight: 600, color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Primary Phone</label>
                 <input
                   type="text"
                   value={phone1}
@@ -551,7 +515,7 @@ export default function SettingsAdminPage() {
                 />
               </div>
               <div>
-                <label style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Support Email</label>
+                <label style={{ fontSize: '11.5px', fontWeight: 600, color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Support Email</label>
                 <input
                   type="email"
                   value={email}
@@ -560,7 +524,7 @@ export default function SettingsAdminPage() {
                 />
               </div>
               <div>
-                <label style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>GSTIN Number</label>
+                <label style={{ fontSize: '11.5px', fontWeight: 600, color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>GSTIN Number</label>
                 <input
                   type="text"
                   value={gstin}
@@ -569,18 +533,18 @@ export default function SettingsAdminPage() {
                 />
               </div>
               <div>
-                <label style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Default GST Rate (%)</label>
+                <label style={{ fontSize: '11.5px', fontWeight: 600, color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Default GST Rate (%)</label>
                 <input
                   type="number"
                   value={taxRate}
-                  onChange={(e) => setTaxRate(Number(e.target.value))}
+                  onChange={(e) => setTaxRate(e.target.value)}
                   className="crm-input"
                 />
               </div>
             </div>
 
-            <div>
-              <label style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Full Property Address</label>
+            <div style={{ marginTop: '14px' }}>
+              <label style={{ fontSize: '11.5px', fontWeight: 600, color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Full Property Address</label>
               <input
                 type="text"
                 value={address}
@@ -591,9 +555,9 @@ export default function SettingsAdminPage() {
           </div>
 
           <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-            <button type="submit" className="crm-btn crm-btn-primary" style={{ padding: '10px 24px', fontSize: '14px' }}>
+            <button type="submit" className="crm-btn crm-btn-primary" style={{ padding: '10px 24px', fontSize: '14px', width: 'auto' }}>
               <Save size={16} />
-              <span>Save Rates & Settings</span>
+              <span>Save Rates &amp; Settings</span>
             </button>
           </div>
         </form>
@@ -602,12 +566,12 @@ export default function SettingsAdminPage() {
       {/* TAB 2: STAFF & ROLE ACCESS CONTROL */}
       {activeTab === 'staff' && (
         <div>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px', marginBottom: '16px' }}>
             <div>
-              <h2 style={{ fontSize: '18px', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>
-                Staff Accounts & Granular Permissions Matrix
+              <h2 style={{ fontSize: '17px', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>
+                Staff Accounts &amp; Granular Permissions
               </h2>
-              <p style={{ fontSize: '13px', color: 'var(--text-secondary)', margin: '4px 0 0 0' }}>
+              <p style={{ fontSize: '12.5px', color: 'var(--text-secondary)', margin: '3px 0 0 0' }}>
                 Admins have root access. For staff members, toggle individual feature modules on/off in real time.
               </p>
             </div>
@@ -623,7 +587,7 @@ export default function SettingsAdminPage() {
           </div>
 
           {/* User Cards with Permissions Matrix */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             {users.map((u) => {
               const isAdmin = u.role === 'admin';
               const perms = u.permissions || {
@@ -642,35 +606,35 @@ export default function SettingsAdminPage() {
               return (
                 <div
                   key={u.id}
-                  className="crm-card"
+                  className="crm-card crm-staff-card"
                   style={{
-                    padding: '24px',
                     border: isAdmin ? '1.5px solid var(--accent-gold)' : '1px solid var(--border-subtle)',
                     backgroundColor: 'var(--bg-card)'
                   }}
                 >
                   {/* User Profile Header Row */}
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '14px', marginBottom: '20px', paddingBottom: '16px', borderBottom: '1px solid var(--border-subtle)' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+                  <div className="crm-staff-header">
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', minWidth: 0 }}>
                       <div
                         style={{
-                          width: '46px',
-                          height: '46px',
-                          borderRadius: '12px',
+                          width: '44px',
+                          height: '44px',
+                          borderRadius: '10px',
                           backgroundColor: isAdmin ? '#FEF3C7' : '#F1F5F9',
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center',
-                          fontSize: '22px',
-                          border: isAdmin ? '1px solid #FDE68A' : '1px solid #E2E8F0'
+                          fontSize: '20px',
+                          border: isAdmin ? '1px solid #FDE68A' : '1px solid #E2E8F0',
+                          flexShrink: 0
                         }}
                       >
                         {u.avatar || (isAdmin ? '👑' : '👤')}
                       </div>
 
-                      <div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                          <h3 style={{ fontSize: '16px', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>
+                      <div style={{ minWidth: 0 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                          <h3 style={{ fontSize: '15px', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>
                             {u.name}
                           </h3>
                           <span
@@ -679,7 +643,7 @@ export default function SettingsAdminPage() {
                               fontWeight: 800,
                               textTransform: 'uppercase',
                               padding: '2px 8px',
-                              borderRadius: '6px',
+                              borderRadius: '4px',
                               backgroundColor: isAdmin ? '#FEF3C7' : '#F1F5F9',
                               color: isAdmin ? '#92400E' : '#475569',
                               border: isAdmin ? '1px solid #FDE68A' : '1px solid #E2E8F0'
@@ -688,44 +652,44 @@ export default function SettingsAdminPage() {
                             {u.role.toUpperCase()}
                           </span>
                         </div>
-                        <span style={{ fontSize: '12.5px', color: 'var(--text-muted)' }}>
+                        <div style={{ fontSize: '12px', color: 'var(--text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                           {u.designation || 'Staff'} · {u.email}
-                        </span>
+                        </div>
                       </div>
                     </div>
 
                     {/* Role & PIN Controls */}
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '14px', flexWrap: 'wrap' }}>
+                    <div className="crm-staff-controls">
                       {/* Role Dropdown */}
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                        <span style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)' }}>Role:</span>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flex: 1, minWidth: '140px' }}>
+                        <span style={{ fontSize: '11.5px', fontWeight: 600, color: 'var(--text-secondary)' }}>Role:</span>
                         <select
                           value={u.role}
                           onChange={(e) => handleRoleChange(u.id, e.target.value as CRMUserRole)}
                           className="crm-select"
-                          style={{ padding: '6px 12px', fontSize: '12.5px', fontWeight: 700 }}
+                          style={{ padding: '5px 10px', fontSize: '12px', fontWeight: 700, flex: 1 }}
                         >
-                          <option value="staff">Staff (Custom Permissions)</option>
-                          <option value="admin">Admin (Unrestricted Root)</option>
+                          <option value="staff">Staff</option>
+                          <option value="admin">Admin</option>
                         </select>
                       </div>
 
                       {/* PIN Editor */}
                       <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                        <Lock size={14} color="var(--text-muted)" />
-                        <span style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)' }}>PIN:</span>
+                        <Lock size={13} color="var(--text-muted)" />
+                        <span style={{ fontSize: '11.5px', fontWeight: 600, color: 'var(--text-secondary)' }}>PIN:</span>
                         <input
                           type="password"
                           maxLength={4}
                           value={u.pin || '0000'}
                           onChange={(e) => handlePinChange(u.id, e.target.value.replace(/\D/g, ''))}
                           style={{
-                            width: '64px',
-                            padding: '4px 8px',
-                            fontSize: '13px',
+                            width: '58px',
+                            padding: '4px 6px',
+                            fontSize: '12px',
                             textAlign: 'center',
                             fontWeight: 700,
-                            letterSpacing: '3px',
+                            letterSpacing: '2px',
                             borderRadius: '6px',
                             border: '1px solid var(--border-subtle)',
                             backgroundColor: 'var(--bg-subtle)'
@@ -742,13 +706,14 @@ export default function SettingsAdminPage() {
                             background: 'none',
                             border: '1px solid #FCA5A5',
                             borderRadius: '6px',
-                            padding: '6px 10px',
+                            padding: '5px 8px',
                             color: '#DC2626',
                             cursor: 'pointer',
-                            backgroundColor: '#FEF2F2'
+                            backgroundColor: '#FEF2F2',
+                            flexShrink: 0
                           }}
                         >
-                          <Trash2 size={14} />
+                          <Trash2 size={13} />
                         </button>
                       )}
                     </div>
@@ -756,17 +721,17 @@ export default function SettingsAdminPage() {
 
                   {/* Permissions Toggles Grid */}
                   <div>
-                    <span style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.6px', marginBottom: '12px' }}>
+                    <span style={{ display: 'block', fontSize: '11px', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.6px', marginBottom: '10px' }}>
                       Allowed Feature Modules
                     </span>
 
                     {isAdmin ? (
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '12px 16px', borderRadius: '10px', backgroundColor: '#FEF3C7', color: '#92400E', fontSize: '13px', fontWeight: 600 }}>
-                        <ShieldCheck size={18} />
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 14px', borderRadius: '8px', backgroundColor: '#FEF3C7', color: '#92400E', fontSize: '12.5px', fontWeight: 600 }}>
+                        <ShieldCheck size={16} />
                         <span>Administrator accounts automatically have full access to all CRM modules and settings.</span>
                       </div>
                     ) : (
-                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '12px' }}>
+                      <div className="crm-perms-grid">
                         {permissionModules.map((mod) => {
                           const isChecked = Boolean(perms[mod.key]);
                           const Icon = mod.icon;
@@ -779,27 +744,28 @@ export default function SettingsAdminPage() {
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'space-between',
-                                padding: '10px 14px',
-                                borderRadius: '10px',
+                                padding: '8px 12px',
+                                borderRadius: '8px',
                                 border: isChecked ? '1px solid rgba(5, 150, 105, 0.4)' : '1px solid var(--border-subtle)',
                                 backgroundColor: isChecked ? 'rgba(5, 150, 105, 0.04)' : 'var(--bg-subtle)',
                                 cursor: 'pointer',
                                 transition: 'all 0.15s ease'
                               }}
                             >
-                              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', minWidth: 0 }}>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0, overflow: 'hidden' }}>
                                 <div
                                   style={{
-                                    color: isChecked ? 'var(--color-emerald)' : 'var(--text-muted)'
+                                    color: isChecked ? 'var(--color-emerald)' : 'var(--text-muted)',
+                                    flexShrink: 0
                                   }}
                                 >
-                                  <Icon size={16} />
+                                  <Icon size={15} />
                                 </div>
-                                <div>
-                                  <div style={{ fontSize: '13px', fontWeight: 600, color: isChecked ? 'var(--text-primary)' : 'var(--text-muted)' }}>
+                                <div style={{ minWidth: 0, overflow: 'hidden' }}>
+                                  <div style={{ fontSize: '12.5px', fontWeight: 600, color: isChecked ? 'var(--text-primary)' : 'var(--text-muted)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                                     {mod.label}
                                   </div>
-                                  <div style={{ fontSize: '11px', color: 'var(--text-muted)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                  <div style={{ fontSize: '10.5px', color: 'var(--text-muted)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                                     {mod.desc}
                                   </div>
                                 </div>
@@ -808,26 +774,27 @@ export default function SettingsAdminPage() {
                               {/* Toggle Switch */}
                               <div
                                 style={{
-                                  width: '38px',
-                                  height: '22px',
+                                  width: '34px',
+                                  height: '18px',
                                   borderRadius: '999px',
                                   backgroundColor: isChecked ? 'var(--color-emerald)' : '#CBD5E1',
                                   position: 'relative',
                                   flexShrink: 0,
+                                  marginLeft: '8px',
                                   transition: 'background-color 0.2s'
                                 }}
                               >
                                 <div
                                   style={{
-                                    width: '18px',
-                                    height: '18px',
+                                    width: '14px',
+                                    height: '14px',
                                     borderRadius: '50%',
                                     backgroundColor: '#FFFFFF',
                                     position: 'absolute',
                                     top: '2px',
                                     left: isChecked ? '18px' : '2px',
                                     transition: 'left 0.2s',
-                                    boxShadow: '0 1px 3px rgba(0, 0, 0, 0.2)'
+                                    boxShadow: '0 1px 2px rgba(0, 0, 0, 0.2)'
                                   }}
                                 />
                               </div>
@@ -846,15 +813,15 @@ export default function SettingsAdminPage() {
 
       {/* TAB 3: SYSTEM & DATA BACKUP */}
       {activeTab === 'system' && (
-        <div className="crm-card" style={{ padding: '24px' }}>
-          <h2 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '16px' }}>
-            Data Import, Export & Reset
+        <div className="crm-card" style={{ padding: '20px' }}>
+          <h2 style={{ fontSize: '17px', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '12px' }}>
+            Data Import, Export &amp; Reset
           </h2>
-          <p style={{ fontSize: '13.5px', color: 'var(--text-secondary)', lineHeight: 1.6, marginBottom: '24px' }}>
+          <p style={{ fontSize: '13px', color: 'var(--text-secondary)', lineHeight: 1.5, marginBottom: '20px' }}>
             Export full hotel records (guests, bookings, folios, users, settings) to a JSON file for backup, or restore from a previous snapshot.
           </p>
 
-          <div style={{ display: 'flex', gap: '14px', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
             <button
               onClick={() => {
                 const json = exportCRMDataAsJSON();
@@ -867,9 +834,9 @@ export default function SettingsAdminPage() {
                 showNotification('Database exported successfully.');
               }}
               className="crm-btn crm-btn-secondary"
-              style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 18px', fontSize: '13.5px' }}
+              style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '9px 16px', fontSize: '13px' }}
             >
-              <Download size={16} />
+              <Download size={15} />
               <span>Export Full CRM Backup (JSON)</span>
             </button>
 
@@ -885,8 +852,8 @@ export default function SettingsAdminPage() {
                 display: 'flex',
                 alignItems: 'center',
                 gap: '8px',
-                padding: '10px 18px',
-                fontSize: '13.5px',
+                padding: '9px 16px',
+                fontSize: '13px',
                 borderRadius: 'var(--radius-md)',
                 backgroundColor: '#FEE2E2',
                 border: '1px solid #FECACA',
@@ -895,7 +862,7 @@ export default function SettingsAdminPage() {
                 cursor: 'pointer'
               }}
             >
-              <RotateCcw size={16} />
+              <RotateCcw size={15} />
               <span>Reset to Seed Defaults</span>
             </button>
           </div>
@@ -904,45 +871,12 @@ export default function SettingsAdminPage() {
 
       {/* Add User Modal */}
       {isAddUserOpen && (
-        <div
-          style={{
-            position: 'fixed',
-            inset: 0,
-            backgroundColor: 'rgba(15, 23, 42, 0.65)',
-            backdropFilter: 'blur(4px)',
-            zIndex: 9999,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '20px'
-          }}
-          onClick={() => setIsAddUserOpen(false)}
-        >
-          <div
-            style={{
-              backgroundColor: '#FFFFFF',
-              borderRadius: '20px',
-              width: '100%',
-              maxWidth: '480px',
-              boxShadow: '0 24px 60px rgba(0, 0, 0, 0.25)',
-              overflow: 'hidden',
-              border: '1px solid var(--border-subtle)'
-            }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div
-              style={{
-                padding: '20px 24px',
-                borderBottom: '1px solid var(--border-subtle)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                background: 'linear-gradient(135deg, #FAF8F5 0%, #F3EFEA 100%)'
-              }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <UserPlus size={20} color="var(--color-emerald)" />
-                <h3 style={{ margin: 0, fontSize: '16px', fontWeight: 800, color: 'var(--text-primary)' }}>
+        <div className="crm-modal-backdrop" onClick={(e) => e.target === e.currentTarget && setIsAddUserOpen(false)}>
+          <div className="crm-modal" style={{ maxWidth: '480px' }}>
+            <div className="crm-modal-header">
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <UserPlus size={18} color="var(--color-emerald)" />
+                <h3 style={{ margin: 0, fontSize: '15px', fontWeight: 800, color: 'var(--text-primary)' }}>
                   Create New Staff Account
                 </h3>
               </div>
@@ -950,123 +884,107 @@ export default function SettingsAdminPage() {
                 onClick={() => setIsAddUserOpen(false)}
                 style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)' }}
               >
-                <X size={20} />
+                <X size={18} />
               </button>
             </div>
 
-            <form onSubmit={handleCreateUser} style={{ padding: '24px' }}>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginBottom: '20px' }}>
-                <div>
-                  <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '4px' }}>
-                    Full Name *
-                  </label>
+            <form onSubmit={handleCreateUser} className="crm-modal-body">
+              <div className="crm-form-group">
+                <label className="crm-label">Full Name *</label>
+                <input
+                  type="text"
+                  required
+                  value={newUserName}
+                  onChange={(e) => setNewUserName(e.target.value)}
+                  placeholder="e.g. Ramesh Kumar"
+                  className="crm-input"
+                />
+              </div>
+
+              <div className="crm-form-group">
+                <label className="crm-label">Email Address *</label>
+                <input
+                  type="email"
+                  required
+                  value={newUserEmail}
+                  onChange={(e) => setNewUserEmail(e.target.value)}
+                  placeholder="e.g. ramesh@casaparadisohotel.in"
+                  className="crm-input"
+                />
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                <div className="crm-form-group">
+                  <label className="crm-label">Scope Role</label>
+                  <select
+                    value={newUserRole}
+                    onChange={(e) => setNewUserRole(e.target.value as CRMUserRole)}
+                    className="crm-select"
+                  >
+                    <option value="staff">Staff (Custom)</option>
+                    <option value="admin">Admin (Root Access)</option>
+                  </select>
+                </div>
+
+                <div className="crm-form-group">
+                  <label className="crm-label">4-Digit PIN Code</label>
                   <input
-                    type="text"
-                    required
-                    value={newUserName}
-                    onChange={(e) => setNewUserName(e.target.value)}
-                    placeholder="e.g. Ramesh Kumar"
+                    type="password"
+                    maxLength={4}
+                    value={newUserPin}
+                    onChange={(e) => setNewUserPin(e.target.value.replace(/\D/g, ''))}
+                    placeholder="0000"
                     className="crm-input"
+                    style={{ textAlign: 'center', letterSpacing: '3px', fontWeight: 700 }}
                   />
-                </div>
-
-                <div>
-                  <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '4px' }}>
-                    Email Address *
-                  </label>
-                  <input
-                    type="email"
-                    required
-                    value={newUserEmail}
-                    onChange={(e) => setNewUserEmail(e.target.value)}
-                    placeholder="e.g. ramesh@casaparadisohotel.in"
-                    className="crm-input"
-                  />
-                </div>
-
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-                  <div>
-                    <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '4px' }}>
-                      Scope Role
-                    </label>
-                    <select
-                      value={newUserRole}
-                      onChange={(e) => setNewUserRole(e.target.value as CRMUserRole)}
-                      className="crm-select"
-                    >
-                      <option value="staff">Staff (Custom)</option>
-                      <option value="admin">Admin (Root Access)</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '4px' }}>
-                      4-Digit PIN Code
-                    </label>
-                    <input
-                      type="password"
-                      maxLength={4}
-                      value={newUserPin}
-                      onChange={(e) => setNewUserPin(e.target.value.replace(/\D/g, ''))}
-                      placeholder="0000"
-                      className="crm-input"
-                      style={{ textAlign: 'center', letterSpacing: '4px', fontWeight: 700 }}
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '4px' }}>
-                    Job Designation
-                  </label>
-                  <input
-                    type="text"
-                    value={newUserDesignation}
-                    onChange={(e) => setNewUserDesignation(e.target.value)}
-                    placeholder="e.g. Front Office Associate / Night Duty"
-                    className="crm-input"
-                  />
-                </div>
-
-                <div>
-                  <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '6px' }}>
-                    Avatar Icon
-                  </label>
-                  <div style={{ display: 'flex', gap: '10px' }}>
-                    {['🏨', '🧹', '👤', '🛎️', '👨‍💼', '👩‍💼', '👑'].map((emoji) => (
-                      <button
-                        key={emoji}
-                        type="button"
-                        onClick={() => setNewUserAvatar(emoji)}
-                        style={{
-                          fontSize: '20px',
-                          padding: '6px 10px',
-                          borderRadius: '8px',
-                          border: newUserAvatar === emoji ? '2px solid var(--color-emerald)' : '1px solid var(--border-subtle)',
-                          backgroundColor: newUserAvatar === emoji ? 'rgba(5, 150, 105, 0.1)' : 'var(--bg-subtle)',
-                          cursor: 'pointer'
-                        }}
-                      >
-                        {emoji}
-                      </button>
-                    ))}
-                  </div>
                 </div>
               </div>
 
-              <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
+              <div className="crm-form-group">
+                <label className="crm-label">Job Designation</label>
+                <input
+                  type="text"
+                  value={newUserDesignation}
+                  onChange={(e) => setNewUserDesignation(e.target.value)}
+                  placeholder="e.g. Front Office Associate"
+                  className="crm-input"
+                />
+              </div>
+
+              <div className="crm-form-group">
+                <label className="crm-label">Avatar Icon</label>
+                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                  {['🏨', '🧹', '👤', '🛎️', '👨‍💼', '👩‍💼', '👑'].map((emoji) => (
+                    <button
+                      key={emoji}
+                      type="button"
+                      onClick={() => setNewUserAvatar(emoji)}
+                      style={{
+                        fontSize: '18px',
+                        padding: '6px 10px',
+                        borderRadius: '8px',
+                        border: newUserAvatar === emoji ? '2px solid var(--color-emerald)' : '1px solid var(--border-subtle)',
+                        backgroundColor: newUserAvatar === emoji ? 'rgba(5, 150, 105, 0.1)' : 'var(--bg-subtle)',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      {emoji}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="crm-modal-footer" style={{ padding: '12px 0 0 0', background: 'none' }}>
                 <button
                   type="button"
                   onClick={() => setIsAddUserOpen(false)}
                   className="crm-btn crm-btn-secondary"
-                  style={{ padding: '8px 16px' }}
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   className="crm-btn crm-btn-primary"
-                  style={{ padding: '8px 20px' }}
                 >
                   Create Account
                 </button>

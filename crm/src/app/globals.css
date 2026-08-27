@@ -723,6 +723,93 @@ body {
   box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.15);
 }
 
+/* Settings & Staff Control Classes */
+.crm-settings-tabs {
+  display: flex;
+  gap: 8px;
+  border-bottom: 1px solid var(--border-subtle);
+  margin-bottom: 24px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.crm-settings-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.crm-settings-tab-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 18px;
+  background: none;
+  border: none;
+  border-bottom: 2.5px solid transparent;
+  color: var(--text-secondary);
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: var(--transition);
+}
+
+.crm-settings-tab-btn.active {
+  border-bottom-color: var(--accent-emerald);
+  color: var(--accent-emerald);
+  font-weight: 700;
+}
+
+.crm-rates-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+.crm-rate-inputs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.crm-vehicle-rates-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+}
+
+.crm-hotel-profile-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.crm-staff-card {
+  padding: 20px;
+}
+
+.crm-staff-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 16px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.crm-staff-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.crm-perms-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 10px;
+}
+
 /* Tape Chart Timeline Grid */
 .crm-tapechart-container {
   overflow-x: auto;
@@ -973,6 +1060,74 @@ body {
     overflow-x: hidden;
   }
 
+
+  /* ══════════════════════════════════════════════
+     PAGE HEADERS — Stack on mobile
+  ══════════════════════════════════════════════ */
+  .crm-page-header {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 12px !important;
+  }
+
+  .crm-page-header h1,
+  div[style*="justifyContent: 'space-between'"] > div > h1 {
+    font-size: 17px !important;
+    line-height: 1.3 !important;
+  }
+
+  div[style*="justifyContent: 'space-between'"][style*="alignItems: 'center'"] {
+    flex-wrap: wrap !important;
+  }
+
+  /* ══════════════════════════════════════════════
+     FILTER BAR — Full-width search inputs
+  ══════════════════════════════════════════════ */
+
+  div[style*="justifyContent: 'space-between'"][style*="border: '1px solid var(--border-subtle)'"] {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 10px !important;
+  }
+
+  div[style*="position: 'relative'"][style*="width: '280px'"],
+  div[style*="position: 'relative'"][style*="width: '260px'"] {
+    width: 100% !important;
+  }
+
+  div[style*="position: 'relative'"][style*="width: '280px'"] input,
+  div[style*="position: 'relative'"][style*="width: '260px'"] input {
+    width: 100% !important;
+  }
+
+  .crm-input, .crm-select, .crm-textarea {
+    width: 100% !important;
+    max-width: 100% !important;
+    font-size: 16px !important;
+  }
+
+  /* ── Filter bars: stack vertically on mobile ── */
+  .crm-filter-bar {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+
+  .crm-filter-search {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: 1 !important;
+  }
+
+  .crm-filter-search input {
+    width: 100% !important;
+  }
+
+  /* ── Vehicle fleet card grid ── */
+  .crm-vehicles-fleet-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important;
+  }
+
   /* ── Dashboard Hero Banner ── */
   .crm-hero-banner {
     padding: 16px 14px !important;
@@ -1099,6 +1254,74 @@ body {
     gap: 10px !important;
   }
 
+  /* ── Settings, Rates & Staff Control (Mobile) ── */
+  .crm-settings-tabs {
+    gap: 4px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid var(--border-subtle);
+    padding-bottom: 2px;
+  }
+
+  .crm-settings-tab-btn {
+    padding: 10px 14px;
+    font-size: 13px;
+    gap: 6px;
+  }
+
+  .crm-rates-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+
+  .crm-rate-inputs {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 6px !important;
+  }
+
+  .crm-vehicle-rates-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important;
+  }
+
+  .crm-hotel-profile-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+
+  .crm-staff-card {
+    padding: 14px !important;
+  }
+
+  .crm-staff-header {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 12px !important;
+    margin-bottom: 12px !important;
+    padding-bottom: 12px !important;
+  }
+
+  .crm-staff-controls {
+    width: 100% !important;
+    justify-content: space-between !important;
+    background-color: var(--bg-subtle);
+    padding: 8px 10px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-subtle);
+  }
+
+  /* ══════════════════════════════════════════════
+     ANALYTICS PAGE — Stack export buttons
+  ══════════════════════════════════════════════ */
+  div[style*="gap: '10px'"] > .crm-btn-secondary[style*="Export"],
+  .crm-analytics-header-actions {
+    flex-direction: column !important;
+    width: 100% !important;
+  }
+
+  div[style*="gap: '10px'"] {
+    flex-wrap: wrap !important;
+  }
+
   /* ── Modals: bottom sheet ── */
   .crm-modal-backdrop {
     padding: 0;
@@ -1118,6 +1341,25 @@ body {
     padding: 16px;
   }
 
+  /* ══════════════════════════════════════════════
+     MODAL FORM GRIDS — Collapse 2-col to 1-col
+  ══════════════════════════════════════════════ */
+  .crm-modal-body div[style*="gridTemplateColumns: '1fr 1fr'"],
+  .crm-modal-body div[style*="grid-template-columns: 1fr 1fr"],
+  .crm-modal-body div[style*="gridTemplateColumns: '1fr, 1fr'"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  .crm-modal-footer {
+    flex-wrap: wrap !important;
+    gap: 10px !important;
+  }
+
+  .crm-modal-footer .crm-btn {
+    flex: 1 !important;
+    justify-content: center !important;
+  }
+
   /* ── Tape chart: compact and scrollable ── */
   .crm-tapechart-container {
     overflow-x: auto;
@@ -1132,6 +1374,101 @@ body {
 
   .crm-tapechart-cell {
     height: 42px;
+  }
+
+  /* ══════════════════════════════════════════════
+     CALENDAR PAGE — Make scrollable
+  ══════════════════════════════════════════════ */
+  .crm-calendar-container,
+  .crm-calendar-grid-wrapper {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  /* ── Settings, Rates & Staff Control (Mobile) ── */
+  .crm-settings-tabs {
+    gap: 4px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .crm-perms-grid {
+    grid-template-columns: 1fr !important;
+    gap: 8px !important;
+  }
+
+  /* ══════════════════════════════════════════════
+     HOUSEKEEPING PAGE — Room grid & admin tools
+  ══════════════════════════════════════════════ */
+  .crm-hk-rooms-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important;
+  }
+
+  .crm-hk-room-card {
+    padding: 12px !important;
+  }
+
+  .crm-hk-room-actions {
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+  }
+
+  .crm-hk-tab-row {
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+  }
+
+  .crm-admin-room-btn {
+    font-size: 12px !important;
+    padding: 7px 10px !important;
+  }
+
+  /* ══════════════════════════════════════════════
+     VEHICLES PAGE — Fleet cards / filter
+  ══════════════════════════════════════════════ */
+  .crm-vehicles-filter-row {
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+
+  .crm-vehicles-category-tabs {
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+  }
+
+  /* ══════════════════════════════════════════════
+     DINING PAGE — Floorplan grid
+  ══════════════════════════════════════════════ */
+  .crm-dining-floorplan {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important;
+  }
+
+  /* ══════════════════════════════════════════════
+     ROOMS PAGE — inline form grid inside edit modal
+  ══════════════════════════════════════════════ */
+  .crm-rooms-edit-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* ══════════════════════════════════════════════
+     GUESTS PAGE — Dossier modal form
+  ══════════════════════════════════════════════ */
+  .crm-guests-kyc-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* ══════════════════════════════════════════════
+     GENERAL — Prevent any stray horizontal overflow
+  ══════════════════════════════════════════════ */
+  * {
+    max-width: 100%;
+  }
+
+  img, video, iframe {
+    max-width: 100%;
+    height: auto;
   }
 }
 
@@ -1168,5 +1505,23 @@ body {
     grid-template-columns: 1fr !important;
     gap: 8px !important;
   }
-}
 
+  /* Housekeeping: 1 column grid on very small screens */
+  .crm-hk-rooms-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Dining: 1 column */
+  .crm-dining-floorplan {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  /* Action buttons in table rows — shrink */
+  .crm-table td div[style*="display: 'flex'"][style*="gap: '6px'"] {
+    gap: 4px !important;
+  }
+
+  .crm-btn[style*="padding: '5px 8px'"] {
+    padding: 5px 6px !important;
+  }
+}

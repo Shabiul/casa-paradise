@@ -584,9 +584,9 @@ export default function QuickBookingModal({ initialTab = 'room', onClose }: Quic
                   >
                     <option value="Room">Guest Room</option>
                     <option value="Restaurant">Restaurant / Bar</option>
-                    <option value="Lobby">Lobby & Altinho Hill Garden</option>
+                    <option value="Lobby">Lobby &amp; Reception</option>
                     <option value="Vehicles">Vehicle Fleet</option>
-                    <option value="General">General Property</option>
+                    <option value="General">Common Area / Facility</option>
                   </select>
                 </div>
                 {maintArea === 'Room' && (

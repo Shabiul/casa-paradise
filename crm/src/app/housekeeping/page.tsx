@@ -55,10 +55,15 @@ export default function HousekeepingAdminPage() {
   const [roomNotes, setRoomNotes] = useState('');
   const [roomFormError, setRoomFormError] = useState('');
 
+  // Quick Note Edit (Admin Only)
+  const [quickNoteRoom, setQuickNoteRoom] = useState<RoomDefinition | null>(null);
+  const [quickNoteText, setQuickNoteText] = useState('');
+
   // Maintenance Edit
   const [selectedTicket, setSelectedTicket] = useState<MaintenanceTicket | null>(null);
   const [ticketStatus, setTicketStatus] = useState<any>('reported');
   const [ticketAssignee, setTicketAssignee] = useState('');
+  const [ticketDescription, setTicketDescription] = useState('');
 
   useEffect(() => {
     const update = () => {
@@ -96,6 +101,7 @@ export default function HousekeepingAdminPage() {
     setSelectedTicket(t);
     setTicketStatus(t.status);
     setTicketAssignee(t.assignedTo || '');
+    setTicketDescription(t.description || '');
   };
 
   const handleSaveTicket = (e: React.FormEvent) => {
@@ -104,10 +110,26 @@ export default function HousekeepingAdminPage() {
 
     updateMaintenanceTicket(selectedTicket.id, {
       status: ticketStatus,
-      assignedTo: ticketAssignee
+      assignedTo: ticketAssignee,
+      description: ticketDescription
     });
 
     setSelectedTicket(null);
+  };
+
+  const handleOpenQuickNote = (room: RoomDefinition) => {
+    if (!isAdmin) return;
+    setQuickNoteRoom(room);
+    setQuickNoteText(room.notes || '');
+  };
+
+  const handleSaveQuickNote = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!quickNoteRoom || !isAdmin) return;
+    updateRoomDefinition(quickNoteRoom.roomNumber, {
+      notes: quickNoteText.trim()
+    });
+    setQuickNoteRoom(null);
   };
 
   const handleOpenRoomModal = (room: RoomDefinition | null) => {
@@ -366,10 +388,56 @@ export default function HousekeepingAdminPage() {
                   </span>
                 </div>
 
-                {room.notes && (
-                  <div style={{ fontSize: '12px', color: '#D97706', backgroundColor: '#FEF3C7', padding: '6px 10px', borderRadius: '4px' }}>
-                    Note: {room.notes}
+                {room.notes ? (
+                  <div style={{ fontSize: '12px', color: '#D97706', backgroundColor: '#FEF3C7', padding: '6px 10px', borderRadius: '4px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '8px' }}>
+                    <span><strong>Note:</strong> {room.notes}</span>
+                    {isAdmin && (
+                      <button
+                        onClick={() => handleOpenQuickNote(room)}
+                        title="Edit Suite Note (Admin Only)"
+                        style={{
+                          background: 'none',
+                          border: 'none',
+                          color: '#B45309',
+                          cursor: 'pointer',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '2px',
+                          fontSize: '11px',
+                          fontWeight: 800,
+                          padding: '2px 6px',
+                          borderRadius: '4px',
+                          backgroundColor: 'rgba(180, 83, 9, 0.1)'
+                        }}
+                      >
+                        <Edit size={11} />
+                        <span>Edit</span>
+                      </button>
+                    )}
                   </div>
+                ) : (
+                  isAdmin && (
+                    <button
+                      onClick={() => handleOpenQuickNote(room)}
+                      style={{
+                        background: 'none',
+                        border: '1px dashed var(--border-subtle)',
+                        borderRadius: '4px',
+                        padding: '4px 8px',
+                        color: 'var(--text-secondary)',
+                        fontSize: '11px',
+                        fontWeight: 600,
+                        cursor: 'pointer',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '4px',
+                        width: 'fit-content'
+                      }}
+                    >
+                      <Plus size={12} color="#059669" />
+                      <span>Add Note (Admin)</span>
+                    </button>
+                  )
                 )}
 
                 {/* Status Toggle Buttons */}
@@ -491,20 +559,31 @@ export default function HousekeepingAdminPage() {
                     </span>
                   </td>
                   <td style={{ textAlign: 'right' }}>
-                    {t.status !== 'resolved' ? (
+                    <div style={{ display: 'inline-flex', gap: '6px', alignItems: 'center' }}>
                       <button
-                        onClick={() => handleResolveTicket(t.id)}
-                        className="crm-btn crm-btn-primary"
-                        style={{ padding: '5px 10px', fontSize: '11.5px' }}
+                        onClick={() => handleOpenTicket(t)}
+                        className="crm-btn crm-btn-secondary"
+                        style={{ padding: '5px 8px', fontSize: '11px' }}
+                        title="Edit Work Order"
                       >
-                        <CheckCircle2 size={13} />
-                        <span>Mark Resolved</span>
+                        <Edit size={12} />
+                        <span>Edit</span>
                       </button>
-                    ) : (
-                      <span style={{ fontSize: '12px', color: '#059669', fontWeight: 700 }}>
-                        Resolved
-                      </span>
-                    )}
+                      {t.status !== 'resolved' ? (
+                        <button
+                          onClick={() => handleResolveTicket(t.id)}
+                          className="crm-btn crm-btn-primary"
+                          style={{ padding: '5px 10px', fontSize: '11.5px' }}
+                        >
+                          <CheckCircle2 size={13} />
+                          <span>Resolve</span>
+                        </button>
+                      ) : (
+                        <span style={{ fontSize: '12px', color: '#059669', fontWeight: 700, padding: '0 4px' }}>
+                          Resolved
+                        </span>
+                      )}
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -655,6 +734,94 @@ export default function HousekeepingAdminPage() {
         </div>
       )}
 
+      {/* Quick Note Modal (Admin Only) */}
+      {quickNoteRoom && isAdmin && (
+        <div className="crm-modal-backdrop" onClick={(e) => e.target === e.currentTarget && setQuickNoteRoom(null)}>
+          <div className="crm-modal" style={{ maxWidth: '480px' }}>
+            <div className="crm-modal-header">
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <Sparkles size={18} color="#059669" />
+                <h3 style={{ fontSize: '16px', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>
+                  Suite {quickNoteRoom.roomNumber} — Housekeeping Notes
+                </h3>
+              </div>
+              <button onClick={() => setQuickNoteRoom(null)} style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer' }}>
+                <X size={18} />
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveQuickNote} className="crm-modal-body">
+              <div className="crm-form-group">
+                <label className="crm-label">Active Housekeeping &amp; Turndown Instructions</label>
+                <textarea
+                  rows={3}
+                  placeholder="e.g. Housekeeping requested fresh linens, Extra towels requested, DND"
+                  value={quickNoteText}
+                  onChange={(e) => setQuickNoteText(e.target.value)}
+                  className="crm-textarea"
+                  style={{ fontSize: '13px', lineHeight: 1.4 }}
+                  autoFocus
+                />
+              </div>
+
+              {/* Quick Suggestion Chips */}
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginTop: '4px' }}>
+                {[
+                  'Housekeeping requested fresh linens',
+                  'Extra towels & amenities requested',
+                  'Do Not Disturb (DND)',
+                  'Deep sanitize bathroom',
+                  'Late checkout requested (1 PM)'
+                ].map(chip => (
+                  <button
+                    key={chip}
+                    type="button"
+                    onClick={() => setQuickNoteText(chip)}
+                    style={{
+                      fontSize: '11px',
+                      padding: '3px 8px',
+                      borderRadius: '4px',
+                      border: '1px solid var(--border-subtle)',
+                      backgroundColor: 'var(--bg-elevated)',
+                      color: 'var(--text-secondary)',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    + {chip}
+                  </button>
+                ))}
+              </div>
+
+              <div className="crm-modal-footer" style={{ padding: '16px 0 0 0', background: 'none', justifyContent: 'space-between' }}>
+                {quickNoteText ? (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      updateRoomDefinition(quickNoteRoom.roomNumber, { notes: '' });
+                      setQuickNoteRoom(null);
+                    }}
+                    className="crm-btn crm-btn-danger"
+                    style={{ fontSize: '12px', padding: '6px 12px' }}
+                  >
+                    <Trash2 size={13} />
+                    <span>Clear Note</span>
+                  </button>
+                ) : <div />}
+
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <button type="button" onClick={() => setQuickNoteRoom(null)} className="crm-btn crm-btn-secondary">
+                    Cancel
+                  </button>
+                  <button type="submit" className="crm-btn crm-btn-primary">
+                    Save Note
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
       {/* Ticket Edit Modal */}
       {selectedTicket && (
         <div className="crm-modal-backdrop" onClick={(e) => e.target === e.currentTarget && setSelectedTicket(null)}>
@@ -681,6 +848,16 @@ export default function HousekeepingAdminPage() {
                   <option value="resolved">Resolved &amp; Closed</option>
                   <option value="cancelled">Cancelled</option>
                 </select>
+              </div>
+
+              <div className="crm-form-group">
+                <label className="crm-label">Work Order Details &amp; Notes</label>
+                <textarea
+                  rows={2}
+                  value={ticketDescription}
+                  onChange={(e) => setTicketDescription(e.target.value)}
+                  className="crm-textarea"
+                />
               </div>
 
               <div className="crm-form-group">

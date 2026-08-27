@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   X,
   Printer,
@@ -22,10 +22,16 @@ interface InvoiceModalProps {
 }
 
 export default function InvoiceModal({ folio, onClose, onPaymentRecorded }: InvoiceModalProps) {
-  const [payAmount, setPayAmount] = useState(folio.balanceDue);
+  const [currentFolio, setCurrentFolio] = useState<GuestFolio>(folio);
+  const [payAmount, setPayAmount] = useState<number | string>(folio.balanceDue);
   const [payMethod, setPayMethod] = useState('UPI / GPay');
   const [showPayBox, setShowPayBox] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+
+  useEffect(() => {
+    setCurrentFolio(folio);
+    setPayAmount(folio.balanceDue);
+  }, [folio]);
 
   const handlePrint = () => {
     window.print();
@@ -33,8 +39,13 @@ export default function InvoiceModal({ folio, onClose, onPaymentRecorded }: Invo
 
   const handleRecordPay = (e: React.FormEvent) => {
     e.preventDefault();
-    if (payAmount <= 0) return;
-    recordFolioPayment(folio.id, payAmount, payMethod);
+    const amt = Number(payAmount);
+    if (amt <= 0) return;
+    const updated = recordFolioPayment(currentFolio.id, amt, payMethod);
+    if (updated) {
+      setCurrentFolio(updated);
+      setPayAmount(updated.balanceDue);
+    }
     setIsSuccess(true);
     if (onPaymentRecorded) onPaymentRecorded();
     setTimeout(() => {
@@ -51,7 +62,7 @@ export default function InvoiceModal({ folio, onClose, onPaymentRecorded }: Invo
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <Receipt size={20} color="#059669" />
             <h3 style={{ fontSize: '16px', fontWeight: 800, color: 'var(--text-primary)' }}>
-              Guest Folio & Tax Invoice ({folio.id})
+              Guest Folio &amp; Tax Invoice ({currentFolio.id})
             </h3>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
@@ -93,8 +104,8 @@ export default function InvoiceModal({ folio, onClose, onPaymentRecorded }: Invo
               <span
                 style={{
                   display: 'inline-block',
-                  backgroundColor: folio.balanceDue === 0 ? '#DCFCE7' : '#FEF3C7',
-                  color: folio.balanceDue === 0 ? '#166534' : '#92400E',
+                  backgroundColor: currentFolio.balanceDue === 0 ? '#DCFCE7' : '#FEF3C7',
+                  color: currentFolio.balanceDue === 0 ? '#166534' : '#92400E',
                   fontWeight: 800,
                   fontSize: '12px',
                   padding: '4px 10px',
@@ -102,12 +113,12 @@ export default function InvoiceModal({ folio, onClose, onPaymentRecorded }: Invo
                   textTransform: 'uppercase'
                 }}
               >
-                {folio.balanceDue === 0 ? 'PAID & SETTLED' : 'PAYMENT DUE'}
+                {currentFolio.balanceDue === 0 ? 'PAID & SETTLED' : 'PAYMENT DUE'}
               </span>
               <div style={{ marginTop: '8px', fontSize: '12px', color: '#64748B' }}>
-                <strong>Invoice:</strong> {folio.id}<br />
-                <strong>Date:</strong> {new Date(folio.createdAt).toLocaleDateString('en-IN')}<br />
-                {folio.roomNumber && <span><strong>Room:</strong> Suite {folio.roomNumber}</span>}
+                <strong>Invoice:</strong> {currentFolio.id}<br />
+                <strong>Date:</strong> {new Date(currentFolio.createdAt).toLocaleDateString('en-IN')}<br />
+                {currentFolio.roomNumber && <span><strong>Room:</strong> Suite {currentFolio.roomNumber}</span>}
               </div>
             </div>
           </div>
@@ -116,16 +127,16 @@ export default function InvoiceModal({ folio, onClose, onPaymentRecorded }: Invo
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', backgroundColor: '#F8FAFC', padding: '16px', borderRadius: '8px', marginBottom: '24px', fontSize: '13px' }}>
             <div>
               <span style={{ fontSize: '11px', textTransform: 'uppercase', color: '#64748B', fontWeight: 700 }}>Billed To:</span>
-              <div style={{ fontWeight: 700, color: '#0F172A', fontSize: '15px', marginTop: '2px' }}>{folio.guestName}</div>
-              <div style={{ color: '#475569' }}>{folio.guestPhone}</div>
-              <div style={{ color: '#475569' }}>{folio.guestEmail}</div>
+              <div style={{ fontWeight: 700, color: '#0F172A', fontSize: '15px', marginTop: '2px' }}>{currentFolio.guestName}</div>
+              <div style={{ color: '#475569' }}>{currentFolio.guestPhone}</div>
+              <div style={{ color: '#475569' }}>{currentFolio.guestEmail}</div>
             </div>
             <div style={{ textAlign: 'right' }}>
               <span style={{ fontSize: '11px', textTransform: 'uppercase', color: '#64748B', fontWeight: 700 }}>Stay Itinerary:</span>
-              {folio.checkIn && folio.checkOut ? (
+              {currentFolio.checkIn && currentFolio.checkOut ? (
                 <div style={{ color: '#334155', marginTop: '2px', fontWeight: 600 }}>
-                  Check-In: {folio.checkIn}<br />
-                  Check-Out: {folio.checkOut}
+                  Check-In: {currentFolio.checkIn}<br />
+                  Check-Out: {currentFolio.checkOut}
                 </div>
               ) : (
                 <div style={{ color: '#64748B', marginTop: '2px' }}>Non-room / Day Guest</div>
@@ -146,7 +157,7 @@ export default function InvoiceModal({ folio, onClose, onPaymentRecorded }: Invo
               </tr>
             </thead>
             <tbody>
-              {folio.items.map((item, idx) => (
+              {currentFolio.items.map((item, idx) => (
                 <tr key={idx} style={{ borderBottom: '1px solid #E2E8F0' }}>
                   <td style={{ padding: '10px 12px', color: '#64748B', fontSize: '12px' }}>{item.date}</td>
                   <td style={{ padding: '10px 12px', fontWeight: 600, color: '#1E293B' }}>{item.description}</td>
@@ -166,25 +177,25 @@ export default function InvoiceModal({ folio, onClose, onPaymentRecorded }: Invo
             <div style={{ width: '320px', display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '13.5px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', color: '#475569' }}>
                 <span>Subtotal (Net):</span>
-                <span>₹{folio.subtotal.toLocaleString('en-IN')}</span>
+                <span>₹{currentFolio.subtotal.toLocaleString('en-IN')}</span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', color: '#475569' }}>
                 <span>GST Tax (CGST + SGST):</span>
-                <span>₹{folio.taxAmount.toLocaleString('en-IN')}</span>
+                <span>₹{currentFolio.taxAmount.toLocaleString('en-IN')}</span>
               </div>
-              {folio.discountAmount > 0 && (
+              {currentFolio.discountAmount > 0 && (
                 <div style={{ display: 'flex', justifyContent: 'space-between', color: '#059669' }}>
                   <span>Promotional Discount:</span>
-                  <span>-₹{folio.discountAmount.toLocaleString('en-IN')}</span>
+                  <span>-₹{currentFolio.discountAmount.toLocaleString('en-IN')}</span>
                 </div>
               )}
               <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 800, fontSize: '16px', color: '#0F172A', borderTop: '2px solid #059669', paddingTop: '8px' }}>
                 <span>Grand Total:</span>
-                <span>₹{folio.grandTotal.toLocaleString('en-IN')}</span>
+                <span>₹{currentFolio.grandTotal.toLocaleString('en-IN')}</span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', color: '#166534', fontWeight: 700 }}>
                 <span>Amount Paid:</span>
-                <span>₹{folio.amountPaid.toLocaleString('en-IN')}</span>
+                <span>₹{currentFolio.amountPaid.toLocaleString('en-IN')}</span>
               </div>
               <div
                 style={{
@@ -192,14 +203,14 @@ export default function InvoiceModal({ folio, onClose, onPaymentRecorded }: Invo
                   justifyContent: 'space-between',
                   fontWeight: 800,
                   fontSize: '15px',
-                  color: folio.balanceDue > 0 ? '#DC2626' : '#166534',
-                  backgroundColor: folio.balanceDue > 0 ? '#FEE2E2' : '#DCFCE7',
+                  color: currentFolio.balanceDue > 0 ? '#DC2626' : '#166534',
+                  backgroundColor: currentFolio.balanceDue > 0 ? '#FEE2E2' : '#DCFCE7',
                   padding: '6px 10px',
                   borderRadius: '4px'
                 }}
               >
                 <span>Balance Due:</span>
-                <span>₹{folio.balanceDue.toLocaleString('en-IN')}</span>
+                <span>₹{currentFolio.balanceDue.toLocaleString('en-IN')}</span>
               </div>
             </div>
           </div>
@@ -212,7 +223,7 @@ export default function InvoiceModal({ folio, onClose, onPaymentRecorded }: Invo
         </div>
 
         {/* Record Payment Section (no-print) */}
-        {folio.balanceDue > 0 && (
+        {currentFolio.balanceDue > 0 && (
           <div className="crm-modal-footer no-print" style={{ flexDirection: 'column', alignItems: 'stretch' }}>
             {!showPayBox ? (
               <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
@@ -222,7 +233,7 @@ export default function InvoiceModal({ folio, onClose, onPaymentRecorded }: Invo
                   className="crm-btn crm-btn-primary"
                 >
                   <CreditCard size={16} />
-                  <span>Collect Payment (₹{folio.balanceDue.toLocaleString('en-IN')})</span>
+                  <span>Collect Payment (₹{currentFolio.balanceDue.toLocaleString('en-IN')})</span>
                 </button>
               </div>
             ) : (
@@ -231,9 +242,9 @@ export default function InvoiceModal({ folio, onClose, onPaymentRecorded }: Invo
                   <input
                     type="number"
                     min="1"
-                    max={folio.balanceDue}
+                    max={currentFolio.balanceDue}
                     value={payAmount}
-                    onChange={(e) => setPayAmount(Number(e.target.value))}
+                    onChange={(e) => setPayAmount(e.target.value)}
                     className="crm-input"
                     placeholder="Amount to collect"
                   />

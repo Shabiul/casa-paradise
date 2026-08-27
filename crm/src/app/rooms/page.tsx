@@ -123,11 +123,11 @@ export default function RoomsAdminPage() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
       {/* Header */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px' }}>
+      <div className="crm-page-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px' }}>
         <div>
           <h1 style={{ fontSize: '22px', fontWeight: 800, color: 'var(--text-primary)', margin: 0, display: 'flex', alignItems: 'center', gap: '10px' }}>
             <BedDouble size={22} color="#059669" />
-            <span>Room Reservations & Front Desk Pipeline</span>
+            <span>Room Reservations &amp; Front Desk Pipeline</span>
           </h1>
           <p style={{ fontSize: '13px', color: 'var(--text-secondary)', margin: '4px 0 0 0' }}>
             Manage guest check-ins, allocate suites 101–210, track payment folios and WhatsApp dispatch.
@@ -142,6 +142,7 @@ export default function RoomsAdminPage() {
 
       {/* Filter & Search Bar */}
       <div
+        className="crm-filter-bar"
         style={{
           display: 'flex',
           alignItems: 'center',
@@ -185,7 +186,7 @@ export default function RoomsAdminPage() {
         </div>
 
         {/* Search Input */}
-        <div style={{ position: 'relative', width: '280px' }}>
+        <div className="crm-filter-search" style={{ position: 'relative', flex: '1', minWidth: '160px', maxWidth: '280px' }}>
           <Search size={15} color="var(--text-muted)" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)' }} />
           <input
             type="text"
@@ -367,7 +368,7 @@ export default function RoomsAdminPage() {
             </div>
 
             <form onSubmit={handleSaveEdit} className="crm-modal-body">
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+              <div className="crm-rooms-edit-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
                 <div className="crm-form-group">
                   <label className="crm-label">Stay Status</label>
                   <select

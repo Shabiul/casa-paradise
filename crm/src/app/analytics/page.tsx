@@ -105,7 +105,7 @@ export default function AnalyticsAdminPage() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
       {/* Header */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px' }}>
+      <div className="crm-page-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px' }}>
         <div>
           <h1 style={{ fontSize: '22px', fontWeight: 800, color: 'var(--text-primary)', margin: 0, display: 'flex', alignItems: 'center', gap: '10px' }}>
             <BarChart3 size={22} color="#059669" />
@@ -116,7 +116,7 @@ export default function AnalyticsAdminPage() {
           </p>
         </div>
 
-        <div style={{ display: 'flex', gap: '10px' }}>
+        <div className="crm-analytics-header-actions" style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
           <button onClick={handleExportCSV} className="crm-btn crm-btn-secondary" style={{ padding: '8px 14px' }}>
             <FileSpreadsheet size={16} color="#059669" />
             <span>Export CSV Report</span>

@@ -15,19 +15,22 @@ import {
 import {
   getCRMStore,
   subscribeToCRM,
-  getOrCreateFolioForGuest,
+  syncAllFolios,
   recordFolioPayment,
   hasPermission
 } from '@/lib/crmStore';
 import { GuestFolio, CRMStoreData } from '@/lib/types';
 import InvoiceModal from '@/components/InvoiceModal';
 import AccessRestricted from '@/components/AccessRestricted';
+import { RefreshCw } from 'lucide-react';
 
 export default function BillingAdminPage() {
   const [store, setStore] = useState<CRMStoreData>(getCRMStore());
   const [filterStatus, setFilterStatus] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [allowed, setAllowed] = useState<boolean>(true);
+  const [isSyncing, setIsSyncing] = useState(false);
+  const [syncNotice, setSyncNotice] = useState<string | null>(null);
 
   // Selected Folio Modal
   const [selectedFolio, setSelectedFolio] = useState<GuestFolio | null>(null);
@@ -35,11 +38,8 @@ export default function BillingAdminPage() {
   useEffect(() => {
     const update = () => {
       setAllowed(hasPermission('billing'));
-      const s = getCRMStore();
-      // Ensure folios exist for all guests who have bookings
-      s.guests.forEach(g => {
-        getOrCreateFolioForGuest(g.id);
-      });
+      // Synchronize all folios with latest bookings
+      syncAllFolios();
       setStore(getCRMStore());
     };
 
@@ -47,6 +47,17 @@ export default function BillingAdminPage() {
     const unsubscribe = subscribeToCRM(update);
     return () => unsubscribe();
   }, []);
+
+  const handleManualSync = () => {
+    setIsSyncing(true);
+    syncAllFolios();
+    setStore(getCRMStore());
+    setSyncNotice('All folios synchronized with live bookings & services.');
+    setTimeout(() => {
+      setIsSyncing(false);
+      setSyncNotice(null);
+    }, 2000);
+  };
 
   if (!allowed) {
     return (
@@ -77,15 +88,33 @@ export default function BillingAdminPage() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
       {/* Header */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px' }}>
+      <div className="crm-page-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px' }}>
         <div>
           <h1 style={{ fontSize: '22px', fontWeight: 800, color: 'var(--text-primary)', margin: 0, display: 'flex', alignItems: 'center', gap: '10px' }}>
             <Receipt size={22} color="#059669" />
-            <span>Consolidated Invoicing & Guest Folios</span>
+            <span>Consolidated Invoicing &amp; Guest Folios</span>
           </h1>
           <p style={{ fontSize: '13px', color: 'var(--text-secondary)', margin: '4px 0 0 0' }}>
-            Multi-service billing ledgers, GST tax breakdowns, printable receipts & settlement tracking.
+            Multi-service billing ledgers, GST tax breakdowns, printable receipts &amp; settlement tracking.
           </p>
+        </div>
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+          {syncNotice && (
+            <div style={{ fontSize: '12px', color: '#059669', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <CheckCircle2 size={14} />
+              <span>{syncNotice}</span>
+            </div>
+          )}
+          <button
+            onClick={handleManualSync}
+            disabled={isSyncing}
+            className="crm-btn crm-btn-secondary"
+            style={{ padding: '8px 14px', fontSize: '12.5px' }}
+          >
+            <RefreshCw size={14} style={{ animation: isSyncing ? 'spin 1s linear infinite' : 'none' }} />
+            <span>{isSyncing ? 'Syncing...' : 'Sync All Folios'}</span>
+          </button>
         </div>
       </div>
 
@@ -118,6 +147,7 @@ export default function BillingAdminPage() {
 
       {/* Filter & Search Bar */}
       <div
+        className="crm-filter-bar"
         style={{
           display: 'flex',
           alignItems: 'center',
@@ -156,7 +186,7 @@ export default function BillingAdminPage() {
           ))}
         </div>
 
-        <div style={{ position: 'relative', width: '280px' }}>
+        <div className="crm-filter-search" style={{ position: 'relative', flex: '1', minWidth: '160px', maxWidth: '280px' }}>
           <Search size={15} color="var(--text-muted)" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)' }} />
           <input
             type="text"
