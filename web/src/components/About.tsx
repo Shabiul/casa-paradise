@@ -25,9 +25,9 @@ export interface AboutProps {
 }
 
 const defaultImages = {
-  opening: '/assets/exterior.png',
-  leftSplit: '/assets/heritage-room.png',
-  rightSplit: '/assets/pool.png',
+  opening: '/assets/ChatGPT Image Aug 27, 2026, 01_21_12 PM.png',
+  leftSplit: '/WhatsApp Image 2026-08-11 at 7.25.40 PM (1).jpeg',
+  rightSplit: '/assets/WhatsApp Image 2026-08-07 at 4.34.56 PM.jpeg',
 };
 
 const defaultLeftCopy = [
@@ -45,7 +45,8 @@ const defaultRightCopy = [
 ];
 
 const defaultFinalStatement = [
-  'WHERE HERITAGE MEETS TRANQUILITY.',
+  'WHERE HERITAGE MEETS',
+  'TRANQUILITY.',
   'AN INTIMATE SANCTUARY',
   'ABOVE THE MANDOVI.',
   'CASA PARADISO.',

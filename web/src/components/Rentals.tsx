@@ -101,14 +101,50 @@ export default function Rentals() {
     price: vehiclePrices[v.id] || v.price
   }));
 
-  const filteredVehicles = filter === 'all' 
-    ? vehicles 
-    : vehicles.filter(v => v.category === filter);
+  const twoWheelers = vehicles.filter(v => v.category === '2-wheeler');
+  const fourWheelers = vehicles.filter(v => v.category === '4-wheeler');
 
   const handleOpenBooking = (vehicle: Vehicle) => {
     setSelectedVehicle(vehicle);
     setIsModalOpen(true);
   };
+
+  const renderVehicleCard = (v: Vehicle) => (
+    <div key={v.id} className={`rental-card ${v.badge ? 'rental-card--featured' : ''}`}>
+      {v.badge && <span className="rental-card__badge">{v.badge}</span>}
+
+      <div className="rental-card__image-wrapper">
+        <img 
+          src={v.image} 
+          alt={`${v.name} Rental in Goa`} 
+          className="rental-card__img"
+          loading="lazy"
+        />
+      </div>
+
+      <div className="rental-card__models">{v.categoryLabel}</div>
+      <div className="rental-card__title">{v.name}</div>
+
+      <div className="rental-card__price-row">
+        <span className="rental-card__price">₹{v.price.toLocaleString('en-IN')}</span>
+        <span className="rental-card__unit">/ day</span>
+      </div>
+
+      <ul className="rental-card__features">
+        {v.features.map((feat, idx) => (
+          <li key={idx}>{feat}</li>
+        ))}
+      </ul>
+
+      <button 
+        onClick={() => handleOpenBooking(v)}
+        className="rental-card__cta"
+        style={{ border: 'none', cursor: 'pointer', width: 'calc(100% - 32px)' }}
+      >
+        Reserve {v.name}
+      </button>
+    </div>
+  );
 
   return (
     <section id="rentals" className="rentals">
@@ -141,45 +177,23 @@ export default function Rentals() {
           </button>
         </div>
 
-        {/* Grid */}
-        <div className="rentals__grid">
-          {filteredVehicles.map((v) => (
-            <div key={v.id} className={`rental-card ${v.badge ? 'rental-card--featured' : ''}`}>
-              {v.badge && <span className="rental-card__badge">{v.badge}</span>}
-
-              <div className="rental-card__image-wrapper">
-                <img 
-                  src={v.image} 
-                  alt={`${v.name} Rental in Goa`} 
-                  className="rental-card__img"
-                  loading="lazy"
-                />
-              </div>
-
-              <div className="rental-card__models">{v.categoryLabel}</div>
-              <div className="rental-card__title">{v.name}</div>
-
-              <div className="rental-card__price-row">
-                <span className="rental-card__price">₹{v.price.toLocaleString('en-IN')}</span>
-                <span className="rental-card__unit">/ day</span>
-              </div>
-
-              <ul className="rental-card__features">
-                {v.features.map((feat, idx) => (
-                  <li key={idx}>{feat}</li>
-                ))}
-              </ul>
-
-              <button 
-                onClick={() => handleOpenBooking(v)}
-                className="rental-card__cta"
-                style={{ border: 'none', cursor: 'pointer', width: 'calc(100% - 32px)' }}
-              >
-                Reserve {v.name}
-              </button>
+        {/* 2-Wheelers Line */}
+        {(filter === 'all' || filter === '2-wheeler') && (
+          <div className="rentals__section-group">
+            <div className="rentals__grid rentals__grid--2wheelers">
+              {twoWheelers.map(renderVehicleCard)}
             </div>
-          ))}
-        </div>
+          </div>
+        )}
+
+        {/* 4-Wheelers Line */}
+        {(filter === 'all' || filter === '4-wheeler') && (
+          <div className="rentals__section-group">
+            <div className="rentals__grid rentals__grid--4wheelers">
+              {fourWheelers.map(renderVehicleCard)}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Vehicle Booking Modal */}

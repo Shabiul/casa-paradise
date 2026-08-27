@@ -10,11 +10,11 @@ interface CycleImage {
 }
 
 const CYCLE_IMAGES: CycleImage[] = [
-  { src: '/assets/exterior.png', alt: 'Casa Paradiso Portuguese Villa Architecture' },
-  { src: '/assets/lobby.png', alt: 'Casa Paradiso Boutique Luxury Reception' },
-  { src: '/assets/heritage-room.png', alt: 'Casa Paradiso Heritage Suite' },
-  { src: '/assets/restaurant.png', alt: 'Casa Paradiso Fine Dining' },
-  { src: '/assets/pool.png', alt: 'Casa Paradiso Serene Swimming Pool' },
+  { src: '/assets/wa-photo-1.jpeg', alt: 'Casa Paradiso Portuguese Villa Architecture' },
+  { src: '/assets/wa-photo-3.jpeg', alt: 'Casa Paradiso Boutique Luxury Reception' },
+  { src: '/assets/wa-photo-6.jpeg', alt: 'Casa Paradiso Heritage Suite' },
+  { src: '/assets/wa-photo-8.jpeg', alt: 'Casa Paradiso Room Accommodations' },
+  { src: '/assets/wa-photo-10.jpeg', alt: 'Casa Paradiso Boutique Facade' },
   { src: '/assets/hero.png', alt: 'Casa Paradiso Sanctuary of Timeless Goan Elegance' },
 ];
 

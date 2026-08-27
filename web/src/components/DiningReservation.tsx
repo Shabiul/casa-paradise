@@ -12,7 +12,7 @@ export default function DiningReservation() {
   const [date, setDate] = useState('');
   const [timeSlot, setTimeSlot] = useState('Dinner (7:30 PM - 11:00 PM)');
   const [partySize, setPartySize] = useState(2);
-  const [dietary, setDietary] = useState('Goan Seafood & Authentic Flavors');
+  const [dietary, setDietary] = useState('Vegetarian (Veg)');
   const [specialRequests, setSpecialRequests] = useState('');
   const [minDate, setMinDate] = useState('');
 
@@ -232,7 +232,7 @@ export default function DiningReservation() {
           {/* Dietary Preference */}
           <div>
             <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: '#374151', marginBottom: '6px' }}>
-              Culinary & Dietary Preference
+              Culinary & Dietary Preference *
             </label>
             <select
               value={dietary}
@@ -246,11 +246,8 @@ export default function DiningReservation() {
                 background: '#F9FAFB'
               }}
             >
-              <option value="Goan Seafood & Authentic Flavors">Goan Seafood & Authentic Flavors</option>
-              <option value="Pure Vegetarian Specials">Pure Vegetarian Specials</option>
-              <option value="Jain Friendly (No Onion/Garlic)">Jain Friendly (No Onion/Garlic)</option>
-              <option value="Continental & Wood-fired Pizzas">Continental & Wood-fired Pizzas</option>
-              <option value="Chef's Special Tasting Menu">Chef's Special Tasting Menu</option>
+              <option value="Vegetarian (Veg)">🌱 Vegetarian (Veg)</option>
+              <option value="Non-Vegetarian (Non-Veg)">🍗 Non-Vegetarian (Non-Veg)</option>
             </select>
           </div>
         </div>

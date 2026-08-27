@@ -54,7 +54,7 @@ export const ATTRACTIONS_DATA: AttractionScene[] = [
       },
       // Image 2: Right-middle (larger than image 1, closer to right edge)
       {
-        src: "/assets/goa-view.png",
+        src: "/WhatsApp Image 2026-08-11 at 6.56.49 PM.jpeg",
         alt: "Mandovi riverfront panoramic view",
         x: 370,
         y: 30,
@@ -204,7 +204,7 @@ export const ATTRACTIONS_DATA: AttractionScene[] = [
       },
       // Image 2: Large horizontal image in upper-right
       {
-        src: "/assets/pool.png",
+        src: "/WhatsApp Image 2026-08-11 at 6.56.50 PM (1).jpeg",
         alt: "Coastal serene water views",
         x: 270,
         y: -180,
@@ -254,8 +254,8 @@ export const ATTRACTIONS_DATA: AttractionScene[] = [
       },
       // Image 2: Large right-side image (horizontal)
       {
-        src: "/assets/exterior.png",
-        alt: "Panaji Portuguese architecture and heritage grounds",
+        src: "/WhatsApp Image 2026-08-11 at 6.56.52 PM.jpeg",
+        alt: "Panaji Portuguese architecture and heritage church grounds",
         x: 360,
         y: 10,
         width: 380,
@@ -266,8 +266,8 @@ export const ATTRACTIONS_DATA: AttractionScene[] = [
       },
       // Image 3: Lower-left / lower-center (vertical)
       {
-        src: "/assets/lobby.png",
-        alt: "Colonial sanctuary interior ambiance",
+        src: "/WhatsApp Image 2026-08-11 at 6.56.52 PM.jpeg",
+        alt: "Colonial sanctuary church facade",
         x: -130,
         y: 210,
         width: 260,

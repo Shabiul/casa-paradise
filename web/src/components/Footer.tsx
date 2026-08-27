@@ -2,14 +2,16 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { getCRMStore, subscribeToCRM } from '@/lib/crmStore';
 
 export default function Footer() {
+  const pathname = usePathname();
   const [hotelName, setHotelName] = useState('Casa Paradiso');
   const [tagline, setTagline] = useState('Boutique Luxury Heritage Hotel in Panaji, Goa');
   const [address, setAddress] = useState('Ghanekar Building, Rua José Falcão, Altinho, Panaji, Goa 403001');
-  const [phone, setPhone] = useState('+91 82081 45931');
-  const [email, setEmail] = useState('info@casaparadisohotel.in');
+  const [phone, setPhone] = useState('+91 98812 47847');
+  const [email, setEmail] = useState('Paradisepanjim@gmail.com');
 
   useEffect(() => {
     const updateSettings = () => {
@@ -27,12 +29,14 @@ export default function Footer() {
     return () => unsubscribe();
   }, []);
 
+  const getHref = (hash: string) => (pathname === '/' ? hash : `/${hash}`);
+
   return (
     <footer className="footer">
       <div className="container">
         <div className="footer__grid">
           <div className="footer__brand">
-            <Link href="#hero" className="nav__logo">
+            <Link href={getHref('#hero')} className="nav__logo">
               <span className="nav__logo-text">{hotelName}</span>
               <span className="nav__logo-sub">Panaji · Goa</span>
             </Link>
@@ -44,10 +48,10 @@ export default function Footer() {
           <div>
             <h4 className="footer__title">Quick Links</h4>
             <ul className="footer__links">
-              <li><Link href="#about">About Us</Link></li>
-              <li><Link href="#rooms">Suites & Rates</Link></li>
-              <li><Link href="#experiences">Attractions</Link></li>
-              <li><Link href="#rentals">Car & Bike Rentals</Link></li>
+              <li><Link href={getHref('#about')}>About Us</Link></li>
+              <li><Link href={getHref('#rooms')}>Suites & Rates</Link></li>
+              <li><Link href={getHref('#experiences')}>Attractions</Link></li>
+              <li><Link href={getHref('#rentals')}>Car & Bike Rentals</Link></li>
               <li><Link href="/admin">Admin Portal</Link></li>
             </ul>
           </div>
@@ -55,10 +59,11 @@ export default function Footer() {
           <div>
             <h4 className="footer__title">Guest Info</h4>
             <ul className="footer__links">
-              <li><Link href="#dining">Restaurant & Dining</Link></li>
-              <li><Link href="#gallery">Property Gallery</Link></li>
-              <li><Link href="#booking">Book Room</Link></li>
-              <li><Link href="#contact">Contact Us</Link></li>
+              <li><Link href={getHref('#dining')}>Restaurant & Dining</Link></li>
+              <li><Link href={getHref('#gallery')}>Property Gallery</Link></li>
+              <li><Link href={getHref('#booking')}>Book Room</Link></li>
+              <li><Link href="/terms">Terms & Conditions</Link></li>
+              <li><Link href="/privacy">Privacy Policy</Link></li>
             </ul>
           </div>
 
@@ -75,7 +80,26 @@ export default function Footer() {
         </div>
 
         <div className="footer__bottom">
-          <p>© {new Date().getFullYear()} {hotelName}. All rights reserved. Boutique Hotel Panaji, Goa.</p>
+          <div className="footer__bottom-content">
+            <div className="footer__bottom-row">
+              <span>© {new Date().getFullYear()} {hotelName}. All rights reserved.</span>
+              <span className="footer__divider">•</span>
+              <Link href="/terms">Terms & Conditions</Link>
+              <span className="footer__divider">•</span>
+              <Link href="/privacy">Privacy Policy</Link>
+            </div>
+            <p className="footer__credits">
+              Designed and Developed by{' '}
+              <a 
+                href="https://naazailabs.com" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="footer__credit-link"
+              >
+                NAAZ AI Labs
+              </a>
+            </p>
+          </div>
         </div>
       </div>
     </footer>

@@ -88,7 +88,7 @@ export default function Rooms() {
             <div className="room-card__image-wrapper">
               <span className="room-card__badge room-card__badge--heritage">Heritage Non-AC</span>
               <img 
-                src="/assets/heritage-room.png" 
+                src="/assets/ChatGPT Image Aug 7, 2026, 06_03_51 PM.png" 
                 alt="Non-AC Heritage Room" 
                 className="room-card__image"
               />

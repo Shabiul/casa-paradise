@@ -52,10 +52,10 @@ export const SYNC_CHANNEL_NAME = 'casa_crm_channel';
 export const defaultSettings: HotelSettings = {
   hotelName: 'Casa Paradiso',
   tagline: 'Boutique Luxury Heritage Hotel in Panaji, Goa',
-  phone1: '+91 82081 45931',
+  phone1: '+91 98812 47847',
   phone2: '+91 98812 47847',
   whatsapp: '919881247847',
-  email: 'info@casaparadisohotel.in',
+  email: 'Paradisepanjim@gmail.com',
   address: 'Ghanekar Building, Rua José Falcão, Altinho, Panaji, Goa 403001',
   checkInTime: '1:00 PM',
   checkOutTime: '11:00 AM',

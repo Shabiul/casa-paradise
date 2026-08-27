@@ -1,4 +1,5 @@
 import { getSupabaseClient, isSupabaseConfigured } from './supabaseClient';
+import type { RealtimeChannel } from '@supabase/supabase-js';
 import {
   CRMStoreData,
   Guest,
@@ -487,10 +488,10 @@ export async function fetchFullStoreFromSupabase(): Promise<CRMStoreData | null>
     let settings: HotelSettings = {
       hotelName: 'Casa Paradiso',
       tagline: 'Boutique Luxury Heritage Hotel in Panaji, Goa',
-      phone1: '+91 82081 45931',
+      phone1: '+91 98812 47847',
       phone2: '+91 98812 47847',
       whatsapp: '919881247847',
-      email: 'info@casaparadisohotel.in',
+      email: 'Paradisepanjim@gmail.com',
       address: 'Ghanekar Building, Rua José Falcão, Altinho, Panaji, Goa 403001',
       checkInTime: '1:00 PM',
       checkOutTime: '11:00 AM',
@@ -757,22 +758,39 @@ export async function deleteRecordFromSupabase(tableName: string, id: string) {
 // REALTIME SUBSCRIPTION LISTENER
 // ==========================================
 
+let realtimeChannel: RealtimeChannel | null = null;
+const realtimeListeners = new Set<() => void>();
+
 export function setupSupabaseRealtimeChannel(onUpdate: () => void): () => void {
   const supabase = getSupabaseClient();
   if (!supabase) return () => {};
 
-  const channel = supabase
-    .channel('web_crm_realtime_sync')
-    .on(
-      'postgres_changes',
-      { event: '*', schema: 'public' },
-      () => {
-        onUpdate();
-      }
-    )
-    .subscribe();
+  realtimeListeners.add(onUpdate);
+
+  if (!realtimeChannel) {
+    realtimeChannel = supabase
+      .channel('web_crm_realtime_sync')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public' },
+        () => {
+          realtimeListeners.forEach(listener => {
+            try {
+              listener();
+            } catch (err) {
+              console.error('Realtime listener error:', err);
+            }
+          });
+        }
+      )
+      .subscribe();
+  }
 
   return () => {
-    supabase.removeChannel(channel);
+    realtimeListeners.delete(onUpdate);
+    if (realtimeListeners.size === 0 && realtimeChannel) {
+      supabase.removeChannel(realtimeChannel);
+      realtimeChannel = null;
+    }
   };
 }

@@ -71,8 +71,8 @@ export default function BookingConfirmationModal({
       booking.detailsList.map(d => `• ${d.label}: ${d.value}`).join('\n') +
       `\n\n-------------------------------------------------\n` +
       `HOTEL CONTACT:\n` +
-      `Phone: +91 82081 45931 / +91 98812 47847\n` +
-      `Email: info@casaparadisohotel.in\n` +
+      `Phone: +91 98812 47847\n` +
+      `Email: Paradisepanjim@gmail.com\n` +
       `Address: Ghanekar Building, Rua José Falcão, Altinho, Panaji, Goa\n` +
       `=================================================\n`;
 

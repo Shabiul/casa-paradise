@@ -1,8 +1,8 @@
 import Hero from '@/components/Hero';
 import About from '@/components/About';
 import Rooms from '@/components/Rooms';
-import Experiences from '@/components/Experiences';
 import Rentals from '@/components/Rentals';
+import Experiences from '@/components/Experiences';
 import Dining from '@/components/Dining';
 import Gallery from '@/components/Gallery';
 import Testimonials from '@/components/Testimonials';
@@ -15,8 +15,8 @@ export default function HomePage() {
       <Hero />
       <About />
       <Rooms />
-      <Experiences />
       <Rentals />
+      <Experiences />
       <Dining />
       <Gallery />
       <Testimonials />

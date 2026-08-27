@@ -44,7 +44,7 @@ export default function RootLayout({
               "name": "Casa Paradiso",
               "description": "An intimate 18-room boutique hotel perched on Altinho hill in Panaji, Goa.",
               "url": "https://casaparadisohotel.in/",
-              "telephone": "+918208145931",
+              "telephone": "+919881247847",
               "address": {
                 "@type": "PostalAddress",
                 "streetAddress": "Ghanekar Building, Rua José Falcão, Altinho",

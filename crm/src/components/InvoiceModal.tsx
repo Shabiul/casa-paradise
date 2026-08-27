@@ -85,7 +85,7 @@ export default function InvoiceModal({ folio, onClose, onPaymentRecorded }: Invo
               </p>
               <p style={{ fontSize: '11.5px', color: '#64748B', margin: 0, lineHeight: 1.4 }}>
                 Ghanekar Building, Rua José Falcão, Altinho, Panaji, Goa 403001<br />
-                Phone: +91 82081 45931 / +91 98812 47847 · GSTIN: 30AAAAA0000A1Z5
+                Phone: +91 98812 47847 · GSTIN: 30AAAAA0000A1Z5
               </p>
             </div>
 

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Sparkles, Calendar, User, Phone, Mail, MessageSquare, ShieldCheck } from 'lucide-react';
+import { Sparkles, Calendar, User, Phone, Mail, MessageSquare, ShieldCheck, MapPin, ExternalLink } from 'lucide-react';
 import { getCRMStore, subscribeToCRM, createRoomBooking } from '@/lib/crmStore';
 import { RoomPriceConfig } from '@/lib/types';
 import BookingConfirmationModal, { BookingConfirmationProps } from './BookingConfirmationModal';
@@ -117,7 +117,7 @@ export default function BookingForm() {
           </p>
 
           <form className="booking-form" onSubmit={handleSubmit}>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+            <div className="booking-form__row">
               <div className="form-group">
                 <label>Room Category</label>
                 <select value={roomType} onChange={(e) => setRoomType(e.target.value as any)}>
@@ -135,7 +135,7 @@ export default function BookingForm() {
               </div>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+            <div className="booking-form__row">
               <div className="form-group">
                 <label>Check-In Date *</label>
                 <input 
@@ -158,7 +158,7 @@ export default function BookingForm() {
               </div>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+            <div className="booking-form__row">
               <div className="form-group">
                 <label>Full Name *</label>
                 <input 
@@ -181,7 +181,7 @@ export default function BookingForm() {
               </div>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+            <div className="booking-form__row">
               <div className="form-group">
                 <label>Email Address (Optional)</label>
                 <input 
@@ -218,18 +218,66 @@ export default function BookingForm() {
         </div>
 
         {/* Location & Contact Info */}
-        <div className="contact__info" style={{ marginTop: '40px' }}>
+        <div className="contact__info" style={{ marginTop: '0' }}>
           <div className="contact__detail">
             <h4>Location & Address</h4>
             <p>Ghanekar Building, Rua José Falcão, Altinho, Panaji, Goa 403001</p>
           </div>
+
+          {/* Embedded Google Map */}
+          <div className="contact__map-wrapper" style={{ marginTop: '4px', marginBottom: '8px' }}>
+            <iframe
+              title="Casa Paradiso Google Map Location"
+              src="https://maps.google.com/maps?q=Casa+Paradiso,+Ghanekar+Building,+Rua+Jos%C3%A9+Falc%C3%A3o,+Altinho,+Panaji,+Goa+403001&t=&z=16&ie=UTF8&iwloc=&output=embed"
+              width="100%"
+              height="220"
+              style={{
+                border: '1px solid rgba(255, 255, 255, 0.15)',
+                borderRadius: '12px',
+                display: 'block',
+                filter: 'contrast(1.02) brightness(0.95)'
+              }}
+              allowFullScreen={false}
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+            ></iframe>
+            <a
+              href="https://maps.app.goo.gl/iKyFhnt8Q5JwUMD46"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn--secondary"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                marginTop: '12px',
+                fontSize: '13px',
+                padding: '10px 18px',
+                width: '100%',
+                justifyContent: 'center'
+              }}
+            >
+              <MapPin size={15} color="#34D399" />
+              Open in Google Maps
+              <ExternalLink size={14} style={{ opacity: 0.7 }} />
+            </a>
+          </div>
+
           <div className="contact__detail">
             <h4>Direct Phone & Enquiries</h4>
-            <p>+91 82081 45931 / +91 98812 47847</p>
+            <p>
+              <a href="tel:+919881247847" style={{ color: 'var(--color-champagne)', textDecoration: 'none', fontWeight: 600 }}>
+                +91 98812 47847
+              </a>
+            </p>
           </div>
           <div className="contact__detail">
             <h4>Email</h4>
-            <p>info@casaparadisohotel.in</p>
+            <p>
+              <a href="mailto:Paradisepanjim@gmail.com" style={{ color: 'rgba(255, 255, 255, 0.9)', textDecoration: 'none' }}>
+                Paradisepanjim@gmail.com
+              </a>
+            </p>
           </div>
           <div className="contact__detail">
             <h4>Check-in / Check-out</h4>
