@@ -24,7 +24,7 @@ export default function Dining() {
             </li>
             <li style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
               <span style={{ color: 'var(--color-champagne)', fontSize: '20px' }}>✓</span>
-              <span>Daily Complimentary Breakfast Buffet & In-Room Dining (7:00 AM – 11:00 PM)</span>
+              <span>All-Day In-Room Dining &amp; Restaurant Service (7:00 AM – 11:00 PM)</span>
             </li>
           </ul>
 
