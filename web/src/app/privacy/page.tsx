@@ -3,8 +3,9 @@ import Link from 'next/link';
 import { ArrowLeft, Lock, Database, Eye, Bell, UserCheck, ShieldCheck, Mail } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Privacy Policy — Casa Paradiso Panaji, Goa',
+  title: 'Privacy Policy',
   description: 'Learn how Casa Paradiso protects guest data, reservation details, identification documents, and website privacy in accordance with hospitality privacy standards.',
+  alternates: { canonical: '/privacy' },
 };
 
 export default function PrivacyPage() {
@@ -28,7 +29,7 @@ export default function PrivacyPage() {
           <div className="legal-page__section">
             <h2>1. Commitment to Guest Privacy</h2>
             <p>
-              At <strong>Casa Paradiso</strong> (&quot;we&quot;, &quot;our&quot;, or &quot;the Hotel&quot;), we are committed to safeguarding the privacy and personal data of our esteemed guests and website visitors. This Privacy Policy details how we collect, use, store, and protect your information when you interact with our website (<a href="https://casaparadisohotel.in">casaparadisohotel.in</a>), make a room or dining reservation, book a vehicle rental, or communicate with our concierge team.
+              At <strong>Casa Paradiso</strong> (&quot;we&quot;, &quot;our&quot;, or &quot;the Hotel&quot;), we are committed to safeguarding the privacy and personal data of our esteemed guests and website visitors. This Privacy Policy details how we collect, use, store, and protect your information when you interact with our website (<a href="https://www.panjimhotelcasaparadiso.in">panjimhotelcasaparadiso.in</a>), make a room or dining reservation, book a vehicle rental, or communicate with our concierge team.
             </p>
             <p>
               We operate in full compliance with applicable Indian privacy laws, including the Information Technology Act, 2000 and the Digital Personal Data Protection (DPDP) framework.

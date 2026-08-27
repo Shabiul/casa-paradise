@@ -3,8 +3,9 @@ import Link from 'next/link';
 import { ArrowLeft, ShieldCheck, Clock, CreditCard, Car, Utensils, AlertTriangle, FileText } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Terms & Conditions — Casa Paradiso Panaji, Goa',
+  title: 'Terms & Conditions',
   description: 'Read the terms and conditions, booking policies, check-in rules, vehicle rental guidelines, and cancellation terms for Casa Paradiso in Panaji, Goa.',
+  alternates: { canonical: '/terms' },
 };
 
 export default function TermsPage() {

@@ -1,5 +1,7 @@
 'use client';
 
+import Link from 'next/link';
+
 export default function Experiences() {
   const items = [
     {
@@ -65,6 +67,14 @@ export default function Experiences() {
               </div>
             </div>
           ))}
+        </div>
+
+        <div style={{ textAlign: 'center', marginTop: '32px' }}>
+          <Link href="/experiences" className="content-links" style={{ display: 'inline-flex' }}>
+            <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--color-champagne)', border: '1px solid rgba(5, 150, 105, 0.3)', borderRadius: '999px', padding: '8px 16px' }}>
+              View All Attractions & Distances →
+            </span>
+          </Link>
         </div>
       </div>
     </section>

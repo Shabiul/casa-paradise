@@ -53,17 +53,20 @@ export default function Footer() {
             <h4 className="footer__title">Quick Links</h4>
             <ul className="footer__links">
               <li><Link href={getHref('#about')}>About Us</Link></li>
-              <li><Link href={getHref('#rooms')}>Suites & Rates</Link></li>
-              <li><Link href={getHref('#experiences')}>Attractions</Link></li>
-              <li><Link href={getHref('#rentals')}>Car & Bike Rentals</Link></li>
+              <li><Link href="/rooms">Rooms & Suites</Link></li>
+              <li><Link href="/experiences">Things to Do Nearby</Link></li>
+              <li><Link href="/rentals">Scooter & Car Rentals</Link></li>
+              <li><Link href="/location">Location & Map</Link></li>
             </ul>
           </div>
 
           <div>
             <h4 className="footer__title">Guest Info</h4>
             <ul className="footer__links">
-              <li><Link href={getHref('#dining')}>Restaurant & Dining</Link></li>
+              <li><Link href="/dining">Restaurant & Dining</Link></li>
               <li><Link href={getHref('#gallery')}>Property Gallery</Link></li>
+              <li><Link href="/faq">FAQ</Link></li>
+              <li><Link href="/contact">Contact Us</Link></li>
               <li><Link href={getHref('#booking')}>Book Room</Link></li>
               <li><Link href="/terms">Terms & Conditions</Link></li>
               <li><Link href="/privacy">Privacy Policy</Link></li>

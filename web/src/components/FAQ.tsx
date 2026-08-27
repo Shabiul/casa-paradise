@@ -1,11 +1,12 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 
 const faqs = [
   {
     q: "What are the standard Check-in and Check-out times?",
-    a: "Standard check-in time is 1:00 PM and check-out time is 12:00 PM. Early check-in or late check-out is subject to room availability."
+    a: "Standard check-in time is 1:00 PM and check-out time is 11:00 AM. Early check-in or late check-out is subject to room availability."
   },
   {
     q: "How far is the hotel from Mandovi River and Offshore Casinos?",
@@ -48,6 +49,15 @@ export default function FAQ() {
               )}
             </div>
           ))}
+        </div>
+
+        <div style={{ textAlign: 'center', marginTop: '32px' }}>
+          <Link
+            href="/faq"
+            style={{ fontSize: '13px', fontWeight: 600, color: 'var(--color-champagne)', border: '1px solid rgba(5, 150, 105, 0.3)', borderRadius: '999px', padding: '8px 16px', textDecoration: 'none' }}
+          >
+            View Full FAQ →
+          </Link>
         </div>
       </div>
     </section>
