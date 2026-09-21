@@ -1,10 +1,11 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ShieldAlert, Lock, KeyRound, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
-import { getCurrentUser } from '@/lib/crmStore';
+import { getCurrentUser, subscribeToCRM } from '@/lib/crmStore';
 import UserSwitcherModal from './UserSwitcherModal';
+import { CRMUser } from '@/lib/types';
 
 interface AccessRestrictedProps {
   moduleName: string;
@@ -18,7 +19,13 @@ export default function AccessRestricted({
   description
 }: AccessRestrictedProps) {
   const [isSwitcherOpen, setIsSwitcherOpen] = useState(false);
-  const currentUser = getCurrentUser();
+  const [currentUser, setCurrentUser] = useState<CRMUser>(() => getCurrentUser());
+
+  useEffect(() => {
+    const sync = () => setCurrentUser(getCurrentUser());
+    const unsub = subscribeToCRM(sync);
+    return () => unsub();
+  }, []);
 
   return (
     <div

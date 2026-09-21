@@ -40,7 +40,7 @@ export default function HousekeepingAdminPage() {
   const [isQuickMaintOpen, setIsQuickMaintOpen] = useState(false);
   const [allowed, setAllowed] = useState<boolean>(true);
 
-  const currentUser = authUser || getCurrentUser();
+  const currentUser = getCurrentUser();
   const isAdmin = currentUser?.role === 'admin';
 
   // Room Create/Edit Modal (Admin Only)

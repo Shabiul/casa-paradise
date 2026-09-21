@@ -67,9 +67,7 @@ export default function UserSwitcherModal({ isOpen, onClose }: UserSwitcherModal
       setSwitchSuccess(false);
       setEnteredPin('');
       onClose();
-      // Reload current page to re-evaluate active permissions
-      window.location.reload();
-    }, 600);
+    }, 450);
   };
 
   return (
@@ -164,6 +162,7 @@ export default function UserSwitcherModal({ isOpen, onClose }: UserSwitcherModal
               return (
                 <div
                   key={u.id}
+                  id={`user-select-${u.id}`}
                   onClick={() => {
                     setSelectedUserId(u.id);
                     setPinError(null);
@@ -218,14 +217,20 @@ export default function UserSwitcherModal({ isOpen, onClose }: UserSwitcherModal
 
           {/* PIN Input */}
           <div style={{ marginBottom: '20px' }}>
-            <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '8px' }}>
-              Enter 4-Digit PIN for {targetUser?.name}
-            </label>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+              <label htmlFor="user-switcher-pin-input" style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text-secondary)' }}>
+                Security PIN for {targetUser?.name}
+              </label>
+              <span style={{ fontSize: '11.5px', color: 'var(--text-muted)' }}>
+                PIN: <code style={{ backgroundColor: '#F1F5F9', padding: '2px 6px', borderRadius: '4px', color: '#059669', fontWeight: 700 }}>{targetUser?.pin || '0000'}</code>
+              </span>
+            </div>
             <div style={{ position: 'relative' }}>
               <div style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }}>
                 <Lock size={16} />
               </div>
               <input
+                id="user-switcher-pin-input"
                 type="password"
                 maxLength={4}
                 value={enteredPin}
@@ -256,11 +261,7 @@ export default function UserSwitcherModal({ isOpen, onClose }: UserSwitcherModal
                 <AlertCircle size={14} />
                 <span>{pinError}</span>
               </div>
-            ) : (
-              <span style={{ fontSize: '11px', color: 'var(--text-muted)', display: 'block', marginTop: '4px' }}>
-                Default PINs: Admin = <strong>1234</strong> | Staff = <strong>0000</strong>
-              </span>
-            )}
+            ) : null}
           </div>
 
           {/* Action Buttons */}
@@ -282,6 +283,7 @@ export default function UserSwitcherModal({ isOpen, onClose }: UserSwitcherModal
               Cancel
             </button>
             <button
+              id="user-switcher-submit-btn"
               type="submit"
               disabled={switchSuccess}
               style={{

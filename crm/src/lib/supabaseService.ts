@@ -457,6 +457,25 @@ export async function fetchFullStoreFromSupabase(): Promise<CRMStoreData | null>
   if (!supabase) return null;
 
   try {
+    const fetchPromise = Promise.all([
+      supabase.from('guests').select('*').order('created_at', { ascending: false }),
+      supabase.from('rooms').select('*').order('room_number', { ascending: true }),
+      supabase.from('room_bookings').select('*').order('created_at', { ascending: false }),
+      supabase.from('vehicles').select('*'),
+      supabase.from('vehicle_bookings').select('*').order('created_at', { ascending: false }),
+      supabase.from('dining_tables').select('*'),
+      supabase.from('dining_bookings').select('*').order('created_at', { ascending: false }),
+      supabase.from('maintenance_tickets').select('*').order('created_at', { ascending: false }),
+      supabase.from('guest_folios').select('*').order('created_at', { ascending: false }),
+      supabase.from('activity_logs').select('*').order('timestamp', { ascending: false }).limit(50),
+      supabase.from('hotel_settings').select('*').eq('id', 'default').single(),
+      supabase.from('crm_users').select('*').order('created_at', { ascending: true })
+    ]);
+
+    const timeoutPromise = new Promise<never>((_, reject) =>
+      setTimeout(() => reject(new Error('Supabase request timed out after 8s')), 8000)
+    );
+
     const [
       guestsRes,
       roomsRes,
@@ -470,20 +489,7 @@ export async function fetchFullStoreFromSupabase(): Promise<CRMStoreData | null>
       logsRes,
       settingsRes,
       usersRes
-    ] = await Promise.all([
-      supabase.from('guests').select('*').order('created_at', { ascending: false }),
-      supabase.from('rooms').select('*').order('room_number', { ascending: true }),
-      supabase.from('room_bookings').select('*').order('created_at', { ascending: false }),
-      supabase.from('vehicles').select('*'),
-      supabase.from('vehicle_bookings').select('*').order('created_at', { ascending: false }),
-      supabase.from('dining_tables').select('*'),
-      supabase.from('dining_bookings').select('*').order('created_at', { ascending: false }),
-      supabase.from('maintenance_tickets').select('*').order('created_at', { ascending: false }),
-      supabase.from('guest_folios').select('*').order('created_at', { ascending: false }),
-      supabase.from('activity_logs').select('*').order('timestamp', { ascending: false }).limit(100),
-      supabase.from('hotel_settings').select('*').eq('id', 'default').single(),
-      supabase.from('crm_users').select('*').order('created_at', { ascending: true })
-    ]);
+    ] = await Promise.race([fetchPromise, timeoutPromise]);
 
     let settings: HotelSettings = {
       hotelName: 'Casa Paradiso',
@@ -556,9 +562,64 @@ export async function fetchFullStoreFromSupabase(): Promise<CRMStoreData | null>
       createdAt: new Date().toISOString()
     };
 
-    const users: CRMUser[] = (usersRes.data && usersRes.data.length > 0)
+    const defaultStaffUsers: CRMUser[] = [
+      defaultAdminUser,
+      {
+        id: 'USR-STAFF-101',
+        name: 'Front Desk Staff',
+        email: 'frontdesk@casaparadisohotel.in',
+        role: 'staff',
+        pin: '0000',
+        designation: 'Front Office Associate',
+        avatar: '🏨',
+        permissions: {
+          dashboard: true,
+          calendar: true,
+          rooms: true,
+          vehicles: true,
+          dining: true,
+          housekeeping: true,
+          guests: true,
+          billing: false,
+          analytics: false,
+          settings: false
+        },
+        createdAt: new Date().toISOString()
+      },
+      {
+        id: 'USR-STAFF-102',
+        name: 'Housekeeping Supervisor',
+        email: 'housekeeping@casaparadisohotel.in',
+        role: 'staff',
+        pin: '1111',
+        designation: 'Housekeeping & Maintenance Lead',
+        avatar: '🧹',
+        permissions: {
+          dashboard: false,
+          calendar: false,
+          rooms: true,
+          vehicles: false,
+          dining: false,
+          housekeeping: true,
+          guests: false,
+          billing: false,
+          analytics: false,
+          settings: false
+        },
+        createdAt: new Date().toISOString()
+      }
+    ];
+
+    const remoteUsers: CRMUser[] = (usersRes.data && usersRes.data.length > 0)
       ? usersRes.data.map(mapUserFromDB)
-      : [defaultAdminUser];
+      : [];
+
+    const users: CRMUser[] = [...remoteUsers];
+    for (const seed of defaultStaffUsers) {
+      if (!users.some(u => u.id === seed.id)) {
+        users.push(seed);
+      }
+    }
 
     return {
       version: 2,

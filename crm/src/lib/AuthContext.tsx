@@ -3,7 +3,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { getSupabaseClient } from '@/lib/supabaseClient';
 import { signInWithEmail, signOut, getCurrentSession, supabaseUserToCRMUser } from '@/lib/auth';
-import { setCurrentUser, saveCRMStore, getCRMStore } from '@/lib/crmStore';
+import { ACTIVE_USER_STORAGE_KEY, saveCRMStore, getCRMStore } from '@/lib/crmStore';
 import type { CRMUser } from '@/lib/types';
 
 interface AuthContextValue {
@@ -27,7 +27,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Sync supabase auth user into crmStore as the active user
+  // Sync supabase auth user into crmStore as a valid user without overriding the workstation's active user selection
   const syncToCRMStore = useCallback((crmUser: CRMUser | null) => {
     if (!crmUser) return;
     const store = getCRMStore();
@@ -37,9 +37,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (existsIndex === -1 || existsIndex === undefined) {
       users = [crmUser, ...users];
     } else {
-      users = users.map(u => u.id === crmUser.id ? crmUser : u);
+      users = users.map(u => u.id === crmUser.id ? { ...u, ...crmUser } : u);
     }
-    saveCRMStore({ ...store, users, activeUserId: crmUser.id });
+
+    // Preserve existing active user from dedicated storage key or store
+    const existingActiveId = (typeof window !== 'undefined' && localStorage.getItem(ACTIVE_USER_STORAGE_KEY)) || store.activeUserId;
+    const activeUserId = (existingActiveId && users.some(u => u.id === existingActiveId))
+      ? existingActiveId
+      : crmUser.id;
+
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(ACTIVE_USER_STORAGE_KEY, activeUserId);
+    }
+
+    saveCRMStore({ ...store, users, activeUserId });
   }, []);
 
   // Bootstrap: check existing Supabase session
@@ -88,6 +99,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setError(err || 'Login failed.');
       return false;
     }
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(ACTIVE_USER_STORAGE_KEY, crmUser.id);
+    }
     syncToCRMStore(crmUser);
     setUser(crmUser);
     return true;
@@ -95,6 +109,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const logout = useCallback(async () => {
     await signOut();
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem(ACTIVE_USER_STORAGE_KEY);
+    }
     setUser(null);
   }, []);
 

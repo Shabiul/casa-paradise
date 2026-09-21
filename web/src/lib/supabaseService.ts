@@ -556,9 +556,64 @@ export async function fetchFullStoreFromSupabase(): Promise<CRMStoreData | null>
       createdAt: new Date().toISOString()
     };
 
-    const users: CRMUser[] = (usersRes.data && usersRes.data.length > 0)
+    const defaultStaffUsers: CRMUser[] = [
+      defaultAdminUser,
+      {
+        id: 'USR-STAFF-101',
+        name: 'Front Desk Staff',
+        email: 'frontdesk@casaparadisohotel.in',
+        role: 'staff',
+        pin: '0000',
+        designation: 'Front Office Associate',
+        avatar: '🏨',
+        permissions: {
+          dashboard: true,
+          calendar: true,
+          rooms: true,
+          vehicles: true,
+          dining: true,
+          housekeeping: true,
+          guests: true,
+          billing: false,
+          analytics: false,
+          settings: false
+        },
+        createdAt: new Date().toISOString()
+      },
+      {
+        id: 'USR-STAFF-102',
+        name: 'Housekeeping Supervisor',
+        email: 'housekeeping@casaparadisohotel.in',
+        role: 'staff',
+        pin: '1111',
+        designation: 'Housekeeping & Maintenance Lead',
+        avatar: '🧹',
+        permissions: {
+          dashboard: false,
+          calendar: false,
+          rooms: true,
+          vehicles: false,
+          dining: false,
+          housekeeping: true,
+          guests: false,
+          billing: false,
+          analytics: false,
+          settings: false
+        },
+        createdAt: new Date().toISOString()
+      }
+    ];
+
+    const remoteUsers: CRMUser[] = (usersRes.data && usersRes.data.length > 0)
       ? usersRes.data.map(mapUserFromDB)
-      : [defaultAdminUser];
+      : [];
+
+    const users: CRMUser[] = [...remoteUsers];
+    for (const seed of defaultStaffUsers) {
+      if (!users.some(u => u.id === seed.id)) {
+        users.push(seed);
+      }
+    }
 
     return {
       version: 2,

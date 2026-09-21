@@ -47,6 +47,7 @@ import {
 } from './supabaseService';
 
 export const STORAGE_KEY = 'casa_paradiso_crm_v2';
+export const ACTIVE_USER_STORAGE_KEY = 'casa_crm_active_user_id';
 export const SYNC_CHANNEL_NAME = 'casa_crm_channel';
 
 export const defaultSettings: HotelSettings = {
@@ -572,14 +573,28 @@ export const initialData: CRMStoreData = {
   activeUserId: 'USR-ADMIN-1'
 };
 
+// Module-level in-memory cache to eliminate JSON.parse CPU thrashing on re-renders
+let memoryStoreCache: CRMStoreData | null = null;
+
 // Cross-tab broadcast channel
 let broadcastChannel: BroadcastChannel | null = null;
 if (typeof window !== 'undefined' && 'BroadcastChannel' in window) {
   try {
     broadcastChannel = new BroadcastChannel(SYNC_CHANNEL_NAME);
+    broadcastChannel.addEventListener('message', () => {
+      memoryStoreCache = null;
+    });
   } catch (e) {
     console.warn('BroadcastChannel error', e);
   }
+}
+
+if (typeof window !== 'undefined') {
+  window.addEventListener('storage', (e) => {
+    if (e.key === STORAGE_KEY) {
+      memoryStoreCache = null;
+    }
+  });
 }
 
 export function notifySubscribers() {
@@ -592,28 +607,71 @@ export function notifySubscribers() {
 }
 
 let hasInitiatedInitialSupabaseFetch = false;
+let activePullPromise: Promise<boolean> | null = null;
+let lastPullTimestamp = 0;
 
-// Pull from Supabase
-export async function pullLatestFromSupabase(): Promise<boolean> {
+// Pull from Supabase with in-flight deduplication and rate-limiting
+export async function pullLatestFromSupabase(force = false): Promise<boolean> {
   if (!isSupabaseConfigured()) return false;
-  try {
-    const remoteData = await fetchFullStoreFromSupabase();
-    if (remoteData) {
-      if (typeof window !== 'undefined') {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(remoteData));
-        notifySubscribers();
-      }
-      return true;
-    }
-  } catch (e) {
-    console.error('Error pulling latest data from Supabase:', e);
+  const now = Date.now();
+  if (!force && now - lastPullTimestamp < 1500) {
+    return true;
   }
-  return false;
+  if (activePullPromise) {
+    return activePullPromise;
+  }
+
+  activePullPromise = (async () => {
+    try {
+      lastPullTimestamp = Date.now();
+      const remoteData = await fetchFullStoreFromSupabase();
+      if (remoteData) {
+        if (typeof window !== 'undefined') {
+          // PRESERVE the workstation terminal's currently active operational user
+          const existingActiveId = localStorage.getItem(ACTIVE_USER_STORAGE_KEY) || (memoryStoreCache?.activeUserId || 'USR-ADMIN-1');
+
+          // Ensure initial seed users are retained in remoteData.users if remote DB is missing them
+          const existingUsers = remoteData.users || [];
+          const mergedUsers = [...existingUsers];
+          for (const initUser of initialUsers) {
+            if (!mergedUsers.some(u => u.id === initUser.id)) {
+              mergedUsers.push(initUser);
+            }
+          }
+          remoteData.users = mergedUsers;
+
+          // Keep active user if valid, otherwise fallback to first user
+          const targetActiveId = mergedUsers.some(u => u.id === existingActiveId)
+            ? existingActiveId
+            : (mergedUsers[0]?.id || 'USR-ADMIN-1');
+
+          remoteData.activeUserId = targetActiveId;
+          localStorage.setItem(ACTIVE_USER_STORAGE_KEY, targetActiveId);
+          memoryStoreCache = remoteData;
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(remoteData));
+          notifySubscribers();
+        }
+        return true;
+      }
+    } catch (e) {
+      console.error('Error pulling latest data from Supabase:', e);
+    } finally {
+      activePullPromise = null;
+    }
+    return false;
+  })();
+
+  return activePullPromise;
 }
 
-// 1. Get Store
+// 1. Get Store (Instant O(1) in-memory return + background refresh from Supabase)
 export function getCRMStore(): CRMStoreData {
   if (typeof window === 'undefined') return initialData;
+
+  // Immediate fast-path: return cached in-memory reference
+  if (memoryStoreCache) {
+    return memoryStoreCache;
+  }
 
   // Background fetch from Supabase on first run
   if (isSupabaseConfigured() && !hasInitiatedInitialSupabaseFetch) {
@@ -660,26 +718,47 @@ export function getCRMStore(): CRMStoreData {
       parsed.users = initialUsers;
       parsed.activeUserId = 'USR-ADMIN-1';
       needsUpdate = true;
+    } else {
+      // Ensure seed users remain available if missing
+      for (const initUser of initialUsers) {
+        if (!parsed.users.some(u => u.id === initUser.id)) {
+          parsed.users.push(initUser);
+          needsUpdate = true;
+        }
+      }
     }
-    if (!parsed.activeUserId) {
+
+    const savedActiveId = localStorage.getItem(ACTIVE_USER_STORAGE_KEY);
+    if (savedActiveId && parsed.users.some(u => u.id === savedActiveId)) {
+      if (parsed.activeUserId !== savedActiveId) {
+        parsed.activeUserId = savedActiveId;
+        needsUpdate = true;
+      }
+    } else if (parsed.activeUserId && parsed.users.some(u => u.id === parsed.activeUserId)) {
+      localStorage.setItem(ACTIVE_USER_STORAGE_KEY, parsed.activeUserId);
+    } else {
       parsed.activeUserId = parsed.users[0]?.id || 'USR-ADMIN-1';
+      localStorage.setItem(ACTIVE_USER_STORAGE_KEY, parsed.activeUserId);
       needsUpdate = true;
     }
 
     if (needsUpdate) {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(parsed));
     }
+    memoryStoreCache = parsed;
     return parsed;
   } catch (e) {
     console.error('Error reading CRM store', e);
+    memoryStoreCache = initialData;
     return initialData;
   }
 }
 
-// 2. Save Store
+// 2. Save Store (Synchronously updates in-memory cache & persists to storage)
 export function saveCRMStore(data: CRMStoreData) {
   if (typeof window === 'undefined') return;
   try {
+    memoryStoreCache = data;
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
     notifySubscribers();
   } catch (e) {
@@ -1558,13 +1637,40 @@ export function resetCRMData(): void {
   persistRoomsBatchToSupabase(initialRooms);
 }
 
-// 14. Real-time Subscription Hook Helper
+// 14. Singleton Real-time Supabase Synchronizer (runs once globally, debounced)
+let hasInitializedSingletonRealtime = false;
+let realtimeDebounceTimer: ReturnType<typeof setTimeout> | null = null;
+
+function initSingletonRealtimeSync() {
+  if (typeof window === 'undefined' || hasInitializedSingletonRealtime) return;
+  hasInitializedSingletonRealtime = true;
+
+  if (isSupabaseConfigured()) {
+    setupSupabaseRealtimeChannel(() => {
+      if (realtimeDebounceTimer) {
+        clearTimeout(realtimeDebounceTimer);
+      }
+      realtimeDebounceTimer = setTimeout(() => {
+        pullLatestFromSupabase(true).catch(() => {});
+      }, 600);
+    });
+  }
+}
+
+if (typeof window !== 'undefined') {
+  initSingletonRealtimeSync();
+}
+
+// 15. Local Store Subscription Hook Helper (zero Supabase connection duplication)
 export function subscribeToCRM(callback: () => void): () => void {
   if (typeof window === 'undefined') return () => {};
 
   const handleCustomEvent = () => callback();
   const handleStorageEvent = (e: StorageEvent) => {
-    if (e.key === STORAGE_KEY) callback();
+    if (e.key === STORAGE_KEY) {
+      memoryStoreCache = null;
+      callback();
+    }
   };
 
   window.addEventListener('casa_crm_updated', handleCustomEvent);
@@ -1572,14 +1678,12 @@ export function subscribeToCRM(callback: () => void): () => void {
 
   let handleBroadcast: ((e: MessageEvent) => void) | null = null;
   if (broadcastChannel) {
-    handleBroadcast = () => callback();
+    handleBroadcast = () => {
+      memoryStoreCache = null;
+      callback();
+    };
     broadcastChannel.addEventListener('message', handleBroadcast);
   }
-
-  // Setup Supabase Realtime channel if configured
-  const unsubscribeSupabase = setupSupabaseRealtimeChannel(() => {
-    pullLatestFromSupabase().then(() => callback()).catch(() => callback());
-  });
 
   return () => {
     window.removeEventListener('casa_crm_updated', handleCustomEvent);
@@ -1587,17 +1691,17 @@ export function subscribeToCRM(callback: () => void): () => void {
     if (broadcastChannel && handleBroadcast) {
       broadcastChannel.removeEventListener('message', handleBroadcast);
     }
-    unsubscribeSupabase();
   };
 }
 
 // ==========================================
-// 15. RBAC & STAFF PERMISSIONS MANAGEMENT
+// 16. RBAC & STAFF PERMISSIONS MANAGEMENT
 // ==========================================
 
 export function getCurrentUser(): CRMUser {
   const store = getCRMStore();
-  const user = store.users?.find(u => u.id === store.activeUserId);
+  const activeId = (typeof window !== 'undefined' && localStorage.getItem(ACTIVE_USER_STORAGE_KEY)) || store.activeUserId;
+  const user = store.users?.find(u => u.id === activeId);
   return user || store.users?.[0] || initialUsers[0];
 }
 

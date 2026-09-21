@@ -43,8 +43,8 @@ export default function Topbar({ onOpenQuickModal }: TopbarProps) {
     setHasSupabase(isSupabaseConfigured());
     const updateStats = () => {
       const store = getCRMStore();
-      // Prefer the Supabase auth user, fall back to crmStore
-      const user = authUser || getCurrentUser();
+      // Active operational user from crmStore (RBAC profile)
+      const user = getCurrentUser();
       setCurrentUserState(user);
       const pending =
         store.roomBookings.filter(b => b.status === 'pending').length +
