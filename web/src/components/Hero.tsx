@@ -123,7 +123,7 @@ export default function Hero() {
 
       {/* Intro Typography Stage (Semantic single H1 horizontal composition) */}
       <div className={`hero-cinematic__intro-stage ${phase === 'settled' ? 'is-faded' : ''}`}>
-        <h1 className="hero-cinematic__h1" aria-label="CASA PARADISO">
+        <h1 className="hero-cinematic__h1" aria-label="CASA PARADISO — Boutique Heritage Hotel in Panjim, Goa">
           <span className="hero-cinematic__word hero-cinematic__word--casa">
             CASA
           </span>
@@ -153,6 +153,7 @@ export default function Hero() {
           <span className="hero-cinematic__word hero-cinematic__word--paradiso">
             PARADISO
           </span>
+          <span className="sr-only"> — Boutique Heritage Hotel in Panjim, Goa</span>
         </h1>
       </div>
 

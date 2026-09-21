@@ -26,23 +26,24 @@ export const BUSINESS = {
   numberOfRooms: 18,
   checkInTime: '1:00 PM',
   checkOutTime: '11:00 AM',
-  mapsUrl: 'https://maps.app.goo.gl/iKyFhnt8Q5JwUMD46',
-  // TODO(manual verification): confirm exact GPS coordinates against the Google
-  // Business Profile before publishing GeoCoordinates in schema. The values
-  // below are approximate, taken from the existing Google Maps embed in
-  // Footer.tsx, and are NOT yet confirmed accurate to the property entrance.
+  mapsUrl: 'https://maps.app.goo.gl/RNMMzQhL3Lrz7tkaA',
+  mapsPlaceUrl:
+    'https://www.google.com/maps/place/panjim+hotel+casa+enterprises/@15.4997708,73.8295675,17z/data=!3m1!4b1!4m6!3m5!1s0x3bbfc10d64d3e767:0x1375ffd0eeec9bf9!8m2!3d15.4997708!4d73.8295675',
+  mapsCidUrl: 'https://maps.google.com/?cid=1402288079685655545',
+  googleCid: '1402288079685655545',
+  googlePlaceId: 'ChIJZ-fTZAzRvzsR-Zvs7tD_dRM',
+  googleKnowledgeGraphId: 'kg:/g/11nw2gn81d',
+  // Verified exact GPS coordinates matching the Google Business Profile
   geo: {
-    latitude: 15.497,
-    longitude: 73.83,
+    latitude: 15.4997708,
+    longitude: 73.8295675,
   },
 } as const;
 
 export const SOCIAL_PROFILES: string[] = [
-  // TODO(manual verification): add verified official social profile URLs
-  // (Instagram/Facebook/etc.) here once confirmed by the hotel owner, then
-  // reference SOCIAL_PROFILES in the Organization schema's `sameAs`. Left
-  // empty deliberately — no profiles were found in the codebase, and
-  // inventing them would violate the "no fabricated schema" rule.
+  BUSINESS.mapsCidUrl,
+  BUSINESS.mapsUrl,
+  BUSINESS.mapsPlaceUrl,
 ];
 
 export function absoluteUrl(path: string): string {

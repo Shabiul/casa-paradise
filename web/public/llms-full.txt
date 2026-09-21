@@ -7,11 +7,14 @@
 - **Location**: Altinho Hill, Panaji (Panjim), Goa, India
 - **Address**: Ghanekar Building, Rua José Falcão, Altinho, Panaji, Goa 403001, India
 - **Postal Code**: 403001
-- **Coordinates (approx)**: Latitude 15.497, Longitude 73.83
+- **Coordinates (verified)**: Latitude 15.4997708, Longitude 73.8295675
 - **Official Website**: https://www.panjimhotelcasaparadiso.in
 - **Direct Phone**: +91 98812 47847
 - **Direct Email**: Paradisepanjim@gmail.com
-- **Google Maps Profile**: https://maps.app.goo.gl/iKyFhnt8Q5JwUMD46
+- **Google Maps Profile (GMB)**: https://maps.app.goo.gl/RNMMzQhL3Lrz7tkaA
+- **Google Maps CID**: https://maps.google.com/?cid=1402288079685655545
+- **Google Maps Place URL**: https://www.google.com/maps/place/panjim+hotel+casa+enterprises/@15.4997708,73.8295675,17z/data=!3m1!4b1!4m6!3m5!1s0x3bbfc10d64d3e767:0x1375ffd0eeec9bf9!8m2!3d15.4997708!4d73.8295675
+- **Knowledge Graph ID**: kg:/g/11nw2gn81d
 
 ## 2. Key Check-In & Operational Policies
 - **Check-in Time**: 1:00 PM (13:00 IST)

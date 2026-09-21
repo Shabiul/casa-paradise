@@ -6,14 +6,14 @@ import { BUSINESS, SITE_URL, absoluteUrl } from '@/lib/seo';
 import { ROOMS_DATA } from '@/lib/roomsData';
 
 export const metadata: Metadata = {
-  title: 'Rooms & Suites in Panaji, Goa',
+  title: 'Rooms & Suites in Panjim Goa | AC & Heritage Stays',
   description:
-    'Two room categories at Casa Paradiso in Panaji: the air-conditioned Paradise AC Suite and the Heritage Non-AC Room, across an intimate 18-room boutique hotel on Altinho hill.',
+    'Explore the Paradise AC Suite and Heritage Non-AC Room at Casa Paradiso on Altinho hill in Panjim, Goa. Intimate 18-room boutique haven 5 mins from Mandovi River & casinos.',
   alternates: { canonical: '/rooms' },
   openGraph: {
-    title: 'Rooms & Suites in Panaji, Goa | Casa Paradiso',
+    title: 'Rooms & Suites in Panjim, Goa | Casa Paradiso',
     description:
-      'Explore the Paradise AC Suite and Heritage Non-AC Room at Casa Paradiso, a boutique hotel on Altinho hill in Panaji, Goa.',
+      'Explore the Paradise AC Suite and Heritage Non-AC Room at Casa Paradiso, a boutique hotel on Altinho hill in Panjim, Goa.',
     url: '/rooms',
     type: 'website',
     images: [absoluteUrl('/assets/wa-photo-8.jpeg')],

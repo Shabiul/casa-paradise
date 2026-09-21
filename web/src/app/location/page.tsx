@@ -5,13 +5,13 @@ import { ATTRACTIONS_DATA } from '@/components/attractions/attractionData';
 import { BUSINESS, SITE_URL, absoluteUrl } from '@/lib/seo';
 
 export const metadata: Metadata = {
-  title: 'Location — Hotel in Panaji, Goa',
+  title: 'Location & Directions | Hotel in Altinho, Panjim Goa',
   description:
-    'Casa Paradiso is located at Ghanekar Building, Rua José Falcão, Altinho, Panaji, Goa 403001 — on historic Altinho hill, close to the Mandovi riverfront, Fontainhas, and Panaji city centre.',
+    'Directions, Google Maps pin, and landmark distances to Casa Paradiso at Ghanekar Building, Rua José Falcão, Altinho, Panaji, Goa 403001. 5 mins to Mandovi River, casinos & Fontainhas.',
   alternates: { canonical: '/location' },
   openGraph: {
-    title: 'Casa Paradiso Location | Hotel in Panaji, Goa',
-    description: 'Find Casa Paradiso on Altinho hill in Panaji, Goa, close to the Mandovi riverfront and Fontainhas.',
+    title: 'Location & Directions | Casa Paradiso Hotel Panjim, Goa',
+    description: 'Find Casa Paradiso on Altinho hill in Panaji, Goa, 5 mins from Mandovi River, offshore casinos, and Fontainhas.',
     url: '/location',
     type: 'website',
     images: [absoluteUrl('/assets/hero.png')],
@@ -23,10 +23,20 @@ export default function LocationPage() {
     '@context': 'https://schema.org',
     '@type': 'Hotel',
     name: BUSINESS.name,
+    alternateName: [
+      'Casa Paradiso Hotel',
+      'Panjim Hotel Casa Enterprises',
+      'Hotel Casa Paradiso Panaji',
+    ],
     description: BUSINESS.description,
     url: `${SITE_URL}/location`,
     telephone: BUSINESS.telephone,
     hasMap: BUSINESS.mapsUrl,
+    sameAs: [
+      BUSINESS.mapsCidUrl,
+      BUSINESS.mapsUrl,
+      BUSINESS.mapsPlaceUrl,
+    ],
     address: {
       '@type': 'PostalAddress',
       streetAddress: BUSINESS.streetAddress,
@@ -126,7 +136,7 @@ export default function LocationPage() {
           <div className="footer__map-frame" style={{ height: 360 }}>
             <iframe
               title="Casa Paradiso location on Google Maps"
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3844.047!2d73.83!3d15.497!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bbfc0fc3a58e44b%3A0x8a2bd60571ce41b3!2sCasa%20Paradiso%20Hotel!5e0!3m2!1sen!2sin!4v1693000000000!5m2!1sen!2sin"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3844.896!2d73.8295675!3d15.4997708!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bbfc10d64d3e767%3A0x1375ffd0eeec9bf9!2spanjim%20hotel%20casa%20enterprises!5e0!3m2!1sen!2sin!4v1726920000000!5m2!1sen!2sin"
               width="100%"
               height="100%"
               style={{ border: 0 }}

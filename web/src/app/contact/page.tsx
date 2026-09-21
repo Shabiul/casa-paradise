@@ -4,13 +4,13 @@ import Breadcrumbs from '@/components/Breadcrumbs';
 import { BUSINESS, SITE_URL, absoluteUrl } from '@/lib/seo';
 
 export const metadata: Metadata = {
-  title: 'Contact Casa Paradiso — Panaji Hotel, Goa',
+  title: 'Contact & Direct Booking | Casa Paradiso Hotel Panjim Goa',
   description:
-    'Contact Casa Paradiso in Panaji, Goa by phone, WhatsApp, or email, or use the booking form to reserve a room, dining table, or vehicle rental directly.',
+    'Contact Casa Paradiso in Panjim, Goa by phone (+91 98812 47847), WhatsApp, or direct online booking for hotel suites, restaurant dining, and scooter rentals.',
   alternates: { canonical: '/contact' },
   openGraph: {
-    title: 'Contact Casa Paradiso | Panaji Hotel, Goa',
-    description: 'Phone, WhatsApp, email, and address for Casa Paradiso, a boutique hotel in Panaji, Goa.',
+    title: 'Contact & Direct Booking | Casa Paradiso Hotel Panjim Goa',
+    description: 'Phone, WhatsApp, email, and address for Casa Paradiso, a boutique hotel in Panjim, Goa.',
     url: '/contact',
     type: 'website',
     images: [absoluteUrl('/assets/hero.png')],

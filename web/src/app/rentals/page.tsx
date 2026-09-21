@@ -5,13 +5,13 @@ import Breadcrumbs from '@/components/Breadcrumbs';
 import { BUSINESS, SITE_URL, absoluteUrl } from '@/lib/seo';
 
 export const metadata: Metadata = {
-  title: 'Scooter & Self-Drive Car Rental in Panaji',
+  title: 'Scooter & Self-Drive Car Rental in Panjim Goa | Doorstep Delivery',
   description:
-    'Rent a scooter or self-drive car at Casa Paradiso in Panaji with doorstep hotel pick-up and drop-off — Honda Activa, Honda Dio, Yamaha Fascino scooters, and Maruti Suzuki Swift or Ertiga self-drive cars.',
+    'Rent a scooter (Honda Activa, Dio, Fascino at ₹400/day) or self-drive car (Swift, Ertiga) with doorstep hotel delivery in Panjim, Goa. Free helmets and unlimited km included.',
   alternates: { canonical: '/rentals' },
   openGraph: {
-    title: 'Scooter & Self-Drive Car Rental in Panaji | Casa Paradiso',
-    description: 'Doorstep scooter and self-drive car rental at Casa Paradiso, Panaji — Activa, Dio, Fascino, Swift, and Ertiga.',
+    title: 'Scooter & Self-Drive Car Rental in Panjim Goa | Casa Paradiso',
+    description: 'Doorstep scooter and self-drive car rental at Casa Paradiso, Panjim — Activa, Dio, Fascino, Swift, and Ertiga.',
     url: '/rentals',
     type: 'website',
     images: [absoluteUrl('/activa.png')],

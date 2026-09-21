@@ -4,13 +4,13 @@ import Breadcrumbs from '@/components/Breadcrumbs';
 import { BUSINESS } from '@/lib/seo';
 
 export const metadata: Metadata = {
-  title: 'Casa Paradiso Hotel FAQs — Panaji, Goa',
+  title: 'Hotel FAQs & Guest Guide | Casa Paradiso Panjim Goa',
   description:
-    'Answers to common questions about Casa Paradiso in Panaji: check-in/check-out times, room types, Wi-Fi and breakfast, on-site dining, vehicle rentals, and how to book directly.',
+    'Direct answers on check-in/out times, room tariffs, Mandovi casino proximity, on-site dining, scooter rentals, and booking at Casa Paradiso in Panjim, Goa.',
   alternates: { canonical: '/faq' },
   openGraph: {
-    title: 'Casa Paradiso Hotel FAQs | Panaji, Goa',
-    description: 'Check-in times, room types, dining, rentals, and booking questions answered for Casa Paradiso, Panaji.',
+    title: 'Hotel FAQs & Guest Guide | Casa Paradiso Panjim Goa',
+    description: 'Check-in times, room types, dining, rentals, and booking questions answered for Casa Paradiso, Panjim.',
     url: '/faq',
     type: 'website',
   },

@@ -5,13 +5,13 @@ import Breadcrumbs from '@/components/Breadcrumbs';
 import { BUSINESS, SITE_URL, absoluteUrl } from '@/lib/seo';
 
 export const metadata: Metadata = {
-  title: 'Dining & Goan Cuisine in Panaji',
+  title: 'Restaurant & Authentic Goan Seafood Dining in Panjim',
   description:
-    'On-site vegetarian and non-vegetarian Goan dining at Casa Paradiso in Panaji — fresh Mandovi seafood, classic Goan curries, and all-day restaurant service from 7:00 AM to 11:00 PM.',
+    'Authentic Goan seafood, vegetarian curries, thalis, and all-day dining at Casa Paradiso in Panjim, Goa. Fresh Mandovi river catch and classic Goan hospitality from 7:00 AM to 11:00 PM.',
   alternates: { canonical: '/dining' },
   openGraph: {
-    title: 'Dining & Goan Cuisine in Panaji | Casa Paradiso',
-    description: 'Vegetarian and non-vegetarian Goan dining at Casa Paradiso, Panaji, including fresh Mandovi seafood and classic Goan curries.',
+    title: 'Restaurant & Authentic Goan Seafood Dining in Panjim | Casa Paradiso',
+    description: 'Vegetarian and non-vegetarian Goan dining at Casa Paradiso, Panjim, including fresh Mandovi seafood and classic Goan curries.',
     url: '/dining',
     type: 'website',
     images: [absoluteUrl('/assets/wa-photo-3.jpeg')],

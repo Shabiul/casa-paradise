@@ -23,6 +23,8 @@ export default function robots(): MetadataRoute.Robots {
           'GPTBot',
           'PerplexityBot',
           'ClaudeBot',
+          'Google-Extended',
+          'Amazonbot',
           'facebookexternalhit',
           'Twitterbot',
           'LinkedInBot',
