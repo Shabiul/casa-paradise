@@ -156,7 +156,7 @@ export default function RoomsAdminPage() {
         }}
       >
         {/* Status Tabs */}
-        <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+        <div className="crm-filter-tabs" style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
           {[
             { key: 'all', label: 'All Stays' },
             { key: 'pending', label: 'Pending' },

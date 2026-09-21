@@ -81,7 +81,7 @@ export default function UserSwitcherModal({ isOpen, onClose }: UserSwitcherModal
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: '20px'
+        padding: '12px'
       }}
       onClick={onClose}
     >
@@ -91,8 +91,9 @@ export default function UserSwitcherModal({ isOpen, onClose }: UserSwitcherModal
           borderRadius: '20px',
           width: '100%',
           maxWidth: '460px',
+          maxHeight: '90dvh',
+          overflowY: 'auto',
           boxShadow: '0 24px 60px rgba(0, 0, 0, 0.25)',
-          overflow: 'hidden',
           border: '1px solid var(--border-subtle)'
         }}
         onClick={(e) => e.stopPropagation()}
@@ -179,20 +180,20 @@ export default function UserSwitcherModal({ isOpen, onClose }: UserSwitcherModal
                     transition: 'all 0.15s ease'
                   }}
                 >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                    <span style={{ fontSize: '22px' }}>{u.avatar || (u.role === 'admin' ? '👑' : '👤')}</span>
-                    <div>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                        <strong style={{ fontSize: '13.5px', color: 'var(--text-primary)' }}>{u.name}</strong>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px', minWidth: 0 }}>
+                    <span style={{ fontSize: '20px', flexShrink: 0 }}>{u.avatar || (u.role === 'admin' ? '👑' : '👤')}</span>
+                    <div style={{ minWidth: 0 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
+                        <strong style={{ fontSize: '13.5px', color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{u.name}</strong>
                         {isCurrent && (
-                          <span style={{ fontSize: '10px', fontWeight: 700, backgroundColor: '#E0E7FF', color: '#3730A3', padding: '1px 6px', borderRadius: '4px' }}>
+                          <span style={{ fontSize: '9px', fontWeight: 700, backgroundColor: '#E0E7FF', color: '#3730A3', padding: '1px 5px', borderRadius: '4px' }}>
                             ACTIVE
                           </span>
                         )}
                       </div>
-                      <span style={{ fontSize: '11.5px', color: 'var(--text-muted)' }}>
+                      <div style={{ fontSize: '11px', color: 'var(--text-muted)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                         {u.designation || (u.role === 'admin' ? 'Hotel Administrator' : 'Staff Associate')}
-                      </span>
+                      </div>
                     </div>
                   </div>
 

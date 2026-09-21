@@ -218,7 +218,7 @@ export default function VehiclesAdminPage() {
           border: '1px solid var(--border-subtle)'
         }}
       >
-        <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+        <div className="crm-filter-tabs" style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
           {[
             { key: 'all', label: 'All Rentals' },
             { key: 'pending', label: 'Pending' },

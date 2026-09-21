@@ -212,6 +212,7 @@ export default function QuickBookingModal({ initialTab = 'room', onClose }: Quic
 
         {/* Tab Navigation */}
         <div
+          className="crm-quick-modal-tabs"
           style={{
             display: 'flex',
             borderBottom: '1px solid var(--border-subtle)',
@@ -279,7 +280,7 @@ export default function QuickBookingModal({ initialTab = 'room', onClose }: Quic
           {/* ROOM FORM */}
           {activeTab === 'room' && (
             <form onSubmit={handleRoomSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+              <div className="crm-form-grid-2col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
                 <div className="crm-form-group">
                   <label className="crm-label">Guest Full Name *</label>
                   <input
@@ -304,7 +305,7 @@ export default function QuickBookingModal({ initialTab = 'room', onClose }: Quic
                 </div>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+              <div className="crm-form-grid-2col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
                 <div className="crm-form-group">
                   <label className="crm-label">Room Type</label>
                   <select
@@ -330,7 +331,7 @@ export default function QuickBookingModal({ initialTab = 'room', onClose }: Quic
                 </div>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+              <div className="crm-form-grid-2col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
                 <div className="crm-form-group">
                   <label className="crm-label">Check-In Date *</label>
                   <input
@@ -392,7 +393,7 @@ export default function QuickBookingModal({ initialTab = 'room', onClose }: Quic
           {/* VEHICLE FORM */}
           {activeTab === 'vehicle' && (
             <form onSubmit={handleVehicleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+              <div className="crm-form-grid-2col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
                 <div className="crm-form-group">
                   <label className="crm-label">Guest Full Name *</label>
                   <input
@@ -432,7 +433,7 @@ export default function QuickBookingModal({ initialTab = 'room', onClose }: Quic
                 </select>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+              <div className="crm-form-grid-2col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
                 <div className="crm-form-group">
                   <label className="crm-label">Pickup Date *</label>
                   <input
@@ -480,7 +481,7 @@ export default function QuickBookingModal({ initialTab = 'room', onClose }: Quic
           {/* DINING FORM */}
           {activeTab === 'dining' && (
             <form onSubmit={handleDiningSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+              <div className="crm-form-grid-2col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
                 <div className="crm-form-group">
                   <label className="crm-label">Guest Full Name *</label>
                   <input
@@ -505,7 +506,7 @@ export default function QuickBookingModal({ initialTab = 'room', onClose }: Quic
                 </div>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+              <div className="crm-form-grid-2col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
                 <div className="crm-form-group">
                   <label className="crm-label">Reservation Date *</label>
                   <input
@@ -529,7 +530,7 @@ export default function QuickBookingModal({ initialTab = 'room', onClose }: Quic
                 </div>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+              <div className="crm-form-grid-2col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
                 <div className="crm-form-group">
                   <label className="crm-label">Meal Slot</label>
                   <select
@@ -574,7 +575,7 @@ export default function QuickBookingModal({ initialTab = 'room', onClose }: Quic
           {/* MAINTENANCE FORM */}
           {activeTab === 'maintenance' && (
             <form onSubmit={handleMaintSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+              <div className="crm-form-grid-2col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
                 <div className="crm-form-group">
                   <label className="crm-label">Area / Location</label>
                   <select
@@ -629,7 +630,7 @@ export default function QuickBookingModal({ initialTab = 'room', onClose }: Quic
                 />
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+              <div className="crm-form-grid-2col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
                 <div className="crm-form-group">
                   <label className="crm-label">Priority</label>
                   <select

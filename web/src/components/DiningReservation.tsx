@@ -81,6 +81,7 @@ export default function DiningReservation() {
 
   return (
     <div
+      className="dining-reservation-card"
       style={{
         backgroundColor: '#FFFFFF',
         borderRadius: '20px',

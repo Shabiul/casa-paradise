@@ -244,7 +244,7 @@ export default function HousekeepingAdminPage() {
           </p>
         </div>
 
-        <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+        <div className="crm-page-header-actions" style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
           {isAdmin && activeTab === 'rooms' && (
             <button
               onClick={() => handleOpenRoomModal(null)}
@@ -323,7 +323,7 @@ export default function HousekeepingAdminPage() {
             </div>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px' }}>
+          <div className="crm-hk-rooms-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px' }}>
             {store.rooms.map(room => (
               <div
                 key={room.roomNumber}

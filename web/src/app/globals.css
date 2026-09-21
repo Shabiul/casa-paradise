@@ -2692,3 +2692,13 @@ html[data-hero-state="settled"] .nav {
   color: #fff;
 }
 
+/* Mobile Responsive Optimization for Dining Card */
+@media (max-width: 640px) {
+  .dining-reservation-card {
+    padding: 18px 14px !important;
+    margin-top: 20px !important;
+    border-radius: 16px !important;
+  }
+}
+
+

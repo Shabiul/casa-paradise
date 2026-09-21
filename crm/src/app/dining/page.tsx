@@ -209,7 +209,7 @@ export default function DiningAdminPage() {
           border: '1px solid var(--border-subtle)'
         }}
       >
-        <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+        <div className="crm-filter-tabs" style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
           {[
             { key: 'all', label: 'All Slots' },
             { key: 'breakfast', label: 'Breakfast' },
@@ -395,7 +395,7 @@ export default function DiningAdminPage() {
             </div>
 
             <form onSubmit={handleSaveEdit} className="crm-modal-body">
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+              <div className="crm-form-grid-2col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
                 <div className="crm-form-group">
                   <label className="crm-label">Status</label>
                   <select

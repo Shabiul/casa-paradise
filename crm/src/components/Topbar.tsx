@@ -261,21 +261,12 @@ export default function Topbar({ onOpenQuickModal }: TopbarProps) {
           {/* Pending Badge */}
           {totalPending > 0 && (
             <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px',
-                backgroundColor: '#FEE2E2',
-                border: '1px solid #FECACA',
-                color: '#B91C1C',
-                padding: '6px 12px',
-                borderRadius: 'var(--radius-full)',
-                fontSize: '12px',
-                fontWeight: 700
-              }}
+              className="crm-topbar-pending-badge"
+              title={`${totalPending} Action${totalPending > 1 ? 's' : ''} Needed`}
             >
               <Bell size={14} />
-              <span>{totalPending} Action{totalPending > 1 ? 's' : ''} Needed</span>
+              <span className="crm-pending-text">{totalPending} Action{totalPending > 1 ? 's' : ''} Needed</span>
+              <span className="crm-pending-count">{totalPending}</span>
             </div>
           )}
 
