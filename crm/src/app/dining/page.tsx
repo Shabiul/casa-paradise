@@ -251,6 +251,9 @@ export default function DiningAdminPage() {
       </div>
 
       {/* Reservations Table */}
+      <div className="crm-table-scroll-cue">
+        <span>← Swipe table horizontally to view slots, bills &amp; actions →</span>
+      </div>
       <div className="crm-table-container">
         <table className="crm-table">
           <thead>
@@ -348,29 +351,26 @@ export default function DiningAdminPage() {
 
                       <button
                         onClick={() => handleWhatsApp(b)}
-                        className="crm-btn"
-                        style={{ padding: '5px 8px', backgroundColor: '#DCFCE7', color: '#15803D', border: '1px solid #BBF7D0' }}
+                        className="crm-table-action-btn whatsapp"
                         title="Send WhatsApp Confirmation"
                       >
-                        <MessageSquare size={14} />
+                        <MessageSquare size={15} />
                       </button>
 
                       <button
                         onClick={() => handleOpenEdit(b)}
-                        className="crm-btn crm-btn-secondary"
-                        style={{ padding: '5px 8px' }}
+                        className="crm-table-action-btn edit"
                         title="Edit Reservation"
                       >
-                        <Edit size={14} />
+                        <Edit size={15} />
                       </button>
 
                       <button
                         onClick={() => handleDelete(b.id, b.guestName)}
-                        className="crm-btn crm-btn-danger"
-                        style={{ padding: '5px 8px' }}
+                        className="crm-table-action-btn delete"
                         title="Delete Reservation"
                       >
-                        <Trash2 size={14} />
+                        <Trash2 size={15} />
                       </button>
                     </div>
                   </td>

@@ -200,6 +200,9 @@ export default function BillingAdminPage() {
       </div>
 
       {/* Folios Table */}
+      <div className="crm-table-scroll-cue">
+        <span>← Swipe table horizontally to view GST tax, balance due &amp; invoices →</span>
+      </div>
       <div className="crm-table-container">
         <table className="crm-table">
           <thead>

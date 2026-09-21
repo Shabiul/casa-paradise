@@ -224,6 +224,9 @@ export default function GuestsAdminPage() {
       </div>
 
       {/* Guests Table */}
+      <div className="crm-table-scroll-cue">
+        <span>← Swipe table horizontally to view contact details, spend &amp; dossier →</span>
+      </div>
       <div className="crm-table-container">
         <table className="crm-table">
           <thead>
@@ -241,20 +244,20 @@ export default function GuestsAdminPage() {
             {filteredGuests.length === 0 ? (
               <tr>
                 <td colSpan={7} style={{ textAlign: 'center', padding: '36px', color: 'var(--text-secondary)' }}>
-                  No guest profiles found matching your search.
+                  No guests found matching your criteria.
                 </td>
               </tr>
             ) : (
               filteredGuests.map(g => (
                 <tr key={g.id}>
                   <td>
-                    <div style={{ fontWeight: 700, color: 'var(--text-primary)', fontSize: '14px' }}>{g.name}</div>
-                    <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>{g.id} {g.address ? `· ${g.address}` : ''}</div>
+                    <div style={{ fontWeight: 700, color: 'var(--text-primary)' }}>{g.name}</div>
+                    <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>{g.id}</div>
                   </td>
 
                   <td>
-                    <div style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{g.phone}</div>
-                    <div style={{ fontSize: '11.5px', color: '#0284C7' }}>{g.email}</div>
+                    <div style={{ fontSize: '13px', color: 'var(--text-primary)' }}>{g.phone}</div>
+                    <div style={{ fontSize: '11.5px', color: 'var(--text-secondary)' }}>{g.email}</div>
                   </td>
 
                   <td>
@@ -288,8 +291,7 @@ export default function GuestsAdminPage() {
                   </td>
 
                   <td>
-                    <strong style={{ fontSize: '14px', color: 'var(--text-primary)' }}>{g.totalBookings}</strong>
-                    <span style={{ fontSize: '11px', color: 'var(--text-secondary)', marginLeft: '4px' }}>bookings</span>
+                    <div style={{ fontWeight: 700, color: 'var(--text-primary)' }}>{g.totalBookings} Stays</div>
                   </td>
 
                   <td>
@@ -311,20 +313,18 @@ export default function GuestsAdminPage() {
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '6px' }}>
                       <button
                         onClick={() => handleWhatsApp(g)}
-                        className="crm-btn"
-                        style={{ padding: '5px 8px', backgroundColor: '#DCFCE7', color: '#15803D', border: '1px solid #BBF7D0' }}
+                        className="crm-table-action-btn whatsapp"
                         title="WhatsApp Concierge Message"
                       >
-                        <MessageSquare size={14} />
+                        <MessageSquare size={15} />
                       </button>
 
                       <button
                         onClick={() => setViewFolioGuestId(g.id)}
-                        className="crm-btn crm-btn-secondary"
-                        style={{ padding: '5px 8px' }}
+                        className="crm-table-action-btn folio"
                         title="View Invoicing Folio"
                       >
-                        <Receipt size={14} color="#059669" />
+                        <Receipt size={15} />
                       </button>
 
                       <button

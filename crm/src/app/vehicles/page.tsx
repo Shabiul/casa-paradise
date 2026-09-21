@@ -260,6 +260,9 @@ export default function VehiclesAdminPage() {
       </div>
 
       {/* Rentals Table */}
+      <div className="crm-table-scroll-cue">
+        <span>← Swipe table horizontally to view vehicles, folios &amp; dispatch →</span>
+      </div>
       <div className="crm-table-container">
         <table className="crm-table">
           <thead>
@@ -366,29 +369,26 @@ export default function VehiclesAdminPage() {
 
                       <button
                         onClick={() => handleWhatsApp(b)}
-                        className="crm-btn"
-                        style={{ padding: '5px 8px', backgroundColor: '#DCFCE7', color: '#15803D', border: '1px solid #BBF7D0' }}
+                        className="crm-table-action-btn whatsapp"
                         title="Send WhatsApp Voucher"
                       >
-                        <MessageSquare size={14} />
+                        <MessageSquare size={15} />
                       </button>
 
                       <button
                         onClick={() => handleOpenEdit(b)}
-                        className="crm-btn crm-btn-secondary"
-                        style={{ padding: '5px 8px' }}
+                        className="crm-table-action-btn edit"
                         title="Edit Rental"
                       >
-                        <Edit size={14} />
+                        <Edit size={15} />
                       </button>
 
                       <button
                         onClick={() => handleDelete(b.id, b.guestName)}
-                        className="crm-btn crm-btn-danger"
-                        style={{ padding: '5px 8px' }}
+                        className="crm-table-action-btn delete"
                         title="Delete Rental"
                       >
-                        <Trash2 size={14} />
+                        <Trash2 size={15} />
                       </button>
                     </div>
                   </td>
